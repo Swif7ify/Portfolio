@@ -307,14 +307,17 @@
 }
 
 .profile-circle {
-	width: 192px;
-	height: 192px;
 	border-radius: 50%;
 	background: linear-gradient(135deg, #ea580c, #f97316);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	color: white;
+}
+
+.profile-circle img {
+	width: 100%;
+	height: 100%;
 }
 
 .about-text {

@@ -40,10 +40,9 @@ function useCountUp(target, duration = 1200) {
 
 // Stats data and animation
 const stats = [
-	{ label: "Years Experience", value: 10, suffix: "+" },
-	{ label: "Projects Completed", value: 150, suffix: "+" },
-	{ label: "Design Awards", value: 30, suffix: "+" },
-	{ label: "Client Satisfaction", value: 98, suffix: "%" },
+	{ label: "Years Experience", value: 2, suffix: "+" },
+	{ label: "Projects Completed", value: 6, suffix: "+" },
+	{ label: "Client Satisfaction", value: 100, suffix: "%" },
 ];
 
 const animatedStats = stats.map((stat) => {
@@ -114,7 +113,7 @@ const submitForm = () => {
 				<span class="loader-text">
 					<span
 						class="letter"
-						v-for="(char, i) in 'ALEX MORGAN'"
+						v-for="(char, i) in 'EARL ROMEO ORDOVEZ'"
 						:key="i"
 						:style="{ animationDelay: i * 0.07 + 's' }"
 					>
@@ -172,11 +171,11 @@ const submitForm = () => {
 					<div class="hero-content">
 						<div class="hero-text">
 							<h1 class="hero-title">
-								UI/UX
+								Web
 								<span class="accent underline-animate"
-									>Designer</span
+									>Developer</span
 								>
-								& Creative Director
+								& Game Developer
 							</h1>
 							<p class="hero-description">
 								Creating exceptional digital experiences that
@@ -209,23 +208,7 @@ const submitForm = () => {
 						</div>
 
 						<div class="hero-image">
-							<div class="hero-placeholder">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="128"
-									height="128"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-									></path>
-								</svg>
-							</div>
+							<img src="../public/myImage/ORDOVEZ_EARL_2A .jpg" />
 						</div>
 					</div>
 
@@ -437,21 +420,9 @@ const submitForm = () => {
 						<div class="about-image">
 							<div class="about-placeholder">
 								<div class="profile-circle">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="96"
-										height="96"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="1"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									>
-										<path
-											d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-										></path>
-									</svg>
+									<img
+										src="../public/myImage/IMG_20250623_112039.jpg"
+									/>
 								</div>
 							</div>
 						</div>
@@ -478,12 +449,12 @@ const submitForm = () => {
 
 							<h3 class="skills-title">My Skills</h3>
 							<div class="skills">
-								<span class="skill">UI Design</span>
-								<span class="skill">UX Research</span>
-								<span class="skill">Wireframing</span>
-								<span class="skill">Prototyping</span>
-								<span class="skill">User Testing</span>
-								<span class="skill">Design Systems</span>
+								<span class="skill">UI & UX Design</span>
+								<span class="skill">Web Development</span>
+								<span class="skill"
+									>Application Development</span
+								>
+								<span class="skill">3D Modeling</span>
 							</div>
 
 							<a href="#" class="btn btn-primary"
