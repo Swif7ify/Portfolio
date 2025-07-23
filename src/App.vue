@@ -117,7 +117,7 @@ const submitForm = () => {
 			<FloatingShapes />
 			<header class="header">
 				<div class="container">
-					<a href="#" class="logo">DESIGNER</a>
+					<a href="#" class="logo"> Home </a>
 
 					<nav class="nav">
 						<a href="#work" @click="smoothScroll">Work</a>
@@ -236,72 +236,46 @@ const submitForm = () => {
 					<div class="projects-grid">
 						<div class="project-card">
 							<div class="project-image">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="80"
-									height="80"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-									></path>
-								</svg>
+								<img src="../public/projects/1.png" />
 							</div>
 							<div class="project-content">
-								<span class="project-category">Mobile App</span>
-								<h3 class="project-title">
-									FinTech Revolution
-								</h3>
+								<span class="project-category">Web App</span>
+								<h3 class="project-title">BootTek</h3>
 								<p class="project-description">
-									Redesigned a leading financial app,
-									increasing user engagement by 45% and
-									improving conversion rates.
+									An online coding platform where you can
+									learn various programming languages through
+									interactive lessons, real-time code editors,
+									and hands-on projects.
 								</p>
 								<div class="project-tags">
-									<span class="tag">UX Research</span>
-									<span class="tag">UI Design</span>
-									<span class="tag">Prototyping</span>
+									<span class="tag">Frontend</span>
+									<span class="tag">Backend</span>
+									<span class="tag">UI/UX Design</span>
+									<span class="tag">Node.js</span>
+									<span class="tag">Vue Framework</span>
 								</div>
 							</div>
 						</div>
 
 						<div class="project-card">
 							<div class="project-image">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="80"
-									height="80"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-									></path>
-								</svg>
+								<img src="../public/projects/2.png" />
 							</div>
 							<div class="project-content">
-								<span class="project-category">E-commerce</span>
-								<h3 class="project-title">
-									Luxury Retail Platform
-								</h3>
+								<span class="project-category"
+									>Game Development</span
+								>
+								<h3 class="project-title">Clashing Grid</h3>
 								<p class="project-description">
-									Created an immersive shopping experience for
-									a luxury brand, resulting in 60% increase in
-									time spent on site.
+									Python game built with Pygame. It features
+									local and multiplayer modes where players
+									expand their pieces on a grid, aiming to
+									outmaneuver and outscore their opponent.
 								</p>
 								<div class="project-tags">
-									<span class="tag">UX Design</span>
-									<span class="tag">Visual Design</span>
-									<span class="tag">Animation</span>
+									<span class="tag">Game Design</span>
+									<span class="tag">Pygame</span>
+									<span class="tag">Multiplayer</span>
 								</div>
 							</div>
 						</div>

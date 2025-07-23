@@ -55,6 +55,11 @@
 /* Header */
 .header {
 	padding: 24px 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+	background-color: rgba(17, 17, 17, 0.9);
 }
 
 .header .container {
@@ -238,6 +243,14 @@
 	align-items: center;
 	justify-content: center;
 	color: white;
+	overflow: hidden;
+}
+
+.project-image img {
+	max-width: 100%;
+	height: auto;
+	transition: transform 0.3s ease;
+	transform: scale(1.08);
 }
 
 .project-content {
