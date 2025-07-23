@@ -2,7 +2,6 @@
 import { ref, onMounted, watch } from "vue";
 import FloatingShapes from "./components/FloatingShapes.vue";
 
-// Loader state
 const loading = ref(true);
 
 onMounted(() => {
@@ -11,7 +10,6 @@ onMounted(() => {
 	}, 2000);
 });
 
-// Animated number composable
 function useCountUp(target, duration = 1200) {
 	const display = ref(0);
 	let startTimestamp = null;
@@ -38,7 +36,6 @@ function useCountUp(target, duration = 1200) {
 	return { display, start };
 }
 
-// Stats data and animation
 const stats = [
 	{ label: "Years Experience", value: 2, suffix: "+" },
 	{ label: "Projects Completed", value: 6, suffix: "+" },
@@ -50,14 +47,12 @@ const animatedStats = stats.map((stat) => {
 	return { ...stat, display, start };
 });
 
-// Start animation when loader finishes
 watch(loading, (val) => {
 	if (!val) {
 		animatedStats.forEach((stat) => stat.start());
 	}
 });
 
-// Reactive state
 const mobileMenuOpen = ref(false);
 const form = ref({
 	name: "",
@@ -82,7 +77,6 @@ const smoothScroll = (event) => {
 			behavior: "smooth",
 		});
 
-		// Close mobile menu if open
 		if (mobileMenuOpen.value) {
 			mobileMenuOpen.value = false;
 		}
@@ -90,11 +84,9 @@ const smoothScroll = (event) => {
 };
 
 const submitForm = () => {
-	// Handle form submission here
 	console.log("Form submitted:", form.value);
 	alert("Message sent successfully!");
 
-	// Reset form
 	form.value = {
 		name: "",
 		email: "",
@@ -106,7 +98,6 @@ const submitForm = () => {
 
 <template>
 	<div>
-		<!-- Loader -->
 		<transition name="fade">
 			<div v-if="loading" class="loader-overlay">
 				<FloatingShapes />
@@ -122,10 +113,8 @@ const submitForm = () => {
 				</span>
 			</div>
 		</transition>
-		<!-- Main Content -->
 		<div v-show="!loading" class="portfolio" style="position: relative">
 			<FloatingShapes />
-			<!-- Navigation -->
 			<header class="header">
 				<div class="container">
 					<a href="#" class="logo">DESIGNER</a>
@@ -154,7 +143,6 @@ const submitForm = () => {
 					</button>
 				</div>
 
-				<!-- Mobile Menu -->
 				<div v-show="mobileMenuOpen" class="mobile-menu">
 					<a href="#work" @click="smoothScroll">Work</a>
 					<a href="#about" @click="smoothScroll">About</a>
@@ -163,9 +151,7 @@ const submitForm = () => {
 				</div>
 			</header>
 
-			<!-- Hero Section -->
 			<section class="hero" style="position: relative; overflow: hidden">
-				<!-- Hero blob removed as requested -->
 				<FloatingShapes />
 				<div class="container">
 					<div class="hero-content">
@@ -230,7 +216,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- Work Section -->
 			<section
 				id="work"
 				class="work"
@@ -249,7 +234,6 @@ const submitForm = () => {
 					</div>
 
 					<div class="projects-grid">
-						<!-- Project 1 -->
 						<div class="project-card">
 							<div class="project-image">
 								<svg
@@ -286,7 +270,6 @@ const submitForm = () => {
 							</div>
 						</div>
 
-						<!-- Project 2 -->
 						<div class="project-card">
 							<div class="project-image">
 								<svg
@@ -323,7 +306,6 @@ const submitForm = () => {
 							</div>
 						</div>
 
-						<!-- Project 3 -->
 						<div class="project-card">
 							<div class="project-image">
 								<svg
@@ -362,7 +344,6 @@ const submitForm = () => {
 							</div>
 						</div>
 
-						<!-- Project 4 -->
 						<div class="project-card">
 							<div class="project-image">
 								<svg
@@ -408,7 +389,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- About Section -->
 			<section
 				id="about"
 				class="about"
@@ -465,7 +445,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- Services Section -->
 			<section
 				id="services"
 				class="services"
@@ -485,7 +464,6 @@ const submitForm = () => {
 					</div>
 
 					<div class="services-grid">
-						<!-- Service 1 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -512,7 +490,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Service 2 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -539,7 +516,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Service 3 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -566,7 +542,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Service 4 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -593,7 +568,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Service 5 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -619,7 +593,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Service 6 -->
 						<div class="service-card">
 							<div class="service-icon">
 								<svg
@@ -649,7 +622,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- Testimonials Section -->
 			<section
 				class="testimonials"
 				style="position: relative; overflow: hidden"
@@ -667,7 +639,6 @@ const submitForm = () => {
 					</div>
 
 					<div class="testimonials-grid">
-						<!-- Testimonial 1 -->
 						<div class="testimonial-card">
 							<div class="testimonial-header">
 								<div class="avatar">S</div>
@@ -685,7 +656,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Testimonial 2 -->
 						<div class="testimonial-card">
 							<div class="testimonial-header">
 								<div class="avatar">M</div>
@@ -705,7 +675,6 @@ const submitForm = () => {
 							</p>
 						</div>
 
-						<!-- Testimonial 3 -->
 						<div class="testimonial-card">
 							<div class="testimonial-header">
 								<div class="avatar">A</div>
@@ -730,7 +699,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- Contact Section -->
 			<section
 				id="contact"
 				class="contact"
@@ -911,7 +879,6 @@ const submitForm = () => {
 				</div>
 			</section>
 
-			<!-- Footer -->
 			<footer class="footer">
 				<div class="container">
 					<div class="footer-content">
