@@ -117,7 +117,7 @@ const submitForm = () => {
 			<FloatingShapes />
 			<header class="header">
 				<div class="container">
-					<a href="#" class="logo"> Home </a>
+					<a href="#" class="logo"> 1DEV </a>
 
 					<nav class="nav">
 						<a href="#work" @click="smoothScroll">Work</a>
@@ -182,15 +182,6 @@ const submitForm = () => {
 									>Get In Touch</a
 								>
 							</div>
-							<div class="floating-cta">
-								<a
-									href="#contact"
-									class="btn btn-primary pulse"
-									@click="smoothScroll"
-								>
-									Let's Collaborate!
-								</a>
-							</div>
 						</div>
 
 						<div class="hero-image">
@@ -228,8 +219,8 @@ const submitForm = () => {
 							Featured <span class="accent">Projects</span>
 						</h2>
 						<p class="section-description">
-							A selection of my award-winning work across various
-							industries and design challenges.
+							A showcase of my most significant projects,
+							demonstrating my skills in web and game development.
 						</p>
 					</div>
 
@@ -237,6 +228,12 @@ const submitForm = () => {
 						<div class="project-card">
 							<div class="project-image">
 								<img src="../public/projects/1.png" />
+								<button
+									onclick="window.open('https://boottek.fwh.is', '_blank')"
+									class="view-project-btn"
+								>
+									Visit Project
+								</button>
 							</div>
 							<div class="project-content">
 								<span class="project-category">Web App</span>
@@ -252,7 +249,7 @@ const submitForm = () => {
 									<span class="tag">Backend</span>
 									<span class="tag">UI/UX Design</span>
 									<span class="tag">Node.js</span>
-									<span class="tag">Vue Framework</span>
+									<span class="tag">Vue.js</span>
 								</div>
 							</div>
 						</div>
@@ -260,6 +257,12 @@ const submitForm = () => {
 						<div class="project-card">
 							<div class="project-image">
 								<img src="../public/projects/2.png" />
+								<button
+									onclick="window.open('https://rinubi.itch.io/glid', '_blank')"
+									class="view-project-btn"
+								>
+									View Project
+								</button>
 							</div>
 							<div class="project-content">
 								<span class="project-category"
@@ -282,74 +285,62 @@ const submitForm = () => {
 
 						<div class="project-card">
 							<div class="project-image">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="80"
-									height="80"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+								<img src="../public/projects/3.png" />
+								<button
+									onclick="window.open('https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/', '_blank')"
+									class="view-project-btn"
 								>
-									<path
-										d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-									></path>
-								</svg>
+									View Project
+								</button>
 							</div>
 							<div class="project-content">
-								<span class="project-category">Dashboard</span>
+								<span class="project-category"
+									>Robotics Simulation</span
+								>
 								<h3 class="project-title">
-									Analytics Platform
+									HydroBot Simulator
 								</h3>
 								<p class="project-description">
-									Designed an intuitive analytics dashboard
-									that simplified complex data visualization
-									for non-technical users.
+									A professional-grade underwater search and
+									rescue simulation system featuring advanced
+									sonar navigation and optical sensor.
 								</p>
 								<div class="project-tags">
-									<span class="tag"
-										>Information Architecture</span
-									>
-									<span class="tag">Data Visualization</span>
-									<span class="tag">UI Design</span>
+									<span class="tag">Three.js</span>
+									<span class="tag">Fusion 360</span>
+									<span class="tag">3D Modelling</span>
+									<span class="tag">Vue.js</span>
 								</div>
 							</div>
 						</div>
 
 						<div class="project-card">
 							<div class="project-image">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="80"
-									height="80"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+								<img src="../public/projects/4.png" />
+								<button
+									onclick="window.open('https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/', '_blank')"
+									class="view-project-btn"
 								>
-									<path
-										d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-									></path>
-								</svg>
+									View Project
+								</button>
 							</div>
 							<div class="project-content">
 								<span class="project-category"
-									>Health Tech</span
+									>Robotics Simulation</span
 								>
-								<h3 class="project-title">Wellness Tracker</h3>
+								<h3 class="project-title">
+									Autonomous Robot Pathfinding Simulator
+								</h3>
 								<p class="project-description">
-									Created a user-friendly health monitoring
-									app that simplifies tracking daily wellness
-									metrics.
+									A 3D autonomous search and
+									rescue/pathfinding simulator built with Vue
+									3, Vite, and Three.js. Simulate robot
+									navigation, LiDAR scanning, and AI-driven
+									search patterns in a dynamic environment.
 								</p>
 								<div class="project-tags">
-									<span class="tag">UX Design</span>
-									<span class="tag">Data Visualization</span>
-									<span class="tag">UI Design</span>
+									<span class="tag">Three.js</span>
+									<span class="tag">Vue.js</span>
 								</div>
 							</div>
 						</div>
@@ -386,25 +377,29 @@ const submitForm = () => {
 								About <span class="accent">Me</span>
 							</h2>
 							<p class="about-description">
-								I'm a passionate UI/UX designer with over 10
-								years of experience creating user-centered
-								digital experiences. My approach combines
-								aesthetic sensibility with a deep understanding
-								of user behavior to create designs that are both
-								beautiful and functional.
+								Hi, I'm Earl Romeo Ordovez, a passionate web and
+								game developer with a knack for creating
+								immersive digital experiences. With a strong
+								background in both frontend and backend
+								development, I specialize in building intuitive,
+								user-friendly applications that not only look
+								great but also perform seamlessly.
 							</p>
 							<p class="about-description">
-								I believe that great design is invisible – it
-								should feel intuitive and natural to the user.
-								My goal is to solve complex problems with
-								simple, elegant solutions that delight users and
-								help businesses achieve their objectives.
+								I have a keen interest in game development,
+								leveraging my skills in 3D modeling and
+								programming to create engaging and interactive
+								games. My approach combines creativity with
+								technical expertise, ensuring that every project
+								is not only functional but also visually
+								stunning.
 							</p>
 
 							<h3 class="skills-title">My Skills</h3>
 							<div class="skills">
 								<span class="skill">UI & UX Design</span>
 								<span class="skill">Web Development</span>
+								<span class="skill">Game Development</span>
 								<span class="skill"
 									>Application Development</span
 								>
@@ -710,7 +705,7 @@ const submitForm = () => {
 											></path>
 										</svg>
 									</div>
-									<span>hello@designerportfolio.com</span>
+									<span>earl.coding@gmail.com</span>
 								</div>
 
 								<div class="contact-item">
@@ -731,7 +726,7 @@ const submitForm = () => {
 											></path>
 										</svg>
 									</div>
-									<span>+1 (555) 123-4567</span>
+									<span>09991884933</span>
 								</div>
 
 								<div class="contact-item">
@@ -755,7 +750,10 @@ const submitForm = () => {
 											></path>
 										</svg>
 									</div>
-									<span>San Francisco, CA</span>
+									<span
+										>Philippines, Zambales Olongapo
+										City</span
+									>
 								</div>
 							</div>
 
@@ -857,7 +855,7 @@ const submitForm = () => {
 				<div class="container">
 					<div class="footer-content">
 						<div class="footer-brand">
-							<a href="#" class="logo">DESIGNER</a>
+							<a href="#" class="logo">1DEV</a>
 							<p class="footer-tagline">
 								Creating exceptional digital experiences.
 							</p>
@@ -875,7 +873,7 @@ const submitForm = () => {
 
 					<div class="footer-bottom">
 						<p class="copyright">
-							© 2023 Designer Portfolio. All rights reserved.
+							© 2025 1DEV. All rights reserved.
 						</p>
 
 						<div class="social-links small">
