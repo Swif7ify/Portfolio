@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import FloatingShapes from "./components/FloatingShapes.vue";
+import { toastSuccess, toastError } from "./composables/Toast";
+import emailjs from "emailjs-com";
 
 const loading = ref(true);
 
@@ -84,15 +86,49 @@ const smoothScroll = (event) => {
 };
 
 const submitForm = () => {
-	console.log("Form submitted:", form.value);
-	alert("Message sent successfully!");
+	if (
+		["name", "email", "subject", "message"].some(
+			(field) =>
+				typeof form.value[field] !== "string" ||
+				!form.value[field].trim()
+		)
+	) {
+		toastError("Please fill in all fields.");
+		return;
+	}
 
-	form.value = {
-		name: "",
-		email: "",
-		subject: "",
-		message: "",
-	};
+	try {
+		const response = emailjs.send(
+			"service_5a7s8ep",
+			"template_g8242va",
+			{
+				name: form.value.name,
+				email: form.value.email,
+				subject: form.value.subject,
+				message: form.value.message,
+				to_email: "earl.coding@gmail.com",
+			},
+			"_LSF5jdTjz3VeANe7"
+		);
+
+		if (response) {
+			toastSuccess("Message sent successfully!");
+		} else {
+			toastError("Failed to send message. Please try again later.");
+		}
+	} catch (error) {
+		toastError(
+			"Something went wrong while sending the message. Please try again later."
+		);
+		return;
+	} finally {
+		form.value = {
+			name: "",
+			email: "",
+			subject: "",
+			message: "",
+		};
+	}
 };
 </script>
 
@@ -245,8 +281,8 @@ const submitForm = () => {
 									and hands-on projects.
 								</p>
 								<div class="project-tags">
-									<span class="tag">Frontend</span>
-									<span class="tag">Backend</span>
+									<span class="tag">Fullstack</span>
+									<span class="tag">PostgreSQL</span>
 									<span class="tag">UI/UX Design</span>
 									<span class="tag">Node.js</span>
 									<span class="tag">Vue.js</span>
@@ -423,18 +459,18 @@ const submitForm = () => {
 				<div class="container">
 					<div class="section-header centered">
 						<h2 class="section-title">
-							My <span class="accent">Services</span>
+							Things <span class="accent">I Do</span>
 						</h2>
 						<p class="section-description">
-							I offer a comprehensive range of design services to
-							help businesses create exceptional digital
-							experiences.
+							Here are some of the projects and activities I work
+							on as a student developer and learner.
 						</p>
 					</div>
 
 					<div class="services-grid">
 						<div class="service-card">
 							<div class="service-icon">
+								<!-- Web Projects Icon -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="32"
@@ -447,20 +483,29 @@ const submitForm = () => {
 									stroke-linejoin="round"
 								>
 									<path
-										d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-									></path>
+										d="M4 17v-2a4 4 0 014-4h8a4 4 0 014 4v2"
+									/>
+									<rect
+										x="2"
+										y="7"
+										width="20"
+										height="8"
+										rx="2"
+									/>
+									<path d="M6 11v2" />
+									<path d="M18 11v2" />
 								</svg>
 							</div>
-							<h3 class="service-title">UI Design</h3>
+							<h3 class="service-title">Web Projects</h3>
 							<p class="service-description">
-								Creating visually stunning interfaces that align
-								with your brand identity and provide a seamless
-								user experience.
+								Building websites and web apps for class, clubs,
+								and personal learning.
 							</p>
 						</div>
 
 						<div class="service-card">
 							<div class="service-icon">
+								<!-- Game Dev Icon -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="32"
@@ -472,21 +517,26 @@ const submitForm = () => {
 									stroke-linecap="round"
 									stroke-linejoin="round"
 								>
-									<path
-										d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-									></path>
+									<rect
+										x="3"
+										y="3"
+										width="18"
+										height="18"
+										rx="2"
+									/>
+									<path d="M8 8h8v8H8z" />
 								</svg>
 							</div>
-							<h3 class="service-title">UX Research</h3>
+							<h3 class="service-title">Game Development</h3>
 							<p class="service-description">
-								Conducting in-depth user research to understand
-								your audience's needs, behaviors, and pain
-								points.
+								Creating games for fun, competitions, and
+								learning new programming concepts.
 							</p>
 						</div>
 
 						<div class="service-card">
 							<div class="service-icon">
+								<!-- App Dev Icon -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="32"
@@ -498,21 +548,26 @@ const submitForm = () => {
 									stroke-linecap="round"
 									stroke-linejoin="round"
 								>
-									<path
-										d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-									></path>
+									<rect
+										x="4"
+										y="4"
+										width="16"
+										height="16"
+										rx="2"
+									/>
+									<path d="M8 8h8v8H8z" />
 								</svg>
 							</div>
-							<h3 class="service-title">Design Systems</h3>
+							<h3 class="service-title">App Development</h3>
 							<p class="service-description">
-								Building comprehensive design systems that
-								ensure consistency and scalability across all
-								your digital products.
+								Building simple applications for school projects
+								and personal use.
 							</p>
 						</div>
 
 						<div class="service-card">
 							<div class="service-icon">
+								<!-- Learning Icon -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="32"
@@ -524,67 +579,74 @@ const submitForm = () => {
 									stroke-linecap="round"
 									stroke-linejoin="round"
 								>
-									<path
-										d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-									></path>
+									<circle cx="12" cy="12" r="10" />
+									<path d="M12 8v4l3 3" />
+								</svg>
+							</div>
+							<h3 class="service-title">
+								Learning & Experimenting
+							</h3>
+							<p class="service-description">
+								Trying out new technologies, frameworks, and
+								programming languages.
+							</p>
+						</div>
+
+						<div class="service-card">
+							<div class="service-icon">
+								<!-- Collaboration Icon -->
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path d="M12 20v-6" />
+									<path d="M6 12l6-6 6 6" />
+								</svg>
+							</div>
+							<h3 class="service-title">Collaboration</h3>
+							<p class="service-description">
+								Working with classmates on group projects and
+								coding challenges.
+							</p>
+						</div>
+						<div class="service-card">
+							<div class="service-icon">
+								<!-- Prototyping Icon -->
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<rect
+										x="3"
+										y="3"
+										width="18"
+										height="18"
+										rx="2"
+									/>
+									<path d="M8 8h8v8H8z" />
+									<path d="M12 12v4" />
+									<path d="M12 12h4" />
 								</svg>
 							</div>
 							<h3 class="service-title">Prototyping</h3>
 							<p class="service-description">
-								Creating interactive prototypes that allow you
-								to test and validate your ideas before
-								development.
-							</p>
-						</div>
-
-						<div class="service-card">
-							<div class="service-icon">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-									></path>
-								</svg>
-							</div>
-							<h3 class="service-title">Responsive Design</h3>
-							<p class="service-description">
-								Ensuring your digital products look and function
-								perfectly across all devices and screen sizes.
-							</p>
-						</div>
-
-						<div class="service-card">
-							<div class="service-icon">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-									></path>
-								</svg>
-							</div>
-							<h3 class="service-title">Design to Development</h3>
-							<p class="service-description">
-								Collaborating with development teams to ensure
-								designs are implemented accurately and
-								efficiently.
+								Creating interactive prototypes for apps, games,
+								and websites to test ideas and get feedback
+								before building the final version.
 							</p>
 						</div>
 					</div>
@@ -602,68 +664,8 @@ const submitForm = () => {
 							Client <span class="accent">Testimonials</span>
 						</h2>
 						<p class="section-description">
-							Don't just take my word for it. Here's what my
-							clients have to say about working with me.
+							Looking forward to working with you!
 						</p>
-					</div>
-
-					<div class="testimonials-grid">
-						<div class="testimonial-card">
-							<div class="testimonial-header">
-								<div class="avatar">S</div>
-								<div class="client-info">
-									<h4 class="client-name">Sarah Johnson</h4>
-									<p class="client-title">CEO, TechStart</p>
-								</div>
-							</div>
-							<p class="testimonial-text">
-								"Working with this designer was a game-changer
-								for our product. They understood our vision
-								perfectly and delivered a design that exceeded
-								our expectations. Our user engagement has
-								increased by 40% since the redesign."
-							</p>
-						</div>
-
-						<div class="testimonial-card">
-							<div class="testimonial-header">
-								<div class="avatar">M</div>
-								<div class="client-info">
-									<h4 class="client-name">Michael Chen</h4>
-									<p class="client-title">
-										Product Manager, FinanceApp
-									</p>
-								</div>
-							</div>
-							<p class="testimonial-text">
-								"The attention to detail and user-centered
-								approach was impressive. They didn't just make
-								our app look better, they made it work better
-								for our users. The design process was
-								collaborative and insightful."
-							</p>
-						</div>
-
-						<div class="testimonial-card">
-							<div class="testimonial-header">
-								<div class="avatar">A</div>
-								<div class="client-info">
-									<h4 class="client-name">
-										Amanda Rodriguez
-									</h4>
-									<p class="client-title">
-										Marketing Director, LuxuryBrand
-									</p>
-								</div>
-							</div>
-							<p class="testimonial-text">
-								"Our e-commerce platform needed a complete
-								overhaul, and this designer delivered beyond our
-								expectations. The new design not only looks
-								stunning but has significantly improved our
-								conversion rates."
-							</p>
-						</div>
 					</div>
 				</div>
 			</section>
@@ -758,7 +760,11 @@ const submitForm = () => {
 							</div>
 
 							<div class="social-links">
-								<a href="#" class="social-link">
+								<a
+									href="https://github.com/Swif7ify"
+									target="_blank"
+									class="social-link"
+								>
 									<svg
 										width="24"
 										height="24"
@@ -770,7 +776,11 @@ const submitForm = () => {
 										></path>
 									</svg>
 								</a>
-								<a href="#" class="social-link">
+								<a
+									href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
+									target="_blank"
+									class="social-link"
+								>
 									<svg
 										width="24"
 										height="24"
@@ -782,7 +792,11 @@ const submitForm = () => {
 										></path>
 									</svg>
 								</a>
-								<a href="#" class="social-link">
+								<a
+									href="https://facebook.com/Swif7ify"
+									target="_blank"
+									class="social-link"
+								>
 									<svg
 										width="24"
 										height="24"
@@ -790,8 +804,8 @@ const submitForm = () => {
 										viewBox="0 0 24 24"
 									>
 										<path
-											d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z"
-										></path>
+											d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
+										/>
 									</svg>
 								</a>
 							</div>
@@ -877,7 +891,11 @@ const submitForm = () => {
 						</p>
 
 						<div class="social-links small">
-							<a href="#" class="social-link">
+							<a
+								href="https://github.com/Swif7ify"
+								target="_blank"
+								class="social-link"
+							>
 								<svg
 									width="20"
 									height="20"
@@ -889,7 +907,11 @@ const submitForm = () => {
 									></path>
 								</svg>
 							</a>
-							<a href="#" class="social-link">
+							<a
+								href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
+								target="_blank"
+								class="social-link"
+							>
 								<svg
 									width="20"
 									height="20"
@@ -901,16 +923,20 @@ const submitForm = () => {
 									></path>
 								</svg>
 							</a>
-							<a href="#" class="social-link">
+							<a
+								href="https://facebook.com/Swif7ify"
+								target="_blank"
+								class="social-link"
+							>
 								<svg
-									width="20"
-									height="20"
+									width="24"
+									height="24"
 									fill="currentColor"
 									viewBox="0 0 24 24"
 								>
 									<path
-										d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z"
-									></path>
+										d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
+									/>
 								</svg>
 							</a>
 						</div>
