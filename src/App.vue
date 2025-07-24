@@ -98,24 +98,25 @@ const submitForm = () => {
 	}
 
 	try {
-		const response = emailjs.send(
-			"service_5a7s8ep",
-			"template_g8242va",
-			{
-				name: form.value.name,
-				email: form.value.email,
-				subject: form.value.subject,
-				message: form.value.message,
-				to_email: "earl.coding@gmail.com",
-			},
-			"_LSF5jdTjz3VeANe7"
-		);
-
-		if (response) {
-			toastSuccess("Message sent successfully!");
-		} else {
-			toastError("Failed to send message. Please try again later.");
-		}
+		emailjs
+			.send(
+				"service_5a7s8ep",
+				"template_g8242va",
+				{
+					name: form.value.name,
+					email: form.value.email,
+					subject: form.value.subject,
+					message: form.value.message,
+					to_email: "earl.coding@gmail.com",
+				},
+				"_LSF5jdTjz3VeANe7"
+			)
+			.then((response) => {
+				toastSuccess("Message sent successfully!");
+			})
+			.catch((error) => {
+				toastError("Failed to send message. Please try again later.");
+			});
 	} catch (error) {
 		toastError(
 			"Something went wrong while sending the message. Please try again later."
