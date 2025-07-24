@@ -111,24 +111,42 @@ const submitForm = () => {
 				},
 				"_LSF5jdTjz3VeANe7"
 			)
-			.then((response) => {
-				toastSuccess("Message sent successfully!");
+			.then(() => {
+				return emailjs.send(
+					"service_5a7s8ep",
+					"template_pcp80n8",
+					{
+						name: form.value.name,
+						email: form.value.email,
+						subject: form.value.subject,
+						message: form.value.message,
+						to_email: "earl.coding@gmail.com",
+					},
+					"_LSF5jdTjz3VeANe7"
+				);
+			})
+			.then(() => {
+				toastSuccess(
+					"Message sent successfully!",
+					"Thank you for reaching out!"
+				);
+				form.value = {
+					name: "",
+					email: "",
+					subject: "",
+					message: "",
+				};
 			})
 			.catch((error) => {
-				toastError("Failed to send message. Please try again later.");
+				toastError(
+					"Failed to send message or auto-reply. Please try again later."
+				);
 			});
 	} catch (error) {
 		toastError(
 			"Something went wrong while sending the message. Please try again later."
 		);
 		return;
-	} finally {
-		form.value = {
-			name: "",
-			email: "",
-			subject: "",
-			message: "",
-		};
 	}
 };
 </script>
