@@ -227,7 +227,7 @@ const submitForm = () => {
 					<div class="projects-grid">
 						<div class="project-card">
 							<div class="project-image">
-								<img src="../public/projects/1.png" />
+								<img src="../public/Projects/1.png" />
 								<button
 									onclick="window.open('https://boottek.fwh.is', '_blank')"
 									class="view-project-btn"
@@ -256,7 +256,7 @@ const submitForm = () => {
 
 						<div class="project-card">
 							<div class="project-image">
-								<img src="../public/projects/2.png" />
+								<img src="../public/Projects/2.png" />
 								<button
 									onclick="window.open('https://rinubi.itch.io/glid', '_blank')"
 									class="view-project-btn"
@@ -285,7 +285,7 @@ const submitForm = () => {
 
 						<div class="project-card">
 							<div class="project-image">
-								<img src="../public/projects/3.png" />
+								<img src="../public/Projects/3.png" />
 								<button
 									onclick="window.open('https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/', '_blank')"
 									class="view-project-btn"
@@ -316,7 +316,7 @@ const submitForm = () => {
 
 						<div class="project-card">
 							<div class="project-image">
-								<img src="../public/projects/4.png" />
+								<img src="../public/Projects/4.png" />
 								<button
 									onclick="window.open('https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/', '_blank')"
 									class="view-project-btn"
