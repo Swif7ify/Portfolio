@@ -291,6 +291,7 @@ watch(loading, (val) => {
 });
 
 const mobileMenuOpen = ref(false);
+const showAllProjects = ref(false);
 const form = ref({
 	name: "",
 	email: "",
@@ -298,9 +299,81 @@ const form = ref({
 	message: "",
 });
 
-// Methods
+const additionalProjects = [
+	{
+		title: "Task Manager App",
+		category: "Web Application",
+		description:
+			"A productivity app built with Vue.js and Firebase for managing daily tasks and projects with real-time collaboration features.",
+		image: "../public/Projects/5.png",
+		tags: ["Vue.js", "Firebase", "CSS3", "JavaScript"],
+		link: "#",
+		status: "In Development",
+	},
+	{
+		title: "Weather Dashboard",
+		category: "API Integration",
+		description:
+			"A responsive weather application that fetches real-time weather data and displays interactive charts and forecasts.",
+		image: "../public/Projects/6.png",
+		tags: ["JavaScript", "API", "Chart.js", "Responsive"],
+		link: "#",
+		status: "Completed",
+	},
+	{
+		title: "E-commerce Landing Page",
+		category: "Frontend Design",
+		description:
+			"A modern, responsive landing page for an e-commerce platform with smooth animations and optimized performance.",
+		image: "../public/Projects/7.png",
+		tags: ["HTML5", "CSS3", "GSAP", "Responsive"],
+		link: "#",
+		status: "Completed",
+	},
+	{
+		title: "Discord Bot",
+		category: "Bot Development",
+		description:
+			"A multi-purpose Discord bot with moderation, music, and gaming features built with Node.js and Discord.js.",
+		image: "../public/Projects/8.png",
+		tags: ["Node.js", "Discord.js", "MongoDB", "API"],
+		link: "#",
+		status: "Active",
+	},
+	{
+		title: "2D Platformer Game",
+		category: "Game Development",
+		description:
+			"A pixel-art 2D platformer game with physics, collectibles, and multiple levels built using Unity and C#.",
+		image: "../public/Projects/9.png",
+		tags: ["Unity", "C#", "2D Physics", "Game Design"],
+		link: "#",
+		status: "In Development",
+	},
+	{
+		title: "Personal Blog",
+		category: "Content Management",
+		description:
+			"A personal blog website with admin panel, markdown support, and SEO optimization built with Nuxt.js.",
+		image: "../public/Projects/10.png",
+		tags: ["Nuxt.js", "Markdown", "SEO", "CMS"],
+		link: "#",
+		status: "Completed",
+	},
+];
+
 const toggleMobileMenu = () => {
 	mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+const toggleAllProjects = () => {
+	showAllProjects.value = !showAllProjects.value;
+};
+
+const openProject = (link) => {
+	if (link && link !== "#") {
+		window.open(link, "_blank");
+	}
 };
 
 const smoothScroll = (event) => {
@@ -659,10 +732,151 @@ const submitForm = () => {
 							</div>
 
 							<div class="view-all">
-								<a href="#" class="btn btn-secondary"
-									>View All Projects</a
+								<button
+									@click="toggleAllProjects"
+									class="btn btn-secondary"
 								>
+									{{
+										showAllProjects
+											? "Show Less Projects"
+											: "View All Projects"
+									}}
+								</button>
 							</div>
+
+							<!-- Additional Projects Modal/Expanded View -->
+							<transition name="fade">
+								<div
+									v-if="showAllProjects"
+									class="all-projects-modal"
+								>
+									<div
+										class="modal-backdrop"
+										@click="toggleAllProjects"
+									></div>
+									<div class="modal-content">
+										<div class="modal-header">
+											<h3>All Projects</h3>
+											<button
+												class="close-btn"
+												@click="toggleAllProjects"
+											>
+												<svg
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="2"
+												>
+													<path
+														d="M18 6L6 18M6 6l12 12"
+													/>
+												</svg>
+											</button>
+										</div>
+										<div class="additional-projects-grid">
+											<div
+												v-for="project in additionalProjects"
+												:key="project.title"
+												class="additional-project-card"
+											>
+												<div
+													class="project-image-small"
+												>
+													<div
+														class="project-placeholder"
+													>
+														<svg
+															width="48"
+															height="48"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															stroke-width="1"
+														>
+															<rect
+																x="3"
+																y="3"
+																width="18"
+																height="18"
+																rx="2"
+															/>
+															<path
+																d="M9 9h6v6H9z"
+															/>
+														</svg>
+													</div>
+													<div
+														class="project-status"
+														:class="
+															project.status
+																.toLowerCase()
+																.replace(
+																	' ',
+																	'-'
+																)
+														"
+													>
+														{{ project.status }}
+													</div>
+												</div>
+												<div
+													class="project-content-small"
+												>
+													<span
+														class="project-category-small"
+														>{{
+															project.category
+														}}</span
+													>
+													<h4
+														class="project-title-small"
+													>
+														{{ project.title }}
+													</h4>
+													<p
+														class="project-description-small"
+													>
+														{{
+															project.description
+														}}
+													</p>
+													<div
+														class="project-tags-small"
+													>
+														<span
+															v-for="tag in project.tags"
+															:key="tag"
+															class="tag-small"
+														>
+															{{ tag }}
+														</span>
+													</div>
+													<button
+														@click="
+															openProject(
+																project.link
+															)
+														"
+														class="btn-small"
+														:disabled="
+															project.link === '#'
+														"
+													>
+														{{
+															project.status ===
+															"In Development"
+																? "Preview"
+																: "View Project"
+														}}
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</transition>
 						</div>
 					</section>
 
@@ -726,7 +940,10 @@ const submitForm = () => {
 										<span class="skill">3D Modeling</span>
 									</div>
 
-									<a href="#" class="btn btn-primary"
+									<a
+										href="https://swif7ify.github.io/Portfolio/resume/resume.pdf"
+										target="_blank"
+										class="btn btn-primary"
 										>Download Resume</a
 									>
 								</div>
@@ -1254,6 +1471,32 @@ const submitForm = () => {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+body {
+	--sb-track-color: #232e33;
+	--sb-thumb-color: #6baf8d;
+	--sb-size: 14px;
+}
+
+*::-webkit-scrollbar {
+	width: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--sb-track-color);
+	border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: var(--sb-thumb-color);
+	border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+	body {
+		scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+	}
 }
 </style>
 
