@@ -1,8 +1,11 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import FloatingShapes from "./components/FloatingShapes.vue";
 import { toastSuccess, toastError } from "./composables/Toast";
 import emailjs from "emailjs-com";
+import gsap from "gsap";
+import ScrollSmoother from "gsap/ScrollSmoother";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 const loading = ref(true);
 
@@ -11,6 +14,238 @@ onMounted(() => {
 		loading.value = false;
 	}, 2000);
 });
+
+watch(loading, async (isLoading) => {
+	if (!isLoading) {
+		await nextTick();
+		setTimeout(() => {
+			gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+			ScrollSmoother.create({
+				wrapper: "#smooth-wrapper",
+				content: "#smooth-content",
+				smooth: 1.2,
+			});
+
+			initAnimations();
+		}, 100);
+	}
+});
+
+const initAnimations = () => {
+	gsap.set(
+		".hero-title, .hero-description, .hero-buttons .btn, .hero-image",
+		{
+			opacity: 0,
+		}
+	);
+
+	gsap.set(".hero-title", { y: 100 });
+	gsap.set(".hero-description", { y: 50 });
+	gsap.set(".hero-buttons .btn", { y: 30 });
+	gsap.set(".hero-image", { x: 100 });
+
+	gsap.timeline()
+		.to(".hero-title", {
+			duration: 0.8,
+			y: 0,
+			opacity: 1,
+			ease: "power3.out",
+			delay: 0.5,
+		})
+		.to(
+			".hero-description",
+			{
+				duration: 0.8,
+				y: 0,
+				opacity: 1,
+				ease: "power3.out",
+			},
+			"-=0.5"
+		)
+		.to(
+			".hero-buttons .btn",
+			{
+				duration: 0.6,
+				y: 0,
+				opacity: 1,
+				stagger: 0.2,
+				ease: "power3.out",
+			},
+			"-=0.3"
+		)
+		.to(
+			".hero-image",
+			{
+				duration: 1,
+				x: 0,
+				opacity: 1,
+				ease: "power3.out",
+			},
+			"-=0.8"
+		);
+
+	gsap.utils.toArray(".section-title").forEach((title) => {
+		gsap.from(title, {
+			scrollTrigger: {
+				trigger: title,
+				start: "top 80%",
+				end: "bottom 20%",
+			},
+			duration: 1,
+			y: 60,
+			opacity: 0,
+			ease: "power3.out",
+		});
+	});
+
+	gsap.utils.toArray(".project-card").forEach((card, index) => {
+		gsap.from(card, {
+			scrollTrigger: {
+				trigger: card,
+				start: "top 85%",
+			},
+			duration: 0.8,
+			y: 80,
+			opacity: 0,
+			delay: index * 0.2,
+			ease: "power3.out",
+		});
+	});
+
+	gsap.utils.toArray(".service-card").forEach((card, index) => {
+		gsap.from(card, {
+			scrollTrigger: {
+				trigger: card,
+				start: "top 85%",
+			},
+			duration: 0.6,
+			y: 60,
+			opacity: 0,
+			delay: index * 0.1,
+			ease: "power3.out",
+		});
+	});
+
+	gsap.utils.toArray(".stat").forEach((stat, index) => {
+		gsap.from(stat, {
+			scrollTrigger: {
+				trigger: stat,
+				start: "top 90%",
+			},
+			duration: 0.8,
+			y: 40,
+			opacity: 0,
+			delay: index * 0.15,
+			ease: "back.out(1.7)",
+		});
+	});
+
+	gsap.timeline({
+		scrollTrigger: {
+			trigger: ".about",
+			start: "top 70%",
+		},
+	})
+		.from(".about-image", {
+			duration: 1,
+			x: -100,
+			opacity: 0,
+			ease: "power3.out",
+		})
+		.from(
+			".about-text",
+			{
+				duration: 1,
+				x: 100,
+				opacity: 0,
+				ease: "power3.out",
+			},
+			"-=0.5"
+		);
+
+	gsap.timeline({
+		scrollTrigger: {
+			trigger: ".contact",
+			start: "top 70%",
+		},
+	})
+		.from(".contact-info", {
+			duration: 0.8,
+			x: -80,
+			opacity: 0,
+			ease: "power3.out",
+		})
+		.from(
+			".contact-form",
+			{
+				duration: 0.8,
+				x: 80,
+				opacity: 0,
+				ease: "power3.out",
+			},
+			"-=0.4"
+		);
+
+	gsap.utils.toArray(".project-card").forEach((card) => {
+		card.addEventListener("mouseenter", () => {
+			gsap.to(card, {
+				duration: 0.3,
+				y: -10,
+				scale: 1.02,
+				ease: "power2.out",
+			});
+		});
+
+		card.addEventListener("mouseleave", () => {
+			gsap.to(card, {
+				duration: 0.3,
+				y: 0,
+				scale: 1,
+				ease: "power2.out",
+			});
+		});
+	});
+
+	gsap.utils.toArray(".btn").forEach((btn) => {
+		btn.addEventListener("mouseenter", () => {
+			gsap.to(btn, {
+				duration: 0.3,
+				scale: 1.05,
+				ease: "power2.out",
+			});
+		});
+
+		btn.addEventListener("mouseleave", () => {
+			gsap.to(btn, {
+				duration: 0.3,
+				scale: 1,
+				ease: "power2.out",
+			});
+		});
+	});
+
+	gsap.to(".hero-image img", {
+		duration: 3,
+		y: -20,
+		repeat: -1,
+		yoyo: true,
+		ease: "power2.inOut",
+	});
+
+	gsap.utils.toArray(".skill").forEach((skill, index) => {
+		gsap.from(skill, {
+			scrollTrigger: {
+				trigger: skill,
+				start: "top 90%",
+			},
+			duration: 0.6,
+			scale: 0,
+			opacity: 0,
+			delay: index * 0.1,
+			ease: "back.out(1.7)",
+		});
+	});
+};
 
 function useCountUp(target, duration = 1200) {
 	const display = ref(0);
@@ -168,7 +403,7 @@ const submitForm = () => {
 				</span>
 			</div>
 		</transition>
-		<div v-show="!loading" class="portfolio" style="position: relative">
+		<div v-if="!loading" class="portfolio" style="position: relative">
 			<FloatingShapes />
 			<header class="header">
 				<div class="container">
@@ -206,514 +441,325 @@ const submitForm = () => {
 				</div>
 			</header>
 
-			<section class="hero" style="position: relative; overflow: hidden">
-				<FloatingShapes />
-				<div class="container">
-					<div class="hero-content">
-						<div class="hero-text">
-							<h1 class="hero-title">
-								Web
-								<span class="accent underline-animate"
-									>Developer</span
-								>
-								& Game Developer
-							</h1>
-							<p class="hero-description">
-								Creating exceptional digital experiences that
-								blend aesthetics with functionality to solve
-								real user problems.
-							</p>
-							<div class="hero-buttons">
-								<a
-									href="#work"
-									class="btn btn-primary"
-									@click="smoothScroll"
-									>View My Work</a
-								>
-								<a
-									href="#contact"
-									class="btn btn-secondary"
-									@click="smoothScroll"
-									>Get In Touch</a
-								>
-							</div>
-						</div>
-
-						<div class="hero-image">
-							<img src="../public/myImage/ORDOVEZ_EARL_2A .jpg" />
-						</div>
-					</div>
-
-					<div class="stats">
-						<div
-							class="stat"
-							v-for="stat in animatedStats"
-							:key="stat.label"
-						>
-							<p class="stat-number">
-								{{ stat.display
-								}}<span v-if="stat.suffix">{{
-									stat.suffix
-								}}</span>
-							</p>
-							<p class="stat-label">{{ stat.label }}</p>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section
-				id="work"
-				class="work"
-				style="position: relative; overflow: hidden"
-			>
-				<FloatingShapes />
-				<div class="container">
-					<div class="section-header">
-						<h2 class="section-title">
-							Featured <span class="accent">Projects</span>
-						</h2>
-						<p class="section-description">
-							A showcase of my most significant projects,
-							demonstrating my skills in web and game development.
-						</p>
-					</div>
-
-					<div class="projects-grid">
-						<div class="project-card">
-							<div class="project-image">
-								<img src="../public/Projects/1.png" />
-								<button
-									onclick="window.open('https://boottek.fwh.is', '_blank')"
-									class="view-project-btn"
-								>
-									Visit Project
-								</button>
-							</div>
-							<div class="project-content">
-								<span class="project-category">Web App</span>
-								<h3 class="project-title">BootTek</h3>
-								<p class="project-description">
-									An online coding platform where you can
-									learn various programming languages through
-									interactive lessons, real-time code editors,
-									and hands-on projects.
-								</p>
-								<div class="project-tags">
-									<span class="tag">Fullstack</span>
-									<span class="tag">PostgreSQL</span>
-									<span class="tag">UI/UX Design</span>
-									<span class="tag">Node.js</span>
-									<span class="tag">Vue.js</span>
+			<div id="smooth-wrapper">
+				<div id="smooth-content">
+					<section
+						class="hero"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="hero-content">
+								<div class="hero-text">
+									<h1 class="hero-title">
+										Web
+										<span class="accent underline-animate"
+											>Developer</span
+										>
+										& Game Developer
+									</h1>
+									<p class="hero-description">
+										Creating exceptional digital experiences
+										that blend aesthetics with functionality
+										to solve real user problems.
+									</p>
+									<div class="hero-buttons">
+										<a
+											href="#work"
+											class="btn btn-primary"
+											@click="smoothScroll"
+											>View My Work</a
+										>
+										<a
+											href="#contact"
+											class="btn btn-secondary"
+											@click="smoothScroll"
+											>Get In Touch</a
+										>
+									</div>
 								</div>
-							</div>
-						</div>
 
-						<div class="project-card">
-							<div class="project-image">
-								<img src="../public/Projects/2.png" />
-								<button
-									onclick="window.open('https://rinubi.itch.io/glid', '_blank')"
-									class="view-project-btn"
-								>
-									View Project
-								</button>
-							</div>
-							<div class="project-content">
-								<span class="project-category"
-									>Game Development</span
-								>
-								<h3 class="project-title">Clashing Grid</h3>
-								<p class="project-description">
-									Python game built with Pygame. It features
-									local and multiplayer modes where players
-									expand their pieces on a grid, aiming to
-									outmaneuver and outscore their opponent.
-								</p>
-								<div class="project-tags">
-									<span class="tag">Game Design</span>
-									<span class="tag">Pygame</span>
-									<span class="tag">Multiplayer</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="project-card">
-							<div class="project-image">
-								<img src="../public/Projects/3.png" />
-								<button
-									onclick="window.open('https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/', '_blank')"
-									class="view-project-btn"
-								>
-									View Project
-								</button>
-							</div>
-							<div class="project-content">
-								<span class="project-category"
-									>Robotics Simulation</span
-								>
-								<h3 class="project-title">
-									HydroBot Simulator
-								</h3>
-								<p class="project-description">
-									A professional-grade underwater search and
-									rescue simulation system featuring advanced
-									sonar navigation and optical sensor.
-								</p>
-								<div class="project-tags">
-									<span class="tag">Three.js</span>
-									<span class="tag">Fusion 360</span>
-									<span class="tag">3D Modelling</span>
-									<span class="tag">Vue.js</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="project-card">
-							<div class="project-image">
-								<img src="../public/Projects/4.png" />
-								<button
-									onclick="window.open('https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/', '_blank')"
-									class="view-project-btn"
-								>
-									View Project
-								</button>
-							</div>
-							<div class="project-content">
-								<span class="project-category"
-									>Robotics Simulation</span
-								>
-								<h3 class="project-title">
-									Autonomous Robot Pathfinding Simulator
-								</h3>
-								<p class="project-description">
-									A 3D autonomous search and
-									rescue/pathfinding simulator built with Vue
-									3, Vite, and Three.js. Simulate robot
-									navigation, LiDAR scanning, and AI-driven
-									search patterns in a dynamic environment.
-								</p>
-								<div class="project-tags">
-									<span class="tag">Three.js</span>
-									<span class="tag">Vue.js</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="view-all">
-						<a href="#" class="btn btn-secondary"
-							>View All Projects</a
-						>
-					</div>
-				</div>
-			</section>
-
-			<section
-				id="about"
-				class="about"
-				style="position: relative; overflow: hidden"
-			>
-				<FloatingShapes />
-				<div class="container">
-					<div class="about-content">
-						<div class="about-image">
-							<div class="about-placeholder">
-								<div class="profile-circle">
+								<div class="hero-image">
 									<img
-										src="../public/myImage/IMG_20250623_112039.jpg"
+										src="../public/myImage/ORDOVEZ_EARL_2A .jpg"
 									/>
 								</div>
 							</div>
-						</div>
 
-						<div class="about-text">
-							<h2 class="section-title">
-								About <span class="accent">Me</span>
-							</h2>
-							<p class="about-description">
-								Hi, I'm Earl Romeo Ordovez, a passionate web and
-								game developer with a knack for creating
-								immersive digital experiences. With a strong
-								background in both frontend and backend
-								development, I specialize in building intuitive,
-								user-friendly applications that not only look
-								great but also perform seamlessly.
-							</p>
-							<p class="about-description">
-								I have a keen interest in game development,
-								leveraging my skills in 3D modeling and
-								programming to create engaging and interactive
-								games. My approach combines creativity with
-								technical expertise, ensuring that every project
-								is not only functional but also visually
-								stunning.
-							</p>
-
-							<h3 class="skills-title">My Skills</h3>
-							<div class="skills">
-								<span class="skill">UI & UX Design</span>
-								<span class="skill">Web Development</span>
-								<span class="skill">Game Development</span>
-								<span class="skill"
-									>Application Development</span
+							<div class="stats">
+								<div
+									class="stat"
+									v-for="stat in animatedStats"
+									:key="stat.label"
 								>
-								<span class="skill">3D Modeling</span>
+									<p class="stat-number">
+										{{ stat.display
+										}}<span v-if="stat.suffix">{{
+											stat.suffix
+										}}</span>
+									</p>
+									<p class="stat-label">{{ stat.label }}</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section
+						id="work"
+						class="work"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="section-header">
+								<h2 class="section-title">
+									Featured
+									<span class="accent">Projects</span>
+								</h2>
+								<p class="section-description">
+									A showcase of my most significant projects,
+									demonstrating my skills in web and game
+									development.
+								</p>
 							</div>
 
-							<a href="#" class="btn btn-primary"
-								>Download Resume</a
-							>
-						</div>
-					</div>
-				</div>
-			</section>
+							<div class="projects-grid">
+								<div class="project-card">
+									<div class="project-image">
+										<img src="../public/Projects/1.png" />
+										<button
+											onclick="window.open('https://boottek.fwh.is', '_blank')"
+											class="view-project-btn"
+										>
+											Visit Project
+										</button>
+									</div>
+									<div class="project-content">
+										<span class="project-category"
+											>Web App</span
+										>
+										<h3 class="project-title">BootTek</h3>
+										<p class="project-description">
+											An online coding platform where you
+											can learn various programming
+											languages through interactive
+											lessons, real-time code editors, and
+											hands-on projects.
+										</p>
+										<div class="project-tags">
+											<span class="tag">Fullstack</span>
+											<span class="tag">PostgreSQL</span>
+											<span class="tag"
+												>UI/UX Design</span
+											>
+											<span class="tag">Node.js</span>
+											<span class="tag">Vue.js</span>
+										</div>
+									</div>
+								</div>
 
-			<section
-				id="services"
-				class="services"
-				style="position: relative; overflow: hidden"
-			>
-				<FloatingShapes />
-				<div class="container">
-					<div class="section-header centered">
-						<h2 class="section-title">
-							Things <span class="accent">I Do</span>
-						</h2>
-						<p class="section-description">
-							Here are some of the projects and activities I work
-							on as a student developer and learner.
-						</p>
-					</div>
+								<div class="project-card">
+									<div class="project-image">
+										<img src="../public/Projects/2.png" />
+										<button
+											onclick="window.open('https://rinubi.itch.io/glid', '_blank')"
+											class="view-project-btn"
+										>
+											View Project
+										</button>
+									</div>
+									<div class="project-content">
+										<span class="project-category"
+											>Game Development</span
+										>
+										<h3 class="project-title">
+											Clashing Grid
+										</h3>
+										<p class="project-description">
+											Python game built with Pygame. It
+											features local and multiplayer modes
+											where players expand their pieces on
+											a grid, aiming to outmaneuver and
+											outscore their opponent.
+										</p>
+										<div class="project-tags">
+											<span class="tag">Game Design</span>
+											<span class="tag">Pygame</span>
+											<span class="tag">Multiplayer</span>
+										</div>
+									</div>
+								</div>
 
-					<div class="services-grid">
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- Web Projects Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path
-										d="M4 17v-2a4 4 0 014-4h8a4 4 0 014 4v2"
-									/>
-									<rect
-										x="2"
-										y="7"
-										width="20"
-										height="8"
-										rx="2"
-									/>
-									<path d="M6 11v2" />
-									<path d="M18 11v2" />
-								</svg>
+								<div class="project-card">
+									<div class="project-image">
+										<img src="../public/Projects/3.png" />
+										<button
+											onclick="window.open('https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/', '_blank')"
+											class="view-project-btn"
+										>
+											View Project
+										</button>
+									</div>
+									<div class="project-content">
+										<span class="project-category"
+											>Robotics Simulation</span
+										>
+										<h3 class="project-title">
+											HydroBot Simulator
+										</h3>
+										<p class="project-description">
+											A professional-grade underwater
+											search and rescue simulation system
+											featuring advanced sonar navigation
+											and optical sensor.
+										</p>
+										<div class="project-tags">
+											<span class="tag">Three.js</span>
+											<span class="tag">Fusion 360</span>
+											<span class="tag"
+												>3D Modelling</span
+											>
+											<span class="tag">Vue.js</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="project-card">
+									<div class="project-image">
+										<img src="../public/Projects/4.png" />
+										<button
+											onclick="window.open('https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/', '_blank')"
+											class="view-project-btn"
+										>
+											View Project
+										</button>
+									</div>
+									<div class="project-content">
+										<span class="project-category"
+											>Robotics Simulation</span
+										>
+										<h3 class="project-title">
+											Autonomous Robot Pathfinding
+											Simulator
+										</h3>
+										<p class="project-description">
+											A 3D autonomous search and
+											rescue/pathfinding simulator built
+											with Vue 3, Vite, and Three.js.
+											Simulate robot navigation, LiDAR
+											scanning, and AI-driven search
+											patterns in a dynamic environment.
+										</p>
+										<div class="project-tags">
+											<span class="tag">Three.js</span>
+											<span class="tag">Vue.js</span>
+										</div>
+									</div>
+								</div>
 							</div>
-							<h3 class="service-title">Web Projects</h3>
-							<p class="service-description">
-								Building websites and web apps for class, clubs,
-								and personal learning.
-							</p>
-						</div>
 
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- Game Dev Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+							<div class="view-all">
+								<a href="#" class="btn btn-secondary"
+									>View All Projects</a
 								>
-									<rect
-										x="3"
-										y="3"
-										width="18"
-										height="18"
-										rx="2"
-									/>
-									<path d="M8 8h8v8H8z" />
-								</svg>
 							</div>
-							<h3 class="service-title">Game Development</h3>
-							<p class="service-description">
-								Creating games for fun, competitions, and
-								learning new programming concepts.
-							</p>
 						</div>
+					</section>
 
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- App Dev Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<rect
-										x="4"
-										y="4"
-										width="16"
-										height="16"
-										rx="2"
-									/>
-									<path d="M8 8h8v8H8z" />
-								</svg>
+					<section
+						id="about"
+						class="about"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="about-content">
+								<div class="about-image">
+									<div class="about-placeholder">
+										<div class="profile-circle">
+											<img
+												src="../public/myImage/IMG_20250623_112039.jpg"
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div class="about-text">
+									<h2 class="section-title">
+										About <span class="accent">Me</span>
+									</h2>
+									<p class="about-description">
+										Hi, I'm Earl Romeo Ordovez, a passionate
+										web and game developer with a knack for
+										creating immersive digital experiences.
+										With a strong background in both
+										frontend and backend development, I
+										specialize in building intuitive,
+										user-friendly applications that not only
+										look great but also perform seamlessly.
+									</p>
+									<p class="about-description">
+										I have a keen interest in game
+										development, leveraging my skills in 3D
+										modeling and programming to create
+										engaging and interactive games. My
+										approach combines creativity with
+										technical expertise, ensuring that every
+										project is not only functional but also
+										visually stunning.
+									</p>
+
+									<h3 class="skills-title">My Skills</h3>
+									<div class="skills">
+										<span class="skill"
+											>UI & UX Design</span
+										>
+										<span class="skill"
+											>Web Development</span
+										>
+										<span class="skill"
+											>Game Development</span
+										>
+										<span class="skill"
+											>Application Development</span
+										>
+										<span class="skill">3D Modeling</span>
+									</div>
+
+									<a href="#" class="btn btn-primary"
+										>Download Resume</a
+									>
+								</div>
 							</div>
-							<h3 class="service-title">App Development</h3>
-							<p class="service-description">
-								Building simple applications for school projects
-								and personal use.
-							</p>
 						</div>
+					</section>
 
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- Learning Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<circle cx="12" cy="12" r="10" />
-									<path d="M12 8v4l3 3" />
-								</svg>
+					<section
+						id="services"
+						class="services"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="section-header centered">
+								<h2 class="section-title">
+									Things <span class="accent">I Do</span>
+								</h2>
+								<p class="section-description">
+									Here are some of the projects and activities
+									I work on as a student developer and
+									learner.
+								</p>
 							</div>
-							<h3 class="service-title">
-								Learning & Experimenting
-							</h3>
-							<p class="service-description">
-								Trying out new technologies, frameworks, and
-								programming languages.
-							</p>
-						</div>
 
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- Collaboration Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path d="M12 20v-6" />
-									<path d="M6 12l6-6 6 6" />
-								</svg>
-							</div>
-							<h3 class="service-title">Collaboration</h3>
-							<p class="service-description">
-								Working with classmates on group projects and
-								coding challenges.
-							</p>
-						</div>
-						<div class="service-card">
-							<div class="service-icon">
-								<!-- Prototyping Icon -->
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<rect
-										x="3"
-										y="3"
-										width="18"
-										height="18"
-										rx="2"
-									/>
-									<path d="M8 8h8v8H8z" />
-									<path d="M12 12v4" />
-									<path d="M12 12h4" />
-								</svg>
-							</div>
-							<h3 class="service-title">Prototyping</h3>
-							<p class="service-description">
-								Creating interactive prototypes for apps, games,
-								and websites to test ideas and get feedback
-								before building the final version.
-							</p>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section
-				class="testimonials"
-				style="position: relative; overflow: hidden"
-			>
-				<FloatingShapes />
-				<div class="container">
-					<div class="section-header centered">
-						<h2 class="section-title">
-							Client <span class="accent">Testimonials</span>
-						</h2>
-						<p class="section-description">
-							Looking forward to working with you!
-						</p>
-					</div>
-				</div>
-			</section>
-
-			<section
-				id="contact"
-				class="contact"
-				style="position: relative; overflow: hidden"
-			>
-				<FloatingShapes />
-				<div class="container">
-					<div class="contact-content">
-						<div class="contact-info">
-							<h2 class="section-title">
-								Let's <span class="accent">Connect</span>
-							</h2>
-							<p class="contact-description">
-								Have a project in mind? Let's discuss how I can
-								help bring your vision to life. Fill out the
-								form and I'll get back to you within 24 hours.
-							</p>
-
-							<div class="contact-details">
-								<div class="contact-item">
-									<div class="contact-icon">
+							<div class="services-grid">
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- Web Projects Icon -->
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
+											width="32"
+											height="32"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -722,19 +768,33 @@ const submitForm = () => {
 											stroke-linejoin="round"
 										>
 											<path
-												d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-											></path>
+												d="M4 17v-2a4 4 0 014-4h8a4 4 0 014 4v2"
+											/>
+											<rect
+												x="2"
+												y="7"
+												width="20"
+												height="8"
+												rx="2"
+											/>
+											<path d="M6 11v2" />
+											<path d="M18 11v2" />
 										</svg>
 									</div>
-									<span>earl.coding@gmail.com</span>
+									<h3 class="service-title">Web Projects</h3>
+									<p class="service-description">
+										Building websites and web apps for
+										class, clubs, and personal learning.
+									</p>
 								</div>
 
-								<div class="contact-item">
-									<div class="contact-icon">
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- Game Dev Icon -->
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
+											width="32"
+											height="32"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -742,20 +802,32 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<path
-												d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-											></path>
+											<rect
+												x="3"
+												y="3"
+												width="18"
+												height="18"
+												rx="2"
+											/>
+											<path d="M8 8h8v8H8z" />
 										</svg>
 									</div>
-									<span>09991884933</span>
+									<h3 class="service-title">
+										Game Development
+									</h3>
+									<p class="service-description">
+										Creating games for fun, competitions,
+										and learning new programming concepts.
+									</p>
 								</div>
 
-								<div class="contact-item">
-									<div class="contact-icon">
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- App Dev Icon -->
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
+											width="32"
+											height="32"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -763,205 +835,416 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<path
-												d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-											></path>
-											<path
-												d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-											></path>
+											<rect
+												x="4"
+												y="4"
+												width="16"
+												height="16"
+												rx="2"
+											/>
+											<path d="M8 8h8v8H8z" />
 										</svg>
 									</div>
-									<span
-										>Philippines, Zambales Olongapo
-										City</span
+									<h3 class="service-title">
+										App Development
+									</h3>
+									<p class="service-description">
+										Building simple applications for school
+										projects and personal use.
+									</p>
+								</div>
+
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- Learning Icon -->
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="32"
+											height="32"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="1.5"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<circle cx="12" cy="12" r="10" />
+											<path d="M12 8v4l3 3" />
+										</svg>
+									</div>
+									<h3 class="service-title">
+										Learning & Experimenting
+									</h3>
+									<p class="service-description">
+										Trying out new technologies, frameworks,
+										and programming languages.
+									</p>
+								</div>
+
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- Collaboration Icon -->
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="32"
+											height="32"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="1.5"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<path d="M12 20v-6" />
+											<path d="M6 12l6-6 6 6" />
+										</svg>
+									</div>
+									<h3 class="service-title">Collaboration</h3>
+									<p class="service-description">
+										Working with classmates on group
+										projects and coding challenges.
+									</p>
+								</div>
+								<div class="service-card">
+									<div class="service-icon">
+										<!-- Prototyping Icon -->
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="32"
+											height="32"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="1.5"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<rect
+												x="3"
+												y="3"
+												width="18"
+												height="18"
+												rx="2"
+											/>
+											<path d="M8 8h8v8H8z" />
+											<path d="M12 12v4" />
+											<path d="M12 12h4" />
+										</svg>
+									</div>
+									<h3 class="service-title">Prototyping</h3>
+									<p class="service-description">
+										Creating interactive prototypes for
+										apps, games, and websites to test ideas
+										and get feedback before building the
+										final version.
+									</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section
+						class="testimonials"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="section-header centered">
+								<h2 class="section-title">
+									Client
+									<span class="accent">Testimonials</span>
+								</h2>
+								<p class="section-description">
+									Looking forward to working with you!
+								</p>
+							</div>
+						</div>
+					</section>
+
+					<section
+						id="contact"
+						class="contact"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="contact-content">
+								<div class="contact-info">
+									<h2 class="section-title">
+										Let's
+										<span class="accent">Connect</span>
+									</h2>
+									<p class="contact-description">
+										Have a project in mind? Let's discuss
+										how I can help bring your vision to
+										life. Fill out the form and I'll get
+										back to you within 24 hours.
+									</p>
+
+									<div class="contact-details">
+										<div class="contact-item">
+											<div class="contact-icon">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="1.5"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												>
+													<path
+														d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+													></path>
+												</svg>
+											</div>
+											<span>earl.coding@gmail.com</span>
+										</div>
+
+										<div class="contact-item">
+											<div class="contact-icon">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="1.5"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												>
+													<path
+														d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+													></path>
+												</svg>
+											</div>
+											<span>09991884933</span>
+										</div>
+
+										<div class="contact-item">
+											<div class="contact-icon">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="1.5"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												>
+													<path
+														d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+													></path>
+													<path
+														d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+													></path>
+												</svg>
+											</div>
+											<span
+												>Philippines, Zambales Olongapo
+												City</span
+											>
+										</div>
+									</div>
+
+									<div class="social-links">
+										<a
+											href="https://github.com/Swif7ify"
+											target="_blank"
+											class="social-link"
+										>
+											<svg
+												width="24"
+												height="24"
+												fill="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+												></path>
+											</svg>
+										</a>
+										<a
+											href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
+											target="_blank"
+											class="social-link"
+										>
+											<svg
+												width="24"
+												height="24"
+												fill="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
+												></path>
+											</svg>
+										</a>
+										<a
+											href="https://facebook.com/Swif7ify"
+											target="_blank"
+											class="social-link"
+										>
+											<svg
+												width="24"
+												height="24"
+												fill="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
+												/>
+											</svg>
+										</a>
+									</div>
+								</div>
+
+								<div class="contact-form">
+									<form @submit.prevent="submitForm">
+										<div class="form-group">
+											<label for="name">Name</label>
+											<input
+												type="text"
+												id="name"
+												v-model="form.name"
+												placeholder="Your name"
+											/>
+										</div>
+
+										<div class="form-group">
+											<label for="email">Email</label>
+											<input
+												type="email"
+												id="email"
+												v-model="form.email"
+												placeholder="Your email"
+											/>
+										</div>
+
+										<div class="form-group">
+											<label for="subject">Subject</label>
+											<input
+												type="text"
+												id="subject"
+												v-model="form.subject"
+												placeholder="Subject"
+											/>
+										</div>
+
+										<div class="form-group">
+											<label for="message">Message</label>
+											<textarea
+												id="message"
+												rows="5"
+												v-model="form.message"
+												placeholder="Your message"
+											></textarea>
+										</div>
+
+										<button
+											type="submit"
+											class="btn btn-primary full-width"
+										>
+											Send Message
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<footer class="footer">
+						<div class="container">
+							<div class="footer-content">
+								<div class="footer-brand">
+									<a href="#" class="logo">1DEV</a>
+									<p class="footer-tagline">
+										Creating exceptional digital
+										experiences.
+									</p>
+								</div>
+
+								<div class="footer-nav">
+									<a href="#work" @click="smoothScroll"
+										>Work</a
+									>
+									<a href="#about" @click="smoothScroll"
+										>About</a
+									>
+									<a href="#services" @click="smoothScroll"
+										>Services</a
+									>
+									<a href="#contact" @click="smoothScroll"
+										>Contact</a
 									>
 								</div>
 							</div>
 
-							<div class="social-links">
-								<a
-									href="https://github.com/Swif7ify"
-									target="_blank"
-									class="social-link"
-								>
-									<svg
-										width="24"
-										height="24"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+							<div class="footer-bottom">
+								<p class="copyright">
+									© 2025 1DEV. All rights reserved.
+								</p>
+
+								<div class="social-links small">
+									<a
+										href="https://github.com/Swif7ify"
+										target="_blank"
+										class="social-link"
 									>
-										<path
-											d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-										></path>
-									</svg>
-								</a>
-								<a
-									href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
-									target="_blank"
-									class="social-link"
-								>
-									<svg
-										width="24"
-										height="24"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											width="20"
+											height="20"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+											></path>
+										</svg>
+									</a>
+									<a
+										href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
+										target="_blank"
+										class="social-link"
 									>
-										<path
-											d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
-										></path>
-									</svg>
-								</a>
-								<a
-									href="https://facebook.com/Swif7ify"
-									target="_blank"
-									class="social-link"
-								>
-									<svg
-										width="24"
-										height="24"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											width="20"
+											height="20"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
+											></path>
+										</svg>
+									</a>
+									<a
+										href="https://facebook.com/Swif7ify"
+										target="_blank"
+										class="social-link"
 									>
-										<path
-											d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
-										/>
-									</svg>
-								</a>
+										<svg
+											width="24"
+											height="24"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
+											/>
+										</svg>
+									</a>
+								</div>
 							</div>
 						</div>
-
-						<div class="contact-form">
-							<form @submit.prevent="submitForm">
-								<div class="form-group">
-									<label for="name">Name</label>
-									<input
-										type="text"
-										id="name"
-										v-model="form.name"
-										placeholder="Your name"
-									/>
-								</div>
-
-								<div class="form-group">
-									<label for="email">Email</label>
-									<input
-										type="email"
-										id="email"
-										v-model="form.email"
-										placeholder="Your email"
-									/>
-								</div>
-
-								<div class="form-group">
-									<label for="subject">Subject</label>
-									<input
-										type="text"
-										id="subject"
-										v-model="form.subject"
-										placeholder="Subject"
-									/>
-								</div>
-
-								<div class="form-group">
-									<label for="message">Message</label>
-									<textarea
-										id="message"
-										rows="5"
-										v-model="form.message"
-										placeholder="Your message"
-									></textarea>
-								</div>
-
-								<button
-									type="submit"
-									class="btn btn-primary full-width"
-								>
-									Send Message
-								</button>
-							</form>
-						</div>
-					</div>
+					</footer>
 				</div>
-			</section>
-
-			<footer class="footer">
-				<div class="container">
-					<div class="footer-content">
-						<div class="footer-brand">
-							<a href="#" class="logo">1DEV</a>
-							<p class="footer-tagline">
-								Creating exceptional digital experiences.
-							</p>
-						</div>
-
-						<div class="footer-nav">
-							<a href="#work" @click="smoothScroll">Work</a>
-							<a href="#about" @click="smoothScroll">About</a>
-							<a href="#services" @click="smoothScroll"
-								>Services</a
-							>
-							<a href="#contact" @click="smoothScroll">Contact</a>
-						</div>
-					</div>
-
-					<div class="footer-bottom">
-						<p class="copyright">
-							© 2025 1DEV. All rights reserved.
-						</p>
-
-						<div class="social-links small">
-							<a
-								href="https://github.com/Swif7ify"
-								target="_blank"
-								class="social-link"
-							>
-								<svg
-									width="20"
-									height="20"
-									fill="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-									></path>
-								</svg>
-							</a>
-							<a
-								href="https://linkedin.com/in/earl-romeo-ordovez-a73a36322"
-								target="_blank"
-								class="social-link"
-							>
-								<svg
-									width="20"
-									height="20"
-									fill="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
-									></path>
-								</svg>
-							</a>
-							<a
-								href="https://facebook.com/Swif7ify"
-								target="_blank"
-								class="social-link"
-							>
-								<svg
-									width="24"
-									height="24"
-									fill="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
-									/>
-								</svg>
-							</a>
-						</div>
-					</div>
-				</div>
-			</footer>
+			</div>
 		</div>
 	</div>
 </template>
