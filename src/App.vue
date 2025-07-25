@@ -368,6 +368,11 @@ const toggleMobileMenu = () => {
 
 const toggleAllProjects = () => {
 	showAllProjects.value = !showAllProjects.value;
+	if (showAllProjects.value) {
+		document.body.style.overflow = "hidden";
+		return;
+	}
+	document.body.style.overflow = "auto";
 };
 
 const openProject = (link) => {
@@ -743,140 +748,6 @@ const submitForm = () => {
 									}}
 								</button>
 							</div>
-
-							<!-- Additional Projects Modal/Expanded View -->
-							<transition name="fade">
-								<div
-									v-if="showAllProjects"
-									class="all-projects-modal"
-								>
-									<div
-										class="modal-backdrop"
-										@click="toggleAllProjects"
-									></div>
-									<div class="modal-content">
-										<div class="modal-header">
-											<h3>All Projects</h3>
-											<button
-												class="close-btn"
-												@click="toggleAllProjects"
-											>
-												<svg
-													width="24"
-													height="24"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-												>
-													<path
-														d="M18 6L6 18M6 6l12 12"
-													/>
-												</svg>
-											</button>
-										</div>
-										<div class="additional-projects-grid">
-											<div
-												v-for="project in additionalProjects"
-												:key="project.title"
-												class="additional-project-card"
-											>
-												<div
-													class="project-image-small"
-												>
-													<div
-														class="project-placeholder"
-													>
-														<svg
-															width="48"
-															height="48"
-															viewBox="0 0 24 24"
-															fill="none"
-															stroke="currentColor"
-															stroke-width="1"
-														>
-															<rect
-																x="3"
-																y="3"
-																width="18"
-																height="18"
-																rx="2"
-															/>
-															<path
-																d="M9 9h6v6H9z"
-															/>
-														</svg>
-													</div>
-													<div
-														class="project-status"
-														:class="
-															project.status
-																.toLowerCase()
-																.replace(
-																	' ',
-																	'-'
-																)
-														"
-													>
-														{{ project.status }}
-													</div>
-												</div>
-												<div
-													class="project-content-small"
-												>
-													<span
-														class="project-category-small"
-														>{{
-															project.category
-														}}</span
-													>
-													<h4
-														class="project-title-small"
-													>
-														{{ project.title }}
-													</h4>
-													<p
-														class="project-description-small"
-													>
-														{{
-															project.description
-														}}
-													</p>
-													<div
-														class="project-tags-small"
-													>
-														<span
-															v-for="tag in project.tags"
-															:key="tag"
-															class="tag-small"
-														>
-															{{ tag }}
-														</span>
-													</div>
-													<button
-														@click="
-															openProject(
-																project.link
-															)
-														"
-														class="btn-small"
-														:disabled="
-															project.link === '#'
-														"
-													>
-														{{
-															project.status ===
-															"In Development"
-																? "Preview"
-																: "View Project"
-														}}
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</transition>
 						</div>
 					</section>
 
@@ -1464,6 +1335,99 @@ const submitForm = () => {
 			</div>
 		</div>
 	</div>
+	<!-- Additional Projects Modal/Expanded View -->
+	<transition name="fade">
+		<div v-if="showAllProjects" class="all-projects-modal">
+			<div class="modal-backdrop" @click="toggleAllProjects"></div>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3>All Projects</h3>
+					<button class="close-btn" @click="toggleAllProjects">
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path d="M18 6L6 18M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+				<div class="additional-projects-grid">
+					<div
+						v-for="project in additionalProjects"
+						:key="project.title"
+						class="additional-project-card"
+					>
+						<div class="project-image-small">
+							<div class="project-placeholder">
+								<svg
+									width="48"
+									height="48"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1"
+								>
+									<rect
+										x="3"
+										y="3"
+										width="18"
+										height="18"
+										rx="2"
+									/>
+									<path d="M9 9h6v6H9z" />
+								</svg>
+							</div>
+							<div
+								class="project-status"
+								:class="
+									project.status
+										.toLowerCase()
+										.replace(' ', '-')
+								"
+							>
+								{{ project.status }}
+							</div>
+						</div>
+						<div class="project-content-small">
+							<span class="project-category-small">{{
+								project.category
+							}}</span>
+							<h4 class="project-title-small">
+								{{ project.title }}
+							</h4>
+							<p class="project-description-small">
+								{{ project.description }}
+							</p>
+							<div class="project-tags-small">
+								<span
+									v-for="tag in project.tags"
+									:key="tag"
+									class="tag-small"
+								>
+									{{ tag }}
+								</span>
+							</div>
+							<button
+								@click="openProject(project.link)"
+								class="btn-small"
+								:disabled="project.link === '#'"
+							>
+								{{
+									project.status === "In Development"
+										? "Preview"
+										: "View Project"
+								}}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</transition>
 </template>
 
 <style>

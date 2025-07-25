@@ -1270,8 +1270,14 @@ textarea {
 	padding: 20px;
 }
 
+.all-projects-modal,
+.modal-content {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Roboto, sans-serif;
+}
+
 .modal-backdrop {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
