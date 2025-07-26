@@ -275,7 +275,7 @@ function useCountUp(target, duration = 1200) {
 
 const stats = [
 	{ label: "Years Experience", value: 2, suffix: "+" },
-	{ label: "Projects Completed", value: 6, suffix: "+" },
+	{ label: "Projects Completed", value: 10, suffix: "+" },
 	{ label: "Client Satisfaction", value: 100, suffix: "%" },
 ];
 
@@ -301,62 +301,102 @@ const form = ref({
 
 const additionalProjects = [
 	{
-		title: "Task Manager App",
+		title: "BootTek",
 		category: "Web Application",
 		description:
-			"A productivity app built with Vue.js and Firebase for managing daily tasks and projects with real-time collaboration features.",
-		image: "../public/Projects/5.png",
-		tags: ["Vue.js", "Firebase", "CSS3", "JavaScript"],
-		link: "#",
-		status: "In Development",
-	},
-	{
-		title: "Weather Dashboard",
-		category: "API Integration",
-		description:
-			"A responsive weather application that fetches real-time weather data and displays interactive charts and forecasts.",
-		image: "../public/Projects/6.png",
-		tags: ["JavaScript", "API", "Chart.js", "Responsive"],
-		link: "#",
+			"An online coding platform where you can learn various programming languages through interactive lessons, real-time code editors, and hands-on projects.",
+		image: "Projects/1.png",
+		tags: ["Fullstack", "PostgreSQL", "UI/UX Design", "Node.js", "Vue.js"],
+		link: "https://boottek.fwh.is",
 		status: "Completed",
 	},
 	{
-		title: "E-commerce Landing Page",
-		category: "Frontend Design",
-		description:
-			"A modern, responsive landing page for an e-commerce platform with smooth animations and optimized performance.",
-		image: "../public/Projects/7.png",
-		tags: ["HTML5", "CSS3", "GSAP", "Responsive"],
-		link: "#",
-		status: "Completed",
-	},
-	{
-		title: "Discord Bot",
-		category: "Bot Development",
-		description:
-			"A multi-purpose Discord bot with moderation, music, and gaming features built with Node.js and Discord.js.",
-		image: "../public/Projects/8.png",
-		tags: ["Node.js", "Discord.js", "MongoDB", "API"],
-		link: "#",
-		status: "Active",
-	},
-	{
-		title: "2D Platformer Game",
+		title: "Clashing Grid",
 		category: "Game Development",
 		description:
-			"A pixel-art 2D platformer game with physics, collectibles, and multiple levels built using Unity and C#.",
-		image: "../public/Projects/9.png",
-		tags: ["Unity", "C#", "2D Physics", "Game Design"],
-		link: "#",
-		status: "In Development",
+			"Python game built with Pygame. It features local and multiplayer modes where players expand their pieces on a grid, aiming to outmaneuver and outscore their opponent.",
+		image: "Projects/2.png",
+		tags: ["Game Design", "Python", "Pygame", "Multiplayer"],
+		link: "https://rinubi.itch.io/glid",
+		status: "Completed",
 	},
 	{
-		title: "Personal Blog",
-		category: "Content Management",
+		title: "HydroBot Simulator",
+		category: "Robotics Simulation",
 		description:
-			"A personal blog website with admin panel, markdown support, and SEO optimization built with Nuxt.js.",
-		image: "../public/Projects/10.png",
-		tags: ["Nuxt.js", "Markdown", "SEO", "CMS"],
+			"A professional-grade underwater search and rescue simulation system featuring advanced sonar navigation and optical sensor.",
+		image: "Projects/3.png",
+		tags: ["Three.js", "Fusion 360", "3D Modelling", "Vue.js"],
+		link: "https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/",
+		status: "Completed",
+	},
+	{
+		title: "Autonomous Robot Pathfinding Simulator",
+		category: "Robotics Simulation",
+		description:
+			"A 3D autonomous search and rescue/pathfinding simulator built with Vue 3, Vite, and Three.js. Simulate robot navigation, LiDAR scanning, and AI-driven search patterns in a dynamic environment.",
+		image: "Projects/4.png",
+		tags: ["Three.js", "Vue.js", "Simulation"],
+		link: "https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/",
+		status: "Completed",
+	},
+	{
+		title: "MCServerhost Automation",
+		category: "DevOps",
+		description:
+			"Python-based monitoring tool for automatically checking and starting a Minecraft server hosted on MCServerHost.com. It uses Selenium WebDriver to automate browser actions and includes a built-in HTTP health check server for status monitoring.",
+		image: "Projects/5.png",
+		tags: ["Python", "Selenium"],
+		link: "https://github.com/Swif7ify/MCServerhost-Server-AutoStart",
+		status: "Completed",
+	},
+	{
+		title: "OCPL Logging",
+		category: "Application Development",
+		description:
+			"A modern digital logging and attendance system for the Olongapo City Public Library, built with Electron and JavaScript. This application streamlines visitor registration, attendance tracking, and report generation, ensuring secure and efficient data management.",
+		image: "Projects/6.png",
+		tags: ["Electron", "Javascript", "Excel", "Responsive"],
+		link: "https://github.com/Swif7ify/OCPL-Logging",
+		status: "Completed",
+	},
+	{
+		title: "All In",
+		category: "Game Development",
+		description:
+			'All-In is a high-risk, high-reward game designed to challenge your luck and train your "SKILLS" and "DECISION MAKING". This game encourages strategic thinking and quick judgment.',
+		image: "Projects/7.png",
+		tags: ["Python", "Pygame", "Game Save"],
+		link: "https://rinubi.itch.io/all-in",
+		status: "Completed",
+	},
+	{
+		title: "Cartify",
+		category: "Bot Development",
+		description:
+			"First Web Development Project. Cartify offers a wide variety of car selections, allowing you to effortlessly browse and explore your dream car. With an intuitive interface and detailed listings, finding the perfect car has never been easier.",
+		image: "Projects/8.png",
+		tags: ["HTML", "CSS", "JavaScript", "Responsive"],
+		link: "https://github.com/Swif7ify/Cartify-Solid-Works",
+		status: "Completed",
+	},
+	{
+		title: "Advance Calculator",
+		category: "Productivity Tool",
+		description:
+			"This project offers a wide range of mathematical functions, from basic arithmetic operations to complex notations and summations. The calculator is designed for infinite calculations with robust handling of various mathematical functions.",
+		image: "Projects/9.png",
+		tags: ["Java", "Java Swing", "UX/UI Design"],
+		link: "https://github.com/Swif7ify/Advanced-Calculator-Made-in-Java-Swing",
+		status: "Completed",
+	},
+	{
+		title: "SmartPocket ",
+		category: "Web Application",
+		description:
+			"An easy-to-use expense tracker helping students manage money and achieve financial goals. It allows users to track expenses, set budgets, and visualize spending patterns.",
+		image: "Projects/10.png",
+		tags: ["Vue.js", "PHP", "MySQL", "Responsive", "Tailwind CSS"],
 		link: "#",
 		status: "Completed",
 	},
@@ -698,6 +738,7 @@ const submitForm = () => {
 												>3D Modelling</span
 											>
 											<span class="tag">Vue.js</span>
+											<span class="tag">Simulation</span>
 										</div>
 									</div>
 								</div>
@@ -809,6 +850,7 @@ const submitForm = () => {
 											>Application Development</span
 										>
 										<span class="skill">3D Modeling</span>
+										<span class="skill">Prototyping</span>
 									</div>
 
 									<a
@@ -1363,23 +1405,7 @@ const submitForm = () => {
 					>
 						<div class="project-image-small">
 							<div class="project-placeholder">
-								<svg
-									width="48"
-									height="48"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-								>
-									<rect
-										x="3"
-										y="3"
-										width="18"
-										height="18"
-										rx="2"
-									/>
-									<path d="M9 9h6v6H9z" />
-								</svg>
+								<img :src="project.image" alt="Project Image" />
 							</div>
 							<div
 								class="project-status"
