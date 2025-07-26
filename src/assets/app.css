@@ -1349,6 +1349,9 @@ textarea {
 	padding: 24px;
 	border: 1px solid rgba(255, 255, 255, 0.05);
 	transition: all 0.3s ease;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .additional-project-card:hover {
@@ -1405,6 +1408,9 @@ textarea {
 
 .project-content-small {
 	text-align: left;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 }
 
 .project-category-small {
@@ -1459,6 +1465,7 @@ textarea {
 	transition: all 0.3s ease;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
+	margin-top: auto;
 }
 
 .btn-small:hover:not(:disabled) {

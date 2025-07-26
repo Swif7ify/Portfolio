@@ -331,6 +331,16 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "Monkeytype Auto Typer",
+		category: "Automation",
+		description:
+			"This project provides a user-friendly GUI to automate typing on Monkeytype using Python, Selenium, PyAutoGUI, and CustomTkinter.",
+		image: "Projects/11.png",
+		tags: ["Python", "Customtkinter", "Selenium", "PyAutoGUI"],
+		link: "https://github.com/Swif7ify/MonkeyType-Auto-Typer",
+		status: "Completed",
+	},
+	{
 		title: "Autonomous Robot Pathfinding Simulator",
 		category: "Robotics Simulation",
 		description:
@@ -745,9 +755,9 @@ const submitForm = () => {
 
 								<div class="project-card">
 									<div class="project-image">
-										<img src="../public/Projects/4.png" />
+										<img src="../public/Projects/11.png" />
 										<button
-											onclick="window.open('https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/', '_blank')"
+											onclick="window.open('https://github.com/Swif7ify/MonkeyType-Auto-Typer', '_blank')"
 											class="view-project-btn"
 										>
 											View Project
@@ -755,23 +765,24 @@ const submitForm = () => {
 									</div>
 									<div class="project-content">
 										<span class="project-category"
-											>Robotics Simulation</span
+											>Automation</span
 										>
 										<h3 class="project-title">
-											Autonomous Robot Pathfinding
-											Simulator
+											Monkeytype Auto Typer
 										</h3>
 										<p class="project-description">
-											A 3D autonomous search and
-											rescue/pathfinding simulator built
-											with Vue 3, Vite, and Three.js.
-											Simulate robot navigation, LiDAR
-											scanning, and AI-driven search
-											patterns in a dynamic environment.
+											A Python-based automation tool that
+											interacts with the Monkeytype
+											website to simulate typing and
+											improve typing speed.
 										</p>
 										<div class="project-tags">
-											<span class="tag">Three.js</span>
-											<span class="tag">Vue.js</span>
+											<span class="tag">Python</span>
+											<span class="tag"
+												>CustomTkinter</span
+											>
+											<span class="tag">Selenium</span>
+											<span class="tag">PyAutoGUI</span>
 										</div>
 									</div>
 								</div>
