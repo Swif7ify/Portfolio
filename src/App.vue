@@ -382,7 +382,7 @@ const additionalProjects = [
 	},
 	{
 		title: "Cartify",
-		category: "Bot Development",
+		category: "Web Development",
 		description:
 			"First Web Development Project. Cartify offers a wide variety of car selections, allowing you to effortlessly browse and explore your dream car. With an intuitive interface and detailed listings, finding the perfect car has never been easier.",
 		image: "Projects/8.png",
