@@ -8,6 +8,7 @@ import ScrollSmoother from "gsap/ScrollSmoother";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 const loading = ref(true);
+const submitting = ref(false);
 
 onMounted(() => {
 	setTimeout(() => {
@@ -461,6 +462,11 @@ const submitForm = () => {
 	}
 
 	try {
+		if (submitting.value) {
+			toastError("Please wait, your message is being sent.");
+			return;
+		}
+		submitting.value = true;
 		emailjs
 			.send(
 				"service_5a7s8ep",
@@ -499,16 +505,20 @@ const submitForm = () => {
 					subject: "",
 					message: "",
 				};
+				submitting.value = false;
 			})
 			.catch((error) => {
 				toastError(
 					"Failed to send message or auto-reply. Please try again later."
 				);
+				submitting.value = false;
+				return;
 			});
 	} catch (error) {
 		toastError(
 			"Something went wrong while sending the message. Please try again later."
 		);
+		submitting.value = false;
 		return;
 	}
 };
