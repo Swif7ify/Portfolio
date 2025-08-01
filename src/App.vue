@@ -300,6 +300,16 @@ const form = ref({
 	message: "",
 });
 
+const vlogVideos = [
+	{
+		title: "My First Job as a Intern",
+		description:
+			"My experience as an intern at Olongapo City Public Library.",
+		driveId: "1Ge8WjLXPYMqeT210hEyQYVz2SsdVl1Aq",
+		thumbnail: "",
+		date: "2025-08-04",
+	},
+];
 const additionalProjects = [
 	{
 		title: "BootTek",
@@ -551,6 +561,7 @@ const submitForm = () => {
 						<a href="#work" @click="smoothScroll">Work</a>
 						<a href="#about" @click="smoothScroll">About</a>
 						<a href="#services" @click="smoothScroll">Services</a>
+						<a href="#vlogs" @click="smoothScroll">Vlogs</a>
 						<a href="#contact" @click="smoothScroll">Contact</a>
 					</nav>
 
@@ -575,6 +586,7 @@ const submitForm = () => {
 					<a href="#work" @click="smoothScroll">Work</a>
 					<a href="#about" @click="smoothScroll">About</a>
 					<a href="#services" @click="smoothScroll">Services</a>
+					<a href="#vlogs" @click="smoothScroll">Vlogs</a>
 					<a href="#contact" @click="smoothScroll">Contact</a>
 				</div>
 			</header>
@@ -1094,6 +1106,64 @@ const submitForm = () => {
 						</div>
 					</section>
 
+					<!-- Vlog Section -->
+					<section
+						id="vlogs"
+						class="vlogs"
+						style="position: relative; overflow: hidden"
+					>
+						<FloatingShapes />
+						<div class="container">
+							<div class="section-header centered">
+								<h2 class="section-title">
+									My <span class="accent">Vlogs</span>
+								</h2>
+								<p class="section-description">
+									Follow my journey, project development
+									process, and experiences through my video
+									logs.
+								</p>
+							</div>
+
+							<div class="vlogs-grid">
+								<div
+									v-for="vlog in vlogVideos"
+									:key="vlog.title"
+									class="vlog-card"
+								>
+									<div class="vlog-video">
+										<iframe
+											:src="`https://drive.google.com/file/d/${vlog.driveId}/preview`"
+											width="100"
+											height="200"
+											allow="autoplay"
+											allowfullscreen
+										></iframe>
+									</div>
+									<div class="vlog-content">
+										<div class="vlog-date">
+											{{
+												new Date(
+													vlog.date
+												).toLocaleDateString("en-US", {
+													month: "short",
+													day: "numeric",
+													year: "numeric",
+												})
+											}}
+										</div>
+										<h3 class="vlog-title">
+											{{ vlog.title }}
+										</h3>
+										<p class="vlog-description">
+											{{ vlog.description }}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
 					<section
 						class="testimonials"
 						style="position: relative; overflow: hidden"
@@ -1329,6 +1399,9 @@ const submitForm = () => {
 									>
 									<a href="#services" @click="smoothScroll"
 										>Services</a
+									>
+									<a href="#vlogs" @click="smoothScroll"
+										>Vlogs</a
 									>
 									<a href="#contact" @click="smoothScroll"
 										>Contact</a
