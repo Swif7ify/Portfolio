@@ -382,6 +382,16 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "Youtube Batch Downloader",
+		category: "Python Automation",
+		description:
+			"A tool that allows users to download YouTube videos. It supports batch downloading, enabling users to download multiple videos at once.",
+		image: "Projects/1DEV.png",
+		tags: ["Python", "YouTube", "Automation"],
+		link: "https://github.com/Swif7ify/youtube-batch-downloader",
+		status: "Completed",
+	},
+	{
 		title: "OCPL Logging",
 		category: "Application Development",
 		description:
