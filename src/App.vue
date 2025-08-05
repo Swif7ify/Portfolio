@@ -372,6 +372,16 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "Youtube to MP3 Batch Downloader",
+		category: "Python Automation",
+		description:
+			"A tool that allows users to download YouTube videos and convert them into MP3 audio files in batches.",
+		image: "Projects/1DEV.png",
+		tags: ["Python", "YouTube", "Automation"],
+		link: "https://github.com/Swif7ify/youtube-to-mp3-batch-downloader",
+		status: "Completed",
+	},
+	{
 		title: "OCPL Logging",
 		category: "Application Development",
 		description:
