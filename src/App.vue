@@ -362,6 +362,16 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "EduGUI",
+		category: "Web Application",
+		description:
+			"EduGUI empowers schools to create engaging, real-time quiz experiences that boost student participation and provide instant feedback for better learning outcomes.",
+		image: "Projects/12.png",
+		tags: ["Next.js", "React", "MongoDB", "Tailwind CSS"],
+		link: "#",
+		status: "In Development",
+	},
+	{
 		title: "MCServerhost Automation",
 		category: "DevOps",
 		description:
