@@ -1,8 +1,7 @@
 .portfolio {
 	background-color: #111111;
 	color: #ffffff;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-		Roboto, sans-serif;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	line-height: 1.6;
 	overflow-x: hidden;
 }
@@ -65,12 +64,7 @@
 	left: -100%;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(
-		45deg,
-		transparent,
-		rgba(255, 255, 255, 0.2),
-		transparent
-	);
+	background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
 	transition: left 0.5s ease;
 }
 
@@ -312,12 +306,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: linear-gradient(
-		45deg,
-		transparent,
-		rgba(234, 88, 12, 0.1),
-		transparent
-	);
+	background: linear-gradient(45deg, transparent, rgba(234, 88, 12, 0.1), transparent);
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
@@ -546,12 +535,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: linear-gradient(
-		45deg,
-		transparent,
-		rgba(234, 88, 12, 0.05),
-		transparent
-	);
+	background: linear-gradient(45deg, transparent, rgba(234, 88, 12, 0.05), transparent);
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
@@ -565,11 +549,7 @@
 .service-icon {
 	width: 64px;
 	height: 64px;
-	background: linear-gradient(
-		45deg,
-		rgba(234, 88, 12, 0.2),
-		rgba(255, 107, 53, 0.2)
-	);
+	background: linear-gradient(45deg, rgba(234, 88, 12, 0.2), rgba(255, 107, 53, 0.2));
 	border-radius: 12px;
 	display: flex;
 	align-items: center;
@@ -830,8 +810,7 @@ textarea {
 	justify-content: center;
 	z-index: 9999;
 	transition: opacity 0.5s;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-		Roboto, sans-serif;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .loader-text {
@@ -1272,8 +1251,7 @@ textarea {
 
 .all-projects-modal,
 .modal-content {
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-		Roboto, sans-serif;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .project-placeholder img {
@@ -1477,6 +1455,23 @@ textarea {
 	background: #3f3f46;
 	color: #9ca3af;
 	cursor: not-allowed;
+}
+
+.project-buttons {
+	display: flex;
+	gap: 8px;
+	margin-top: auto;
+}
+
+.btn-github {
+	background: linear-gradient(45deg, #333, #555) !important;
+	color: white;
+}
+
+.btn-github:hover:not(:disabled) {
+	background: linear-gradient(45deg, #555, #777) !important;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 15px rgba(85, 85, 85, 0.4);
 }
 
 /* Responsive styles for modal */

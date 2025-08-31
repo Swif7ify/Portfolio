@@ -33,12 +33,9 @@ watch(loading, async (isLoading) => {
 });
 
 const initAnimations = () => {
-	gsap.set(
-		".hero-title, .hero-description, .hero-buttons .btn, .hero-image",
-		{
-			opacity: 0,
-		}
-	);
+	gsap.set(".hero-title, .hero-description, .hero-buttons .btn, .hero-image", {
+		opacity: 0,
+	});
 
 	gsap.set(".hero-title", { y: 100 });
 	gsap.set(".hero-description", { y: 50 });
@@ -303,8 +300,7 @@ const form = ref({
 const vlogVideos = [
 	{
 		title: "My First Job as a Intern",
-		description:
-			"My experience as an intern at Olongapo City Public Library.",
+		description: "My experience as an intern at Olongapo City Public Library.",
 		driveId: "1Ge8WjLXPYMqeT210hEyQYVz2SsdVl1Aq",
 		thumbnail: "",
 		date: "2025-08-04",
@@ -319,6 +315,7 @@ const additionalProjects = [
 		image: "Projects/1.png",
 		tags: ["Fullstack", "PostgreSQL", "UI/UX Design", "Node.js", "Vue.js"],
 		link: "https://boottek.fwh.is",
+		githubLink: "#",
 		status: "Completed",
 	},
 	{
@@ -329,6 +326,7 @@ const additionalProjects = [
 		image: "Projects/2.png",
 		tags: ["Game Design", "Python", "Pygame", "Multiplayer"],
 		link: "https://rinubi.itch.io/glid",
+		githubLink: "https://github.com/Swif7ify/Clashing-Grid-Pygame",
 		status: "Completed",
 	},
 	{
@@ -339,6 +337,7 @@ const additionalProjects = [
 		image: "Projects/3.png",
 		tags: ["Three.js", "Fusion 360", "3D Modelling", "Vue.js"],
 		link: "https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/",
+		githubLink: "https://github.com/Swif7ify/Hydro-Bot-Pathfinding-Simulator",
 		status: "Completed",
 	},
 	{
@@ -349,6 +348,7 @@ const additionalProjects = [
 		image: "Projects/11.png",
 		tags: ["Python", "Customtkinter", "Selenium", "PyAutoGUI"],
 		link: "https://github.com/Swif7ify/MonkeyType-Auto-Typer",
+		githubLink: "https://github.com/Swif7ify/MonkeyType-Auto-Typer",
 		status: "Completed",
 	},
 	{
@@ -359,6 +359,7 @@ const additionalProjects = [
 		image: "Projects/4.png",
 		tags: ["Three.js", "Vue.js", "Simulation"],
 		link: "https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/",
+		githubLink: "https://github.com/Swif7ify/Autonomous-Robot-Pathfinding-Simulator",
 		status: "Completed",
 	},
 	{
@@ -369,6 +370,7 @@ const additionalProjects = [
 		image: "Projects/12.png",
 		tags: ["Next.js", "React", "MongoDB", "Tailwind CSS"],
 		link: "#",
+		githubLink: "#",
 		status: "In Development",
 	},
 	{
@@ -379,6 +381,18 @@ const additionalProjects = [
 		image: "Projects/5.png",
 		tags: ["Python", "Selenium"],
 		link: "https://github.com/Swif7ify/MCServerhost-Server-AutoStart",
+		githubLink: "https://github.com/Swif7ify/MCServerhost-Server-AutoStart",
+		status: "Completed",
+	},
+	{
+		title: "OpenLeaf - Leaflet and MapLibre GL",
+		category: "Web Mapping",
+		description:
+			"A web mapping tool that integrates Leaflet and MapLibre GL for advanced geospatial visualizations.",
+		image: "Projects/openleaf.png",
+		tags: ["React", "Leaflet", "MapLibre", "Typescript"],
+		link: "https://swif7ify.github.io/leaflet-openfreemap-3d-demo/",
+		githubLink: "https://github.com/Swif7ify/leaflet-openfreemap-3d-demo",
 		status: "Completed",
 	},
 	{
@@ -389,6 +403,7 @@ const additionalProjects = [
 		image: "Projects/1DEV.png",
 		tags: ["Python", "YouTube", "Automation"],
 		link: "https://github.com/Swif7ify/youtube-to-mp3-batch-downloader",
+		githubLink: "https://github.com/Swif7ify/youtube-to-mp3-batch-downloader",
 		status: "Completed",
 	},
 	{
@@ -399,6 +414,7 @@ const additionalProjects = [
 		image: "Projects/1DEV.png",
 		tags: ["Python", "YouTube", "Automation"],
 		link: "https://github.com/Swif7ify/youtube-batch-downloader",
+		githubLink: "https://github.com/Swif7ify/youtube-batch-downloader",
 		status: "Completed",
 	},
 	{
@@ -409,6 +425,7 @@ const additionalProjects = [
 		image: "Projects/6.png",
 		tags: ["Electron", "Javascript", "Excel", "Responsive"],
 		link: "https://github.com/Swif7ify/OCPL-Logging",
+		githubLink: "https://github.com/Swif7ify/OCPL-Logging",
 		status: "Completed",
 	},
 	{
@@ -419,6 +436,7 @@ const additionalProjects = [
 		image: "Projects/7.png",
 		tags: ["Python", "Pygame", "Game Save"],
 		link: "https://rinubi.itch.io/all-in",
+		githubLink: "https://github.com/Swif7ify/All-In-Pygame",
 		status: "Completed",
 	},
 	{
@@ -429,6 +447,7 @@ const additionalProjects = [
 		image: "Projects/8.png",
 		tags: ["HTML", "CSS", "JavaScript", "Responsive"],
 		link: "https://github.com/Swif7ify/Cartify-Solid-Works",
+		githubLink: "https://github.com/Swif7ify/Cartify-Solid-Works",
 		status: "Completed",
 	},
 	{
@@ -439,6 +458,7 @@ const additionalProjects = [
 		image: "Projects/9.png",
 		tags: ["Java", "Java Swing", "UX/UI Design"],
 		link: "https://github.com/Swif7ify/Advanced-Calculator-Made-in-Java-Swing",
+		githubLink: "https://github.com/Swif7ify/Advanced-Calculator-Made-in-Java-Swing",
 		status: "Completed",
 	},
 	{
@@ -472,6 +492,12 @@ const openProject = (link) => {
 	}
 };
 
+const openGitHub = (link) => {
+	if (link) {
+		window.open(link, "_blank");
+	}
+};
+
 const smoothScroll = (event) => {
 	event.preventDefault();
 	const targetId = event.target.getAttribute("href");
@@ -492,9 +518,7 @@ const smoothScroll = (event) => {
 const submitForm = () => {
 	if (
 		["name", "email", "subject", "message"].some(
-			(field) =>
-				typeof form.value[field] !== "string" ||
-				!form.value[field].trim()
+			(field) => typeof form.value[field] !== "string" || !form.value[field].trim()
 		)
 	) {
 		toastError("Please fill in all fields.");
@@ -535,10 +559,7 @@ const submitForm = () => {
 				);
 			})
 			.then(() => {
-				toastSuccess(
-					"Message sent successfully!",
-					"Thank you for reaching out!"
-				);
+				toastSuccess("Message sent successfully!", "Thank you for reaching out!");
 				form.value = {
 					name: "",
 					email: "",
@@ -548,16 +569,12 @@ const submitForm = () => {
 				submitting.value = false;
 			})
 			.catch((error) => {
-				toastError(
-					"Failed to send message or auto-reply. Please try again later."
-				);
+				toastError("Failed to send message or auto-reply. Please try again later.");
 				submitting.value = false;
 				return;
 			});
 	} catch (error) {
-		toastError(
-			"Something went wrong while sending the message. Please try again later."
-		);
+		toastError("Something went wrong while sending the message. Please try again later.");
 		submitting.value = false;
 		return;
 	}
@@ -623,60 +640,37 @@ const submitForm = () => {
 
 			<div id="smooth-wrapper">
 				<div id="smooth-content">
-					<section
-						class="hero"
-						style="position: relative; overflow: hidden"
-					>
+					<section class="hero" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="hero-content">
 								<div class="hero-text">
 									<h1 class="hero-title">
 										Web
-										<span class="accent underline-animate"
-											>Developer</span
-										>
+										<span class="accent underline-animate">Developer</span>
 										& Game Developer
 									</h1>
 									<p class="hero-description">
-										Creating exceptional digital experiences
-										that blend aesthetics with functionality
-										to solve real user problems.
+										Creating exceptional digital experiences that blend aesthetics with
+										functionality to solve real user problems.
 									</p>
 									<div class="hero-buttons">
-										<a
-											href="#work"
-											class="btn btn-primary"
-											@click="smoothScroll"
-											>View My Work</a
-										>
-										<a
-											href="#contact"
-											class="btn btn-secondary"
-											@click="smoothScroll"
+										<a href="#work" class="btn btn-primary" @click="smoothScroll">View My Work</a>
+										<a href="#contact" class="btn btn-secondary" @click="smoothScroll"
 											>Get In Touch</a
 										>
 									</div>
 								</div>
 
 								<div class="hero-image">
-									<img
-										src="../public/myImage/ORDOVEZ_EARL_2A .jpg"
-									/>
+									<img src="../public/myImage/ORDOVEZ_EARL_2A .jpg" />
 								</div>
 							</div>
 
 							<div class="stats">
-								<div
-									class="stat"
-									v-for="stat in animatedStats"
-									:key="stat.label"
-								>
+								<div class="stat" v-for="stat in animatedStats" :key="stat.label">
 									<p class="stat-number">
-										{{ stat.display
-										}}<span v-if="stat.suffix">{{
-											stat.suffix
-										}}</span>
+										{{ stat.display }}<span v-if="stat.suffix">{{ stat.suffix }}</span>
 									</p>
 									<p class="stat-label">{{ stat.label }}</p>
 								</div>
@@ -684,11 +678,7 @@ const submitForm = () => {
 						</div>
 					</section>
 
-					<section
-						id="work"
-						class="work"
-						style="position: relative; overflow: hidden"
-					>
+					<section id="work" class="work" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="section-header">
@@ -697,8 +687,7 @@ const submitForm = () => {
 									<span class="accent">Projects</span>
 								</h2>
 								<p class="section-description">
-									A showcase of my most significant projects,
-									demonstrating my skills in web and game
+									A showcase of my most significant projects, demonstrating my skills in web and game
 									development.
 								</p>
 							</div>
@@ -715,23 +704,16 @@ const submitForm = () => {
 										</button>
 									</div>
 									<div class="project-content">
-										<span class="project-category"
-											>Web App</span
-										>
+										<span class="project-category">Web App</span>
 										<h3 class="project-title">BootTek</h3>
 										<p class="project-description">
-											An online coding platform where you
-											can learn various programming
-											languages through interactive
-											lessons, real-time code editors, and
-											hands-on projects.
+											An online coding platform where you can learn various programming languages
+											through interactive lessons, real-time code editors, and hands-on projects.
 										</p>
 										<div class="project-tags">
 											<span class="tag">Fullstack</span>
 											<span class="tag">PostgreSQL</span>
-											<span class="tag"
-												>UI/UX Design</span
-											>
+											<span class="tag">UI/UX Design</span>
 											<span class="tag">Node.js</span>
 											<span class="tag">Vue.js</span>
 										</div>
@@ -749,18 +731,12 @@ const submitForm = () => {
 										</button>
 									</div>
 									<div class="project-content">
-										<span class="project-category"
-											>Game Development</span
-										>
-										<h3 class="project-title">
-											Clashing Grid
-										</h3>
+										<span class="project-category">Game Development</span>
+										<h3 class="project-title">Clashing Grid</h3>
 										<p class="project-description">
-											Python game built with Pygame. It
-											features local and multiplayer modes
-											where players expand their pieces on
-											a grid, aiming to outmaneuver and
-											outscore their opponent.
+											Python game built with Pygame. It features local and multiplayer modes where
+											players expand their pieces on a grid, aiming to outmaneuver and outscore
+											their opponent.
 										</p>
 										<div class="project-tags">
 											<span class="tag">Game Design</span>
@@ -781,24 +757,16 @@ const submitForm = () => {
 										</button>
 									</div>
 									<div class="project-content">
-										<span class="project-category"
-											>Robotics Simulation</span
-										>
-										<h3 class="project-title">
-											HydroBot Simulator
-										</h3>
+										<span class="project-category">Robotics Simulation</span>
+										<h3 class="project-title">HydroBot Simulator</h3>
 										<p class="project-description">
-											A professional-grade underwater
-											search and rescue simulation system
-											featuring advanced sonar navigation
-											and optical sensor.
+											A professional-grade underwater search and rescue simulation system
+											featuring advanced sonar navigation and optical sensor.
 										</p>
 										<div class="project-tags">
 											<span class="tag">Three.js</span>
 											<span class="tag">Fusion 360</span>
-											<span class="tag"
-												>3D Modelling</span
-											>
+											<span class="tag">3D Modelling</span>
 											<span class="tag">Vue.js</span>
 											<span class="tag">Simulation</span>
 										</div>
@@ -816,23 +784,15 @@ const submitForm = () => {
 										</button>
 									</div>
 									<div class="project-content">
-										<span class="project-category"
-											>Automation</span
-										>
-										<h3 class="project-title">
-											Monkeytype Auto Typer
-										</h3>
+										<span class="project-category">Automation</span>
+										<h3 class="project-title">Monkeytype Auto Typer</h3>
 										<p class="project-description">
-											A Python-based automation tool that
-											interacts with the Monkeytype
-											website to simulate typing and
-											improve typing speed.
+											A Python-based automation tool that interacts with the Monkeytype website to
+											simulate typing and improve typing speed.
 										</p>
 										<div class="project-tags">
 											<span class="tag">Python</span>
-											<span class="tag"
-												>CustomTkinter</span
-											>
+											<span class="tag">CustomTkinter</span>
 											<span class="tag">Selenium</span>
 											<span class="tag">PyAutoGUI</span>
 										</div>
@@ -841,77 +801,46 @@ const submitForm = () => {
 							</div>
 
 							<div class="view-all">
-								<button
-									@click="toggleAllProjects"
-									class="btn btn-secondary"
-								>
-									{{
-										showAllProjects
-											? "Show Less Projects"
-											: "View All Projects"
-									}}
+								<button @click="toggleAllProjects" class="btn btn-secondary">
+									{{ showAllProjects ? "Show Less Projects" : "View All Projects" }}
 								</button>
 							</div>
 						</div>
 					</section>
 
-					<section
-						id="about"
-						class="about"
-						style="position: relative; overflow: hidden"
-					>
+					<section id="about" class="about" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="about-content">
 								<div class="about-image">
 									<div class="about-placeholder">
 										<div class="profile-circle">
-											<img
-												src="../public/myImage/IMG_20250623_112039.jpg"
-											/>
+											<img src="../public/myImage/IMG_20250623_112039.jpg" />
 										</div>
 									</div>
 								</div>
 
 								<div class="about-text">
-									<h2 class="section-title">
-										About <span class="accent">Me</span>
-									</h2>
+									<h2 class="section-title">About <span class="accent">Me</span></h2>
 									<p class="about-description">
-										Hi, I'm Earl Romeo Ordovez, a passionate
-										web and game developer with a knack for
-										creating immersive digital experiences.
-										With a strong background in both
-										frontend and backend development, I
-										specialize in building intuitive,
-										user-friendly applications that not only
-										look great but also perform seamlessly.
+										Hi, I'm Earl Romeo Ordovez, a passionate web and game developer with a knack for
+										creating immersive digital experiences. With a strong background in both
+										frontend and backend development, I specialize in building intuitive,
+										user-friendly applications that not only look great but also perform seamlessly.
 									</p>
 									<p class="about-description">
-										I have a keen interest in game
-										development, leveraging my skills in 3D
-										modeling and programming to create
-										engaging and interactive games. My
-										approach combines creativity with
-										technical expertise, ensuring that every
-										project is not only functional but also
-										visually stunning.
+										I have a keen interest in game development, leveraging my skills in 3D modeling
+										and programming to create engaging and interactive games. My approach combines
+										creativity with technical expertise, ensuring that every project is not only
+										functional but also visually stunning.
 									</p>
 
 									<h3 class="skills-title">My Skills</h3>
 									<div class="skills">
-										<span class="skill"
-											>UI & UX Design</span
-										>
-										<span class="skill"
-											>Web Development</span
-										>
-										<span class="skill"
-											>Game Development</span
-										>
-										<span class="skill"
-											>Application Development</span
-										>
+										<span class="skill">UI & UX Design</span>
+										<span class="skill">Web Development</span>
+										<span class="skill">Game Development</span>
+										<span class="skill">Application Development</span>
 										<span class="skill">3D Modeling</span>
 										<span class="skill">Prototyping</span>
 									</div>
@@ -927,20 +856,13 @@ const submitForm = () => {
 						</div>
 					</section>
 
-					<section
-						id="services"
-						class="services"
-						style="position: relative; overflow: hidden"
-					>
+					<section id="services" class="services" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="section-header centered">
-								<h2 class="section-title">
-									Things <span class="accent">I Do</span>
-								</h2>
+								<h2 class="section-title">Things <span class="accent">I Do</span></h2>
 								<p class="section-description">
-									Here are some of the projects and activities
-									I work on as a student developer and
+									Here are some of the projects and activities I work on as a student developer and
 									learner.
 								</p>
 							</div>
@@ -960,24 +882,15 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<path
-												d="M4 17v-2a4 4 0 014-4h8a4 4 0 014 4v2"
-											/>
-											<rect
-												x="2"
-												y="7"
-												width="20"
-												height="8"
-												rx="2"
-											/>
+											<path d="M4 17v-2a4 4 0 014-4h8a4 4 0 014 4v2" />
+											<rect x="2" y="7" width="20" height="8" rx="2" />
 											<path d="M6 11v2" />
 											<path d="M18 11v2" />
 										</svg>
 									</div>
 									<h3 class="service-title">Web Projects</h3>
 									<p class="service-description">
-										Building websites and web apps for
-										class, clubs, and personal learning.
+										Building websites and web apps for class, clubs, and personal learning.
 									</p>
 								</div>
 
@@ -995,22 +908,13 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<rect
-												x="3"
-												y="3"
-												width="18"
-												height="18"
-												rx="2"
-											/>
+											<rect x="3" y="3" width="18" height="18" rx="2" />
 											<path d="M8 8h8v8H8z" />
 										</svg>
 									</div>
-									<h3 class="service-title">
-										Game Development
-									</h3>
+									<h3 class="service-title">Game Development</h3>
 									<p class="service-description">
-										Creating games for fun, competitions,
-										and learning new programming concepts.
+										Creating games for fun, competitions, and learning new programming concepts.
 									</p>
 								</div>
 
@@ -1028,22 +932,13 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<rect
-												x="4"
-												y="4"
-												width="16"
-												height="16"
-												rx="2"
-											/>
+											<rect x="4" y="4" width="16" height="16" rx="2" />
 											<path d="M8 8h8v8H8z" />
 										</svg>
 									</div>
-									<h3 class="service-title">
-										App Development
-									</h3>
+									<h3 class="service-title">App Development</h3>
 									<p class="service-description">
-										Building simple applications for school
-										projects and personal use.
+										Building simple applications for school projects and personal use.
 									</p>
 								</div>
 
@@ -1065,12 +960,9 @@ const submitForm = () => {
 											<path d="M12 8v4l3 3" />
 										</svg>
 									</div>
-									<h3 class="service-title">
-										Learning & Experimenting
-									</h3>
+									<h3 class="service-title">Learning & Experimenting</h3>
 									<p class="service-description">
-										Trying out new technologies, frameworks,
-										and programming languages.
+										Trying out new technologies, frameworks, and programming languages.
 									</p>
 								</div>
 
@@ -1094,8 +986,7 @@ const submitForm = () => {
 									</div>
 									<h3 class="service-title">Collaboration</h3>
 									<p class="service-description">
-										Working with classmates on group
-										projects and coding challenges.
+										Working with classmates on group projects and coding challenges.
 									</p>
 								</div>
 								<div class="service-card">
@@ -1112,13 +1003,7 @@ const submitForm = () => {
 											stroke-linecap="round"
 											stroke-linejoin="round"
 										>
-											<rect
-												x="3"
-												y="3"
-												width="18"
-												height="18"
-												rx="2"
-											/>
+											<rect x="3" y="3" width="18" height="18" rx="2" />
 											<path d="M8 8h8v8H8z" />
 											<path d="M12 12v4" />
 											<path d="M12 12h4" />
@@ -1126,10 +1011,8 @@ const submitForm = () => {
 									</div>
 									<h3 class="service-title">Prototyping</h3>
 									<p class="service-description">
-										Creating interactive prototypes for
-										apps, games, and websites to test ideas
-										and get feedback before building the
-										final version.
+										Creating interactive prototypes for apps, games, and websites to test ideas and
+										get feedback before building the final version.
 									</p>
 								</div>
 							</div>
@@ -1137,30 +1020,19 @@ const submitForm = () => {
 					</section>
 
 					<!-- Vlog Section -->
-					<section
-						id="vlogs"
-						class="vlogs"
-						style="position: relative; overflow: hidden"
-					>
+					<section id="vlogs" class="vlogs" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="section-header centered">
-								<h2 class="section-title">
-									My <span class="accent">Vlogs</span>
-								</h2>
+								<h2 class="section-title">My <span class="accent">Vlogs</span></h2>
 								<p class="section-description">
-									Follow my journey, project development
-									process, and experiences through my video
+									Follow my journey, project development process, and experiences through my video
 									logs.
 								</p>
 							</div>
 
 							<div class="vlogs-grid">
-								<div
-									v-for="vlog in vlogVideos"
-									:key="vlog.title"
-									class="vlog-card"
-								>
+								<div v-for="vlog in vlogVideos" :key="vlog.title" class="vlog-card">
 									<div class="vlog-video">
 										<iframe
 											:src="`https://drive.google.com/file/d/${vlog.driveId}/preview`"
@@ -1173,9 +1045,7 @@ const submitForm = () => {
 									<div class="vlog-content">
 										<div class="vlog-date">
 											{{
-												new Date(
-													vlog.date
-												).toLocaleDateString("en-US", {
+												new Date(vlog.date).toLocaleDateString("en-US", {
 													month: "short",
 													day: "numeric",
 													year: "numeric",
@@ -1194,10 +1064,7 @@ const submitForm = () => {
 						</div>
 					</section>
 
-					<section
-						class="testimonials"
-						style="position: relative; overflow: hidden"
-					>
+					<section class="testimonials" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="section-header centered">
@@ -1205,18 +1072,12 @@ const submitForm = () => {
 									Client
 									<span class="accent">Testimonials</span>
 								</h2>
-								<p class="section-description">
-									Looking forward to working with you!
-								</p>
+								<p class="section-description">Looking forward to working with you!</p>
 							</div>
 						</div>
 					</section>
 
-					<section
-						id="contact"
-						class="contact"
-						style="position: relative; overflow: hidden"
-					>
+					<section id="contact" class="contact" style="position: relative; overflow: hidden">
 						<FloatingShapes />
 						<div class="container">
 							<div class="contact-content">
@@ -1226,10 +1087,8 @@ const submitForm = () => {
 										<span class="accent">Connect</span>
 									</h2>
 									<p class="contact-description">
-										Have a project in mind? Let's discuss
-										how I can help bring your vision to
-										life. Fill out the form and I'll get
-										back to you within 24 hours.
+										Have a project in mind? Let's discuss how I can help bring your vision to life.
+										Fill out the form and I'll get back to you within 24 hours.
 									</p>
 
 									<div class="contact-details">
@@ -1291,30 +1150,16 @@ const submitForm = () => {
 													<path
 														d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
 													></path>
-													<path
-														d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-													></path>
+													<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
 												</svg>
 											</div>
-											<span
-												>Philippines, Zambales Olongapo
-												City</span
-											>
+											<span>Philippines, Zambales Olongapo City</span>
 										</div>
 									</div>
 
 									<div class="social-links">
-										<a
-											href="https://github.com/Swif7ify"
-											target="_blank"
-											class="social-link"
-										>
-											<svg
-												width="24"
-												height="24"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-											>
+										<a href="https://github.com/Swif7ify" target="_blank" class="social-link">
+											<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 												<path
 													d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
 												></path>
@@ -1325,28 +1170,14 @@ const submitForm = () => {
 											target="_blank"
 											class="social-link"
 										>
-											<svg
-												width="24"
-												height="24"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-											>
+											<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 												<path
 													d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
 												></path>
 											</svg>
 										</a>
-										<a
-											href="https://facebook.com/Swif7ify"
-											target="_blank"
-											class="social-link"
-										>
-											<svg
-												width="24"
-												height="24"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-											>
+										<a href="https://facebook.com/Swif7ify" target="_blank" class="social-link">
+											<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 												<path
 													d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
 												/>
@@ -1359,12 +1190,7 @@ const submitForm = () => {
 									<form @submit.prevent="submitForm">
 										<div class="form-group">
 											<label for="name">Name</label>
-											<input
-												type="text"
-												id="name"
-												v-model="form.name"
-												placeholder="Your name"
-											/>
+											<input type="text" id="name" v-model="form.name" placeholder="Your name" />
 										</div>
 
 										<div class="form-group">
@@ -1397,12 +1223,7 @@ const submitForm = () => {
 											></textarea>
 										</div>
 
-										<button
-											type="submit"
-											class="btn btn-primary full-width"
-										>
-											Send Message
-										</button>
+										<button type="submit" class="btn btn-primary full-width">Send Message</button>
 									</form>
 								</div>
 							</div>
@@ -1414,48 +1235,24 @@ const submitForm = () => {
 							<div class="footer-content">
 								<div class="footer-brand">
 									<a href="#" class="logo">1DEV</a>
-									<p class="footer-tagline">
-										Creating exceptional digital
-										experiences.
-									</p>
+									<p class="footer-tagline">Creating exceptional digital experiences.</p>
 								</div>
 
 								<div class="footer-nav">
-									<a href="#work" @click="smoothScroll"
-										>Work</a
-									>
-									<a href="#about" @click="smoothScroll"
-										>About</a
-									>
-									<a href="#services" @click="smoothScroll"
-										>Services</a
-									>
-									<a href="#vlogs" @click="smoothScroll"
-										>Vlogs</a
-									>
-									<a href="#contact" @click="smoothScroll"
-										>Contact</a
-									>
+									<a href="#work" @click="smoothScroll">Work</a>
+									<a href="#about" @click="smoothScroll">About</a>
+									<a href="#services" @click="smoothScroll">Services</a>
+									<a href="#vlogs" @click="smoothScroll">Vlogs</a>
+									<a href="#contact" @click="smoothScroll">Contact</a>
 								</div>
 							</div>
 
 							<div class="footer-bottom">
-								<p class="copyright">
-									© 2025 1DEV. All rights reserved.
-								</p>
+								<p class="copyright">© 2025 1DEV. All rights reserved.</p>
 
 								<div class="social-links small">
-									<a
-										href="https://github.com/Swif7ify"
-										target="_blank"
-										class="social-link"
-									>
-										<svg
-											width="20"
-											height="20"
-											fill="currentColor"
-											viewBox="0 0 24 24"
-										>
+									<a href="https://github.com/Swif7ify" target="_blank" class="social-link">
+										<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
 											<path
 												d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
 											></path>
@@ -1466,28 +1263,14 @@ const submitForm = () => {
 										target="_blank"
 										class="social-link"
 									>
-										<svg
-											width="20"
-											height="20"
-											fill="currentColor"
-											viewBox="0 0 24 24"
-										>
+										<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
 											<path
 												d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c.872-1.616 4-1.736 4 1.548v3.359z"
 											></path>
 										</svg>
 									</a>
-									<a
-										href="https://facebook.com/Swif7ify"
-										target="_blank"
-										class="social-link"
-									>
-										<svg
-											width="24"
-											height="24"
-											fill="currentColor"
-											viewBox="0 0 24 24"
-										>
+									<a href="https://facebook.com/Swif7ify" target="_blank" class="social-link">
+										<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 											<path
 												d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.495v-9.294H9.691v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z"
 											/>
@@ -1522,30 +1305,17 @@ const submitForm = () => {
 					</button>
 				</div>
 				<div class="additional-projects-grid">
-					<div
-						v-for="project in additionalProjects"
-						:key="project.title"
-						class="additional-project-card"
-					>
+					<div v-for="project in additionalProjects" :key="project.title" class="additional-project-card">
 						<div class="project-image-small">
 							<div class="project-placeholder">
 								<img :src="project.image" alt="Project Image" />
 							</div>
-							<div
-								class="project-status"
-								:class="
-									project.status
-										.toLowerCase()
-										.replace(' ', '-')
-								"
-							>
+							<div class="project-status" :class="project.status.toLowerCase().replace(' ', '-')">
 								{{ project.status }}
 							</div>
 						</div>
 						<div class="project-content-small">
-							<span class="project-category-small">{{
-								project.category
-							}}</span>
+							<span class="project-category-small">{{ project.category }}</span>
 							<h4 class="project-title-small">
 								{{ project.title }}
 							</h4>
@@ -1553,25 +1323,26 @@ const submitForm = () => {
 								{{ project.description }}
 							</p>
 							<div class="project-tags-small">
-								<span
-									v-for="tag in project.tags"
-									:key="tag"
-									class="tag-small"
-								>
+								<span v-for="tag in project.tags" :key="tag" class="tag-small">
 									{{ tag }}
 								</span>
 							</div>
-							<button
-								@click="openProject(project.link)"
-								class="btn-small"
-								:disabled="project.link === '#'"
-							>
-								{{
-									project.status === "In Development"
-										? "Preview"
-										: "View Project"
-								}}
-							</button>
+							<div class="project-buttons">
+								<button
+									@click="openProject(project.link)"
+									class="btn-small"
+									:disabled="project.link === '#'"
+								>
+									{{ project.status === "In Development" ? "Preview" : "View Project" }}
+								</button>
+								<button
+									@click="openGitHub(project.githubLink)"
+									class="btn-small btn-github"
+									:disabled="project.githubLink === '#'"
+								>
+									View GitHub
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
