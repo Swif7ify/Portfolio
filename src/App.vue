@@ -385,6 +385,28 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "GapoGo - Smart Transportation Commuter for Olongapo City",
+		category: "Web Application",
+		description:
+			"Innovative location-powered mobility app that empowers users through intelligent routing, real-time traffic updates, and seamless connections between drivers and commuters.",
+		image: "Projects/13.png",
+		tags: ["React", "Next.JS", "MapLibre", "Typescript", "MongoDB", "Tailwind CSS"],
+		link: "#",
+		githubLink: "#",
+		status: "In Development",
+	},
+	{
+		title: "GCYofinder",
+		category: "Mobile Application",
+		description:
+			"Mobile app-based application designed to help students report, search and reclaim any lost items in the campus.",
+		image: "Projects/14.png",
+		tags: ["React", "Next.JS", "Typescript", "MongoDB", "Tailwind CSS"],
+		link: "#",
+		githubLink: "#",
+		status: "In Development",
+	},
+	{
 		title: "OpenLeaf - Leaflet and MapLibre GL",
 		category: "Web Mapping",
 		description:
@@ -469,6 +491,7 @@ const additionalProjects = [
 		image: "Projects/10.png",
 		tags: ["Vue.js", "PHP", "MySQL", "Responsive", "Tailwind CSS"],
 		link: "#",
+		githubLink: "#",
 		status: "Completed",
 	},
 ];
