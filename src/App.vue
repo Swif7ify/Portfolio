@@ -385,6 +385,27 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "Chatry - Messaging App",
+		category: "Mobile Development",
+		description: "Chatry is a messaging app that allows users to communicate in real-time with rich media support.",
+		image: "Projects/16.png",
+		tags: ["React Native", "Flask", "Socket.IO", "MongoDB"],
+		link: "#",
+		githubLink: "#",
+		status: "In Development",
+	},
+	{
+		title: "AimY - Stop Coding, Start Shooting",
+		category: "VS Code Extension",
+		description:
+			"AimY is a VS Code extension that turns your idle time into aim training sessions. When you stop coding for a while, targets appear and you need to hit them to get back to work",
+		image: "Projects/15.png",
+		tags: ["TypeScript", "VS Code API", "Extension"],
+		link: "https://marketplace.visualstudio.com/items?itemName=EarlRomeoOrdovez.aimy&ssr=false#review-details",
+		githubLink: "https://github.com/Swif7ify/AimY",
+		status: "Completed",
+	},
+	{
 		title: "GapoGo - Smart Transportation Commuter for Olongapo City",
 		category: "Web Application",
 		description:
