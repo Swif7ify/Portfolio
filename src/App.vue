@@ -391,6 +391,17 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "React Native Gamepad Library",
+		category: "React Native Library",
+		description:
+			"A React Native library that provides gamepad support for mobile applications, using react native webview as a bridge to connect to the gamepad API.",
+		image: "Projects/18.jpg",
+		tags: ["React Native", "Webview", "npmjs"],
+		link: "https://www.npmjs.com/package/react-native-earl-gamepad",
+		githubLink: "https://github.com/Swif7ify/react-native-earl-gamepad",
+		status: "Completed",
+	},
+	{
 		title: "Chatry - Messaging App",
 		category: "Mobile Development",
 		description:
