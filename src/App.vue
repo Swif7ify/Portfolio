@@ -402,6 +402,50 @@ const additionalProjects = [
 		status: "Completed",
 	},
 	{
+		title: "Hydrobot Mobile",
+		category: "Mobile Development",
+		description:
+			"A mobile application that allows users to control Hydrobot in real-time.",
+		image: "Projects/19.jpg",
+		tags: ["React Native"],
+		link: "#",
+		githubLink: "#",
+		status: "Completed",
+	},
+	{
+		title: "Hydrobot",
+		category: "Robotics",
+		description:
+			"A fully functional floating robot built from scratch. It features thermal camera, leak detection system, and an integrated camera system for real-time video streaming. The robot is controlled via a custom mobile application.",
+		image: "Projects/20.jpg",
+		tags: ["Raspberry Pi", "Python"],
+		link: "#",
+		githubLink: "#",
+		status: "Completed",
+	},
+	{
+		title: "Smart Vacuum Bot",
+		category: "Robotics",
+		description:
+			"A smart vacuum robot that autonomously cleans floors and can be controlled through a mobile application. It features automatic home mapping and intelligent cleaning modes.",
+		image: "Projects/1DEV.png",
+		tags: ["ESP32", "Arduino", "C#"],
+		link: "#",
+		githubLink: "#",
+		status: "In Development",
+	},
+	{
+		title: "Ikot Palengke Metro Project",
+		category: "Mobile Development",
+		description:
+			"A digital mobile application that helps DTI monitor prices and violations in public markets (palengke) in an organized, real-time way",
+		image: "Projects/1DEV.png",
+		tags: ["React Native", "Express", "MongoDB", "PostgreSQL"],
+		link: "#",
+		githubLink: "#",
+		status: "In Development",
+	},
+	{
 		title: "Chatry - Messaging App",
 		category: "Mobile Development",
 		description:
