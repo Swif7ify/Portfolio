@@ -74,7 +74,7 @@ export function About() {
 					>
 						<div className="relative aspect-[3/4] w-full overflow-hidden">
 							<Image
-								src={getImagePath("/EARL_ORDOVEZ.jpg")}
+								src={getImagePath("/EARL_ORDOVEZ.JPG")}
 								alt="Portrait of Earl Ordovez"
 								fill
 								sizes="(max-width: 768px) 100vw, 40vw"
