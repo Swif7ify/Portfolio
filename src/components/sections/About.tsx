@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { RevealText } from "../RevealText";
 
@@ -16,7 +17,6 @@ export function About() {
 		target: imgRef,
 		offset: ["start end", "end start"],
 	});
-	const y = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
 	const rotate = useTransform(scrollYProgress, [0, 1], [-2, 2]);
 
 	return (
@@ -71,13 +71,16 @@ export function About() {
 						style={{ rotate }}
 						className="sticky top-28 overflow-hidden rounded-sm"
 					>
-						<motion.img
-							src="/EARL_ORDOVEZ.jpg"
-							alt="Portrait of Earl Ordovez"
-							style={{ y, scale: 1.04 }}
-							className="aspect-[3/4] w-full object-cover grayscale transition-all duration-700 hover:grayscale-0"
-							loading="lazy"
-						/>
+						<div className="relative aspect-[3/4] w-full overflow-hidden">
+							<Image
+								src="/EARL_ORDOVEZ.jpg"
+								alt="Portrait of Earl Ordovez"
+								fill
+								sizes="(max-width: 768px) 100vw, 40vw"
+								className="object-cover grayscale transition-all duration-700 hover:grayscale-0"
+								priority
+							/>
+						</div>
 					</motion.div>
 				</div>
 			</div>
