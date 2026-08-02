@@ -9,6 +9,14 @@ export interface Certificate {
 
 export const certificates: Certificate[] = [
   {
+    id: 'techfest-hackathon-2026',
+    title: '2nd Runner Up — CCS TechFest Hackathon 2026',
+    issuer: 'Team1 Philippines x Gordon College CCS',
+    year: '2026',
+    credentialUrl: '#',
+    image: '/certificates/hackathon.jpg',
+  },
+  {
     id: 'lablab-ibm-bob',
     title: 'IBM Bob Hackathon — Outstanding Performance',
     issuer: 'lablab.ai (NativelyAI)',
