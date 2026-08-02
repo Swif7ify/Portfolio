@@ -9,7 +9,7 @@ interface HeroProps {
 	ready: boolean;
 }
 
-const line1 = "CREATIVE";
+const line1 = "FULLSTACK";
 const line2 = "DEVELOPER";
 
 function AnimatedLine({

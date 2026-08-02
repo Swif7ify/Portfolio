@@ -4,42 +4,48 @@ export interface Certificate {
   issuer: string;
   year: string;
   credentialUrl: string;
+  image: string;
 }
 
 export const certificates: Certificate[] = [
   {
-    id: 'meta-frontend',
-    title: 'Front-End Developer Professional',
-    issuer: 'Meta',
+    id: 'lablab-ibm-bob',
+    title: 'IBM Bob Hackathon — Outstanding Performance',
+    issuer: 'lablab.ai (NativelyAI)',
+    year: '2026',
+    credentialUrl: 'https://lablab.ai',
+    image: '/certificates/lablabai.png',
+  },
+  {
+    id: 'cisco-cybersecurity',
+    title: 'Introduction to Cybersecurity',
+    issuer: 'Cisco Networking Academy',
+    year: '2026',
+    credentialUrl: '#',
+    image: '/certificates/neta3.png',
+  },
+  {
+    id: 'tesda-css-ncii',
+    title: 'Computer Systems Servicing NC II',
+    issuer: 'TESDA (Republic of the Philippines)',
     year: '2025',
-    credentialUrl: 'https://coursera.org/verify/example-meta',
+    credentialUrl: '#',
+    image: '/certificates/ncii.png',
   },
   {
-    id: 'gcp-ux',
-    title: 'UX Design Professional Certificate',
-    issuer: 'Google',
-    year: '2024',
-    credentialUrl: 'https://coursera.org/verify/example-google',
+    id: 'cisco-ccna-switching',
+    title: 'CCNA: Switching, Routing & Wireless Essentials',
+    issuer: 'Cisco Networking Academy',
+    year: '2025',
+    credentialUrl: '#',
+    image: '/certificates/neta2.png',
   },
   {
-    id: 'aws-dev',
-    title: 'Certified Developer — Associate',
-    issuer: 'Amazon Web Services',
-    year: '2024',
-    credentialUrl: 'https://aws.amazon.com/verification/example',
-  },
-  {
-    id: 'awwwards-motion',
-    title: 'Motion Design for the Web',
-    issuer: 'Awwwards Academy',
-    year: '2023',
-    credentialUrl: 'https://awwwards.com/academy/certificate/example',
-  },
-  {
-    id: 'fcc-algos',
-    title: 'JavaScript Algorithms & Data Structures',
-    issuer: 'freeCodeCamp',
-    year: '2022',
-    credentialUrl: 'https://freecodecamp.org/certification/example',
+    id: 'cisco-ccna-networks',
+    title: 'CCNA: Introduction to Networks',
+    issuer: 'Cisco Networking Academy',
+    year: '2025',
+    credentialUrl: '#',
+    image: '/certificates/neta1.png',
   },
 ];

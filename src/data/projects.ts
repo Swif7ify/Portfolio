@@ -25,7 +25,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A custom-built 10-key mechanical macropad featuring a rotary encoder knob and an integrated 0.96-inch OLED display for real-time status, macros, and productivity shortcuts.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/placeholder.jpg",
 		tags: [
 			"ESP32 / Arduino",
 			"C++",
@@ -44,7 +44,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A dual ESP32 microcontroller system equipped with a 1.3-inch OLED display. One ESP32 fetches live date, time, weather, and Wi-Fi speeds, while the secondary ESP32 interfaces directly with the PC to stream live CPU/GPU temperatures and hardware telemetry.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/placeholder.jpg",
 		tags: [
 			"ESP32",
 			"C++",
@@ -58,12 +58,12 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-metro",
-		title: "Project METRO - DTI Web Admin & Mobile Inspector System",
+		title: "Project METRO IkotPalengke - DTI ",
 		category: "Fullstack & Mobile System",
 		year: "2025",
 		description:
 			"Measurement, Evaluation, and Tracking for Regulatory Operations — a comprehensive regulatory compliance ecosystem for the Department of Trade and Industry (DTI). Combines a Next.js administrative management portal with an offline-first React Native mobile application for field inspectors featuring Bluetooth thermal receipt printing and automated cloud sync.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/projectmetro.png",
 		tags: [
 			"Next.js",
 			"React Native",
@@ -79,13 +79,34 @@ export const projects: Project[] = [
 		repoUrl: "https://github.com/Swif7ify/Project-METRO-Mobile",
 	},
 	{
+		id: "rfjewelry",
+		title: "RF Jewelry - Luxury E-Commerce & Inventory System",
+		category: "Fullstack E-Commerce",
+		year: "2025",
+		description:
+			"An all-in-one luxury jewelry e-commerce platform and inventory management system built with Astro, Supabase, and Tailwind CSS. Features custom order requests, appointment scheduling, QR code receipt scanning, PWA offline capabilities, and administrative analytics.",
+		image: "/projects/rfjewelry.png",
+		tags: [
+			"Astro",
+			"Supabase",
+			"Tailwind CSS",
+			"TypeScript",
+			"PostgreSQL",
+			"Redis",
+			"PWA",
+			"QR Code Scanner",
+		],
+		liveUrl: "#",
+		repoUrl: "#",
+	},
+	{
 		id: "boottek",
 		title: "BootTek",
 		category: "Web Application",
 		year: "2024",
 		description:
 			"An online coding platform where you can learn various programming languages through interactive lessons, real-time code editors, and hands-on projects.",
-		image: "/Projects/1.png",
+		image: "/projects/bootek.png",
 		tags: ["Fullstack", "PostgreSQL", "UI/UX Design", "Node.js", "Vue.js"],
 		liveUrl: "https://boottek.fwh.is",
 		repoUrl: "#",
@@ -97,7 +118,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Python game built with Pygame. It features local and multiplayer modes where players expand their pieces on a grid, aiming to outmaneuver and outscore their opponent.",
-		image: "/Projects/2.png",
+		image: "/projects/clashing_grid.png",
 		tags: ["Game Design", "Python", "Pygame", "Multiplayer"],
 		liveUrl: "https://rinubi.itch.io/glid",
 		repoUrl: "https://github.com/Swif7ify/Clashing-Grid-Pygame",
@@ -109,7 +130,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A professional-grade underwater search and rescue simulation system featuring advanced sonar navigation and optical sensor.",
-		image: "/Projects/3.png",
+		image: "/projects/hydrobot_simulation.png",
 		tags: ["Three.js", "Fusion 360", "3D Modelling", "Vue.js"],
 		liveUrl: "https://swif7ify.github.io/Hydro-Bot-Pathfinding-Simulator/",
 		repoUrl: "https://github.com/Swif7ify/Hydro-Bot-Pathfinding-Simulator",
@@ -121,7 +142,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"This project provides a user-friendly GUI to automate typing on Monkeytype using Python, Selenium, PyAutoGUI, and CustomTkinter.",
-		image: "/Projects/11.png",
+		image: "/projects/monkeytype.png",
 		tags: ["Python", "Customtkinter", "Selenium", "PyAutoGUI"],
 		liveUrl: "https://github.com/Swif7ify/MonkeyType-Auto-Typer",
 		repoUrl: "https://github.com/Swif7ify/MonkeyType-Auto-Typer",
@@ -133,7 +154,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A 3D autonomous search and rescue/pathfinding simulator built with Vue 3, Vite, and Three.js. Simulate robot navigation, LiDAR scanning, and AI-driven search patterns in a dynamic environment.",
-		image: "/Projects/4.png",
+		image: "/projects/pathfinding.png",
 		tags: ["Three.js", "Vue.js", "Simulation"],
 		liveUrl:
 			"https://swif7ify.github.io/Autonomous-Robot-Pathfinding-Simulator/",
@@ -147,7 +168,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Python-based monitoring tool for automatically checking and starting a Minecraft server hosted on MCServerHost.com. It uses Selenium WebDriver to automate browser actions and includes a built-in HTTP health check server for status monitoring.",
-		image: "/Projects/5.png",
+		image: "/projects/mcpserver.png",
 		tags: ["Python", "Selenium"],
 		liveUrl: "https://github.com/Swif7ify/MCServerhost-Server-AutoStart",
 		repoUrl: "https://github.com/Swif7ify/MCServerhost-Server-AutoStart",
@@ -159,7 +180,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A React Native library that provides gamepad support for mobile applications, using react native webview as a bridge to connect to the gamepad API.",
-		image: "/Projects/18.jpg",
+		image: "/projects/gamepad.jpg",
 		tags: ["React Native", "Webview", "npmjs"],
 		liveUrl: "https://www.npmjs.com/package/react-native-earl-gamepad",
 		repoUrl: "https://github.com/Swif7ify/react-native-earl-gamepad",
@@ -171,10 +192,12 @@ export const projects: Project[] = [
 		year: "2025",
 		description:
 			"A high-performance React Native thermal printer library built with TurboModules (New Architecture) supporting Bluetooth (BLE), USB, and TCP/IP printers.",
-		image: "/Projects/18.jpg",
+		image: "/projects/npmjs.png",
 		tags: ["React Native", "TurboModules", "Bluetooth", "ESC/POS", "npmjs"],
-		liveUrl: "https://www.npmjs.com/package/react-native-earl-thermal-printer",
-		repoUrl: "https://github.com/Swif7ify/react-native-earl-thermal-printer",
+		liveUrl:
+			"https://www.npmjs.com/package/react-native-earl-thermal-printer",
+		repoUrl:
+			"https://github.com/Swif7ify/react-native-earl-thermal-printer",
 	},
 	{
 		id: "react-native-earl-toastify",
@@ -183,7 +206,7 @@ export const projects: Project[] = [
 		year: "2025",
 		description:
 			"A highly customizable toast notification and confirmation modal library for React Native featuring Fabric (New Architecture) support, 6 animation modes, global imperative trigger API, and WCAG 2.1 AA accessibility compliance.",
-		image: "/Projects/18.jpg",
+		image: "/projects/npmjs.png",
 		tags: ["React Native", "Fabric", "TypeScript", "UI Component", "npmjs"],
 		liveUrl: "https://www.npmjs.com/package/react-native-earl-toastify",
 		repoUrl: "https://github.com/Swif7ify/react-native-earl-toastify",
@@ -195,7 +218,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A mobile application that allows users to control Hydrobot in real-time.",
-		image: "/Projects/19.jpg",
+		image: "/projects/hydrobotmobile.jpg",
 		tags: ["React Native"],
 		liveUrl: "#",
 		repoUrl: "#",
@@ -207,7 +230,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A fully functional floating robot built from scratch. It features thermal camera, leak detection system, and an integrated camera system for real-time video streaming. The robot is controlled via a custom mobile application.",
-		image: "/Projects/20.jpg",
+		image: "/projects/hydrobotiot.jpg",
 		tags: ["Raspberry Pi", "Python"],
 		liveUrl: "#",
 		repoUrl: "#",
@@ -219,20 +242,8 @@ export const projects: Project[] = [
 		year: "2025",
 		description:
 			"A smart vacuum robot that autonomously cleans floors and can be controlled through a mobile application. It features automatic home mapping and intelligent cleaning modes.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/placeholder.jpg",
 		tags: ["ESP32", "Arduino", "C#"],
-		liveUrl: "#",
-		repoUrl: "#",
-	},
-	{
-		id: "ikot-palengke-metro-project",
-		title: "Ikot Palengke Metro Project",
-		category: "Mobile Development",
-		year: "2025",
-		description:
-			"A digital mobile application that helps DTI monitor prices and violations in public markets (palengke) in an organized, real-time way",
-		image: "/Projects/1DEV.png",
-		tags: ["React Native", "Express", "MongoDB", "PostgreSQL"],
 		liveUrl: "#",
 		repoUrl: "#",
 	},
@@ -243,7 +254,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Chatry is a messaging app that allows users to communicate in real-time with rich media support.",
-		image: "/Projects/16.png",
+		image: "/projects/chatry.png",
 		tags: ["React Native", "Flask", "Socket.IO", "MongoDB"],
 		liveUrl: "#",
 		repoUrl: "#",
@@ -255,7 +266,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"AimY is a VS Code extension that turns your idle time into aim training sessions. When you stop coding for a while, targets appear and you need to hit them to get back to work",
-		image: "/Projects/15.png",
+		image: "/projects/aimy.png",
 		tags: ["TypeScript", "VS Code API", "Extension"],
 		liveUrl:
 			"https://marketplace.visualstudio.com/items?itemName=EarlRomeoOrdovez.aimy&ssr=false#review-details",
@@ -268,7 +279,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Innovative location-powered mobility app that empowers users through intelligent routing, real-time traffic updates, and seamless connections between drivers and commuters.",
-		image: "/Projects/13.png",
+		image: "/projects/gapogoweb.png",
 		tags: [
 			"React",
 			"Next.js",
@@ -287,7 +298,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Innovative location-powered mobility app that empowers users through intelligent routing, real-time traffic updates, and seamless connections between drivers and commuters.",
-		image: "/Projects/17.jpg",
+		image: "/projects/gapogomobile.jpg",
 		tags: [
 			"React Native",
 			"Google Maps API",
@@ -306,7 +317,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"Mobile app-based application designed to help students report, search and reclaim any lost items in the campus.",
-		image: "/Projects/14.png",
+		image: "/projects/gcyofinder.png",
 		tags: ["React", "Next.js", "TypeScript", "MongoDB", "Tailwind CSS"],
 		liveUrl: "https://gc-yofinder.vercel.app/login",
 		repoUrl: "#",
@@ -318,7 +329,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A web mapping tool that integrates Leaflet and MapLibre GL for advanced geospatial visualizations.",
-		image: "/Projects/openleaf.png",
+		image: "/projects/openleaf.png",
 		tags: ["React", "Leaflet", "MapLibre", "TypeScript"],
 		liveUrl: "https://swif7ify.github.io/leaflet-openfreemap-3d-demo/",
 		repoUrl: "https://github.com/Swif7ify/leaflet-openfreemap-3d-demo",
@@ -330,7 +341,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A tool that allows users to download YouTube videos and convert them into MP3 audio files in batches.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/placeholder.jpg",
 		tags: ["Python", "YouTube", "Automation"],
 		liveUrl: "https://github.com/Swif7ify/youtube-to-mp3-batch-downloader",
 		repoUrl: "https://github.com/Swif7ify/youtube-to-mp3-batch-downloader",
@@ -342,7 +353,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A tool that allows users to download YouTube videos. It supports batch downloading, enabling users to download multiple videos at once.",
-		image: "/Projects/1DEV.png",
+		image: "/projects/placeholder.jpg",
 		tags: ["Python", "YouTube", "Automation"],
 		liveUrl: "https://github.com/Swif7ify/youtube-batch-downloader",
 		repoUrl: "https://github.com/Swif7ify/youtube-batch-downloader",
@@ -354,7 +365,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"A modern digital logging and attendance system for the Olongapo City Public Library, built with Electron and JavaScript. This application streamlines visitor registration, attendance tracking, and report generation, ensuring secure and efficient data management.",
-		image: "/Projects/6.png",
+		image: "/projects/ocpl.png",
 		tags: ["Electron", "JavaScript", "Excel", "Responsive"],
 		liveUrl: "https://github.com/Swif7ify/OCPL-Logging",
 		repoUrl: "https://github.com/Swif7ify/OCPL-Logging",
@@ -366,7 +377,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			'All-In is a high-risk, high-reward game designed to challenge your luck and train your "SKILLS" and "DECISION MAKING". This game encourages strategic thinking and quick judgment.',
-		image: "/Projects/7.png",
+		image: "/projects/allin.png",
 		tags: ["Python", "Pygame", "Game Save"],
 		liveUrl: "https://rinubi.itch.io/all-in",
 		repoUrl: "https://github.com/Swif7ify/All-In-Pygame",
@@ -378,7 +389,7 @@ export const projects: Project[] = [
 		year: "2023",
 		description:
 			"First Web Development Project. Cartify offers a wide variety of car selections, allowing you to effortlessly browse and explore your dream car. With an intuitive interface and detailed listings, finding the perfect car has never been easier.",
-		image: "/Projects/8.png",
+		image: "/projects/cartify.png",
 		tags: ["HTML", "CSS", "JavaScript", "Responsive"],
 		liveUrl: "https://github.com/Swif7ify/Cartify-Solid-Works",
 		repoUrl: "https://github.com/Swif7ify/Cartify-Solid-Works",
@@ -390,7 +401,7 @@ export const projects: Project[] = [
 		year: "2023",
 		description:
 			"This project offers a wide range of mathematical functions, from basic arithmetic operations to complex notations and summations. The calculator is designed for infinite calculations with robust handling of various mathematical functions.",
-		image: "/Projects/9.png",
+		image: "/projects/calculator.png",
 		tags: ["Java", "Java Swing", "UX/UI Design"],
 		liveUrl:
 			"https://github.com/Swif7ify/Advanced-Calculator-Made-in-Java-Swing",
@@ -404,7 +415,7 @@ export const projects: Project[] = [
 		year: "2024",
 		description:
 			"An easy-to-use expense tracker helping students manage money and achieve financial goals. It allows users to track expenses, set budgets, and visualize spending patterns.",
-		image: "/Projects/10.png",
+		image: "/projects/pocket.png",
 		tags: ["Vue.js", "PHP", "MySQL", "Responsive", "Tailwind CSS"],
 		liveUrl: "#",
 		repoUrl: "#",
