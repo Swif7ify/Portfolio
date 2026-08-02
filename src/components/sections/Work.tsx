@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Globe, Plus, Minus } from 'lucide-react';
 import { projects, Project } from '../../data/projects';
+import { getImagePath } from '../../utils/image';
 
 const VISIBLE_COUNT = 4;
 
@@ -56,7 +57,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image
-                src={project.image}
+                src={getImagePath(project.image)}
                 alt={`${project.title} — ${project.category}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -67,7 +68,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         ) : (
           <div className="relative aspect-[16/10] overflow-hidden">
             <Image
-              src={project.image}
+              src={getImagePath(project.image)}
               alt={`${project.title} — ${project.category}`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

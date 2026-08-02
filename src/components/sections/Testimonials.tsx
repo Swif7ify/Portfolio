@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { testimonials } from "../../data/testimonials";
 import { scrollToSection } from "../../hooks/useSmoothScroll";
+import { getImagePath } from "../../utils/image";
 
 const AUTO_ADVANCE_MS = 6000;
 
@@ -142,7 +143,7 @@ export function Testimonials() {
 							</p>
 							<footer className="mt-8 flex items-center gap-4">
 								<Image
-									src={testimonial.avatar}
+									src={getImagePath(testimonial.avatar)}
 									alt={`Portrait of ${testimonial.name}`}
 									width={48}
 									height={48}

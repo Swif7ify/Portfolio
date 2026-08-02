@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { RevealText } from "../RevealText";
+import { getImagePath } from "../../utils/image";
 
 const stats = [
 	{ value: "4+", label: "Years crafting" },
@@ -73,7 +74,7 @@ export function About() {
 					>
 						<div className="relative aspect-[3/4] w-full overflow-hidden">
 							<Image
-								src="/EARL_ORDOVEZ.jpg"
+								src={getImagePath("/EARL_ORDOVEZ.jpg")}
 								alt="Portrait of Earl Ordovez"
 								fill
 								sizes="(max-width: 768px) 100vw, 40vw"
