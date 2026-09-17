@@ -19,6 +19,46 @@ export interface Service {
 
 export const projects: Project[] = [
 	{
+		id: "obelisk-cli",
+		title: "Obelisk CLI - AI Code Health & Architecture Linter",
+		category: "Developer Tool & CLI",
+		year: "2026",
+		description:
+			"A high-performance Go-based CLI, VS Code extension, and Model Context Protocol (MCP) server that acts as an automated tech lead. Evaluates project integrity, security vulnerabilities, and architectural health using static analysis, native esbuild parsing, and Gemini AI grading.",
+		image: "/projects/obelisk-cli.png",
+		tags: [
+			"Go",
+			"CLI",
+			"Model Context Protocol",
+			"Gemini AI",
+			"Static Analysis",
+			"esbuild",
+			"Security",
+		],
+		liveUrl: "https://github.com/Swif7ify/Obelisk-CLI",
+		repoUrl: "https://github.com/Swif7ify/Obelisk-CLI",
+	},
+	{
+		id: "8bitdo-battery-tray-display",
+		title: "8BitDo Battery Tray Display",
+		category: "Desktop Utility & IoT",
+		year: "2026",
+		description:
+			"A lightweight, secure, and read-only Windows system tray monitor for the 8BitDo Ultimate 2 Wireless controller. Features transparent battery tray icons displaying exact percentages via Bluetooth LE GATT or vertical capacity blocks via 2.4 GHz receiver, zero input lag, and per-monitor DPI awareness.",
+		image: "/projects/8bitdo_tray.png",
+		tags: [
+			"Python",
+			"Windows API",
+			"Bluetooth LE",
+			"GATT",
+			"PyStray",
+			"Win32",
+			"Reverse Engineering",
+		],
+		liveUrl: "https://github.com/Swif7ify/8BitDo-Battery-Tray-Display",
+		repoUrl: "https://github.com/Swif7ify/8BitDo-Battery-Tray-Display",
+	},
+	{
 		id: "devpad",
 		title: "DevPad - Custom Mechanical Macropad",
 		category: "Hardware & Embedded",
