@@ -35,7 +35,7 @@ export const projects: Project[] = [
 			"esbuild",
 			"Security",
 		],
-		liveUrl: "https://github.com/Swif7ify/Obelisk-CLI",
+		liveUrl: "",
 		repoUrl: "https://github.com/Swif7ify/Obelisk-CLI",
 	},
 	{
@@ -55,7 +55,7 @@ export const projects: Project[] = [
 			"Win32",
 			"Reverse Engineering",
 		],
-		liveUrl: "https://github.com/Swif7ify/8BitDo-Battery-Tray-Display",
+		liveUrl: "",
 		repoUrl: "https://github.com/Swif7ify/8BitDo-Battery-Tray-Display",
 	},
 	{
