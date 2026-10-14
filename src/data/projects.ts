@@ -474,7 +474,7 @@ export const services: Service[] = [
 			"Node.js",
 			"TypeScript",
 			"TailwindCSS",
-			"REST & GraphQL",
+			"REST",
 		],
 	},
 	{
@@ -484,7 +484,6 @@ export const services: Service[] = [
 			"Interactive games and real-time graphics experiences. Designing intuitive gameplay mechanics, fluid character controllers, and optimized physics pipelines.",
 		tags: [
 			"Unity",
-			"Unreal Engine",
 			"C#",
 			"C++",
 			"Gameplay Systems",
@@ -498,6 +497,7 @@ export const services: Service[] = [
 			"Stylized and high-fidelity 3D assets, environment modeling, and real-time shaders engineered for seamless integration in game engines and web visualizers.",
 		tags: [
 			"Blender",
+			"Fusion 360",
 			"Texturing",
 			"Shader Graph",
 			"Environment Design",
@@ -511,6 +511,7 @@ export const services: Service[] = [
 			"Hardware-software integration and custom PCB layout engineering. Developing custom microcontroller firmware that bridges real-world physical inputs with digital software.",
 		tags: [
 			"PCB Layout",
+			"Schematic Design",
 			"Microcontrollers",
 			"C/C++",
 			"Arduino",

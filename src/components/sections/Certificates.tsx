@@ -57,17 +57,19 @@ function CertificateCard({
           </div>
         </div>
       </button>
-      <a
-        href={cert.credentialUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-cursor
-        className="mt-2 inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-muted transition-colors duration-300 hover:text-accent"
-        aria-label={`Verify credential for ${cert.title}`}
-      >
-        Verify credential
-        <ArrowUpRight size={12} aria-hidden="true" />
-      </a>
+      {cert.credentialUrl && cert.credentialUrl.trim() !== '' && cert.credentialUrl !== '#' && (
+        <a
+          href={cert.credentialUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor
+          className="mt-2 inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-muted transition-colors duration-300 hover:text-accent"
+          aria-label={`Verify credential for ${cert.title}`}
+        >
+          Verify credential
+          <ArrowUpRight size={12} aria-hidden="true" />
+        </a>
+      )}
     </motion.li>
   );
 }
@@ -86,6 +88,16 @@ export function Certificates() {
 
   if (!certificates || certificates.length === 0) return null;
 
+  const years = certificates.map((c) => parseInt(c.year, 10)).filter((y) => !isNaN(y));
+  const minYear = years.length ? Math.min(...years) : null;
+  const maxYear = years.length ? Math.max(...years) : null;
+  const yearRangeText =
+    minYear && maxYear
+      ? minYear === maxYear
+        ? `${minYear}`
+        : `${minYear}/${String(maxYear).slice(-2)}`
+      : '';
+
   return (
     <section
       id="certificates"
@@ -102,7 +114,7 @@ export function Certificates() {
           </h2>
         </div>
         <span className="hidden font-sans text-xs uppercase tracking-[0.2em] text-muted md:block">
-          ({certificates.length}) Verified — 2022/25
+          ({certificates.length}) Verified{yearRangeText ? ` — ${yearRangeText}` : ''}
         </span>
       </div>
 
@@ -153,16 +165,18 @@ export function Certificates() {
                     {active.issuer} — {active.year}
                   </p>
                 </div>
-                <a
-                  href={active.credentialUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor
-                  className="flex shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
-                >
-                  Verify
-                  <ArrowUpRight size={13} aria-hidden="true" />
-                </a>
+                {active.credentialUrl && active.credentialUrl.trim() !== '' && active.credentialUrl !== '#' && (
+                  <a
+                    href={active.credentialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor
+                    className="flex shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
+                  >
+                    Verify
+                    <ArrowUpRight size={13} aria-hidden="true" />
+                  </a>
+                )}
               </figcaption>
               <button
                 onClick={() => setActive(null)}
