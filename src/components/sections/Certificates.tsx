@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, X } from 'lucide-react';
 import { certificates, Certificate } from '../../data/certificates';
 import { getImagePath } from '../../utils/image';
+import { setScrollLock } from '../../hooks/useSmoothScroll';
 
 function CertificateCard({
   cert,
@@ -74,16 +76,23 @@ function CertificateCard({
   );
 }
 
+const emptySubscribe = () => () => {};
+
 export function Certificates() {
   const [active, setActive] = useState<Certificate | null>(null);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
     if (!active) return;
+    setScrollLock(true);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setActive(null);
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      setScrollLock(false);
+    };
   }, [active]);
 
   if (!certificates || certificates.length === 0) return null;
@@ -124,72 +133,79 @@ export function Certificates() {
         ))}
       </ul>
 
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[250] flex items-center justify-center bg-ink/90 p-6 backdrop-blur-md md:p-12"
-            onClick={() => setActive(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Certificate: ${active.title}`}
-          >
-            <motion.figure
-              initial={{ scale: 0.92, y: 24 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 16 }}
-              transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-              className="relative max-h-full w-full max-w-3xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-line">
-                <Image
-                  src={getImagePath(active.image)}
-                  alt={`Certificate: ${active.title} issued by ${active.issuer}`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                />
-              </div>
-
-              <figcaption className="mt-4 flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-display text-lg uppercase tracking-wide text-cream">
-                    {active.title}
-                  </p>
-                  <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted">
-                    {active.issuer} — {active.year}
-                  </p>
-                </div>
-                {active.credentialUrl && active.credentialUrl.trim() !== '' && active.credentialUrl !== '#' && (
-                  <a
-                    href={active.credentialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor
-                    className="flex shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
-                  >
-                    Verify
-                    <ArrowUpRight size={13} aria-hidden="true" />
-                  </a>
-                )}
-              </figcaption>
-              <button
+      {/* Lightbox Modal rendered via Portal to escape section backdrop-filter containing block */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {active && (
+              <motion.div
+                key="certificate-lightbox"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="fixed inset-0 z-[250] flex items-center justify-center bg-ink/90 p-4 sm:p-6 md:p-12 backdrop-blur-md"
+                data-lenis-prevent
                 onClick={() => setActive(null)}
-                data-cursor
-                aria-label="Close certificate view"
-                className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-ink text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Certificate: ${active.title}`}
               >
-                <X size={16} aria-hidden="true" />
-              </button>
-            </motion.figure>
-          </motion.div>
+                <motion.figure
+                  initial={{ scale: 0.92, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.95, y: 16 }}
+                  transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }}
+                  className="relative flex flex-col w-full max-w-3xl max-h-[90vh] my-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="relative aspect-[4/3] w-full max-h-[70vh] overflow-hidden rounded-sm border border-line bg-ink/80 flex items-center justify-center">
+                    <Image
+                      src={getImagePath(active.image)}
+                      alt={`Certificate: ${active.title} issued by ${active.issuer}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 800px"
+                      className="object-contain p-2"
+                      priority
+                    />
+                  </div>
+
+                  <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-display text-lg uppercase tracking-wide text-cream md:text-xl">
+                        {active.title}
+                      </p>
+                      <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted">
+                        {active.issuer} — {active.year}
+                      </p>
+                    </div>
+                    {active.credentialUrl && active.credentialUrl.trim() !== '' && active.credentialUrl !== '#' && (
+                      <a
+                        href={active.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="Verify"
+                        className="flex shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
+                      >
+                        Verify
+                        <ArrowUpRight size={13} aria-hidden="true" />
+                      </a>
+                    )}
+                  </figcaption>
+                  <button
+                    onClick={() => setActive(null)}
+                    data-cursor="Close"
+                    aria-label="Close certificate view"
+                    className="absolute -right-3 -top-3 sm:-right-4 sm:-top-4 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-ink text-cream transition-colors duration-300 hover:border-accent hover:text-accent shadow-lg z-30"
+                  >
+                    <X size={16} aria-hidden="true" />
+                  </button>
+                </motion.figure>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </section>
   );
 }

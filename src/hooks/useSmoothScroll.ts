@@ -36,3 +36,14 @@ export function scrollToSection(target: string): void {
     document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
   }
 }
+
+export function setScrollLock(locked: boolean): void {
+  if (typeof document === 'undefined') return;
+  if (locked) {
+    lenisInstance?.stop();
+    document.body.style.overflow = 'hidden';
+  } else {
+    lenisInstance?.start();
+    document.body.style.overflow = '';
+  }
+}
