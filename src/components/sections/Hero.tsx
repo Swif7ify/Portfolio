@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { scrollToSection } from "../../hooks/useSmoothScroll";
 
@@ -9,37 +9,139 @@ interface HeroProps {
 	ready: boolean;
 }
 
-const line1 = "FULLSTACK";
-const line2 = "DEVELOPER";
+export const heroRotatingWords = [
+	"digital experiences",
+	"scalable systems",
+	"modern interfaces",
+	"creative web apps",
+	"interactive worlds",
+];
 
-function AnimatedLine({
-	text,
-	ready,
-	delay,
-}: {
+const line1 = "Fullstack developer";
+const line3 = "that refuse to be ordinary.";
+
+const LETTER_STAGGER = 0.02;
+const EASE: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+interface SplitLineProps {
 	text: string;
 	ready: boolean;
-	delay: number;
-}) {
+	delay?: number;
+}
+
+function SplitLine({ text, ready, delay = 0.45 }: SplitLineProps) {
+	let index = 0;
 	return (
-		<span className="block overflow-hidden">
-			<span className="flex justify-between">
-				{text.split("").map((char, i) => (
+		<span className="block overflow-hidden pb-[0.06em]">
+			{text.split(" ").map((word, wi) => (
+				<span
+					key={wi}
+					className="mr-[0.24em] inline-block whitespace-nowrap last:mr-0"
+				>
+					{word.split("").map((char, ci) => {
+						const i = index++;
+						return (
+							<motion.span
+								key={ci}
+								className="inline-block"
+								initial={{ y: "115%" }}
+								animate={ready ? { y: "0%" } : { y: "115%" }}
+								transition={{
+									duration: 0.75,
+									ease: [0.33, 1, 0.68, 1],
+									delay: delay + i * LETTER_STAGGER,
+								}}
+							>
+								{char}
+							</motion.span>
+						);
+					})}
+				</span>
+			))}
+		</span>
+	);
+}
+
+interface RotatingPhraseProps {
+	words?: string[];
+	ready: boolean;
+	delay?: number;
+}
+
+function RotatingPhrase({
+	words = heroRotatingWords,
+	ready,
+	delay = 0.65,
+}: RotatingPhraseProps) {
+	const [index, setIndex] = useState(0);
+
+	useEffect(() => {
+		if (!ready) return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		const id = window.setInterval(() => {
+			setIndex((v) => (v + 1) % words.length);
+		}, 2800);
+		return () => window.clearInterval(id);
+	}, [ready, words.length]);
+
+	const phrase = words[index];
+
+	return (
+		<span className="block overflow-hidden pb-[0.08em] font-serif italic text-accent font-normal">
+			<motion.span
+				className="inline-block"
+				initial={{ y: "115%" }}
+				animate={ready ? { y: "0%" } : { y: "115%" }}
+				transition={{ duration: 0.75, ease: [0.33, 1, 0.68, 1], delay }}
+			>
+				<span className="text-cream/90 not-italic mr-[0.24em]">crafting</span>
+				<AnimatePresence mode="wait" initial={false}>
 					<motion.span
-						key={i}
+						key={phrase}
 						className="inline-block"
-						initial={{ y: "110%", rotate: 6 }}
-						animate={ready ? { y: 0, rotate: 0 } : {}}
-						transition={{
-							duration: 0.9,
-							ease: [0.33, 1, 0.68, 1],
-							delay: delay + i * 0.035,
-						}}
+						initial="hidden"
+						animate="show"
+						exit="exit"
 					>
-						{char}
+						{phrase.split(" ").map((word, wi) => (
+							<span
+								key={wi}
+								className="mr-[0.22em] inline-block whitespace-nowrap last:mr-0"
+							>
+								{word.split("").map((char, ci) => (
+									<motion.span
+										key={ci}
+										className="inline-block"
+										variants={{
+											hidden: { y: "115%", opacity: 0 },
+											show: {
+												y: "0%",
+												opacity: 1,
+												transition: {
+													duration: 0.35,
+													ease: EASE,
+													delay: (wi * 8 + ci) * 0.018,
+												},
+											},
+											exit: {
+												y: "-115%",
+												opacity: 0,
+												transition: {
+													duration: 0.25,
+													ease: EASE,
+													delay: (wi * 8 + ci) * 0.012,
+												},
+											},
+										}}
+									>
+										{char}
+									</motion.span>
+								))}
+							</span>
+						))}
 					</motion.span>
-				))}
-			</span>
+				</AnimatePresence>
+			</motion.span>
 		</span>
 	);
 }
@@ -53,11 +155,15 @@ export function Hero({ ready }: HeroProps) {
 	const y = useTransform(scrollYProgress, [0, 1], [0, 220]);
 	const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
+	const line1Delay = 0.5;
+	const rotatingDelay = line1Delay + line1.length * LETTER_STAGGER;
+	const line3Delay = rotatingDelay + 0.25;
+
 	return (
 		<section
 			id="hero"
 			ref={ref}
-			className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-ink px-6 pb-10 pt-28 md:px-10"
+			className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-transparent px-6 pb-10 pt-28 md:px-10"
 			aria-label="Introduction"
 		>
 			{/* faint grid lines */}
@@ -81,7 +187,7 @@ export function Hero({ ready }: HeroProps) {
 						transition={{
 							duration: 0.8,
 							ease: [0.33, 1, 0.68, 1],
-							delay: 0.5,
+							delay: 0.45,
 						}}
 						className="font-serif text-xl italic text-muted md:text-2xl"
 					>
@@ -89,10 +195,16 @@ export function Hero({ ready }: HeroProps) {
 					</motion.p>
 				</div>
 
-				<h1 className="font-display text-[17.5vw] uppercase leading-[0.86] tracking-tight text-cream md:text-[15.5vw]">
-					<AnimatedLine text={line1} ready={ready} delay={0.55} />
-					<span className="block text-accent">
-						<AnimatedLine text={line2} ready={ready} delay={0.75} />
+				<h1 className="font-serif text-[clamp(2.6rem,7.4vw,7.6rem)] leading-[0.92] tracking-[-0.02em] text-cream">
+					<span className="sr-only">
+						Fullstack developer crafting digital experiences that refuse to be ordinary.
+					</span>
+					<span aria-hidden="true" className="block">
+						<SplitLine text={line1} ready={ready} delay={line1Delay} />
+						<span className="block pl-[4vw] md:pl-[10vw]">
+							<RotatingPhrase ready={ready} delay={rotatingDelay} />
+						</span>
+						<SplitLine text={line3} ready={ready} delay={line3Delay} />
 					</span>
 				</h1>
 

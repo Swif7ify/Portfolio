@@ -23,7 +23,7 @@ export function About() {
 	return (
 		<section
 			id="about"
-			className="relative w-full border-t border-line bg-panel px-6 py-24 md:px-10 md:py-36"
+			className="relative w-full border-t border-line bg-panel/40 backdrop-blur-[2px] px-6 py-24 md:px-10 md:py-36"
 			aria-label="About me"
 		>
 			<div className="grid grid-cols-1 gap-16 md:grid-cols-12">

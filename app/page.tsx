@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSmoothScroll } from "@/src/hooks/useSmoothScroll";
 import { Cursor } from "@/src/components/Cursor";
+import { FlowFieldBackground } from "@/src/components/FlowFieldBackground";
 import { Preloader } from "@/src/components/Preloader";
 import { Navbar } from "@/src/components/Navbar";
 import { Hero } from "@/src/components/sections/Hero";
@@ -28,7 +29,8 @@ export default function Home() {
 	useSmoothScroll();
 
 	return (
-		<div className="relative w-full bg-ink">
+		<div className="relative min-h-screen w-full bg-ink text-cream">
+			<FlowFieldBackground />
 			<div className="noise-overlay" aria-hidden="true" />
 			<Cursor />
 
@@ -43,10 +45,10 @@ export default function Home() {
 
 			<Navbar ready={loaded} />
 
-			<main>
+			<main className="relative z-10">
 				<Hero ready={loaded} />
 
-				<div className="border-y border-line bg-ink py-6 md:py-8">
+				<div className="border-y border-line bg-ink/60 backdrop-blur-[2px] py-6 md:py-8">
 					<Marquee baseVelocity={2.5}>
 						{marqueeItems.map((item) => (
 							<span

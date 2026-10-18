@@ -32,7 +32,7 @@ export function Testimonials() {
 		return (
 			<section
 				id="testimonials"
-				className="relative w-full overflow-hidden border-t border-line bg-ink px-6 py-24 md:px-10 md:py-36"
+				className="relative w-full overflow-hidden border-t border-line bg-transparent px-6 py-24 md:px-10 md:py-36"
 				aria-label="Testimonials"
 			>
 				{/* oversized background word */}
@@ -84,7 +84,7 @@ export function Testimonials() {
 	return (
 		<section
 			id="testimonials"
-			className="relative w-full overflow-hidden border-t border-line bg-ink px-6 py-24 md:px-10 md:py-36"
+			className="relative w-full overflow-hidden border-t border-line bg-transparent px-6 py-24 md:px-10 md:py-36"
 			aria-label="Testimonials"
 			onMouseEnter={() => setPaused(true)}
 			onMouseLeave={() => setPaused(false)}

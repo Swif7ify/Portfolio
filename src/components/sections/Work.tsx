@@ -166,7 +166,7 @@ export function Work() {
   const visibleProjects = showAll ? projects : projects.slice(0, VISIBLE_COUNT);
 
   return (
-    <section id="work" className="relative w-full bg-ink px-6 py-24 md:px-10 md:py-36" aria-label="Selected work">
+    <section id="work" className="relative w-full bg-transparent px-6 py-24 md:px-10 md:py-36" aria-label="Selected work">
       <div className="mb-16 flex items-end justify-between border-b border-line pb-6 md:mb-24">
         <h2 className="font-display text-[13vw] uppercase leading-none text-cream md:text-[8vw]">
           Selected<span className="text-accent">*</span>

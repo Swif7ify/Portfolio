@@ -11,7 +11,7 @@ export function Services() {
 	return (
 		<section
 			id="services"
-			className="relative w-full bg-ink px-6 py-24 md:px-10 md:py-36"
+			className="relative w-full bg-transparent px-6 py-24 md:px-10 md:py-36"
 			aria-label="Services"
 		>
 			<div className="mb-16 md:mb-24">

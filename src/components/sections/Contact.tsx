@@ -26,7 +26,7 @@ export function Contact() {
 		<footer
 			id="contact"
 			ref={ref}
-			className="relative w-full overflow-hidden border-t border-line bg-panel px-6 pb-8 pt-24 md:px-10 md:pt-36"
+			className="relative w-full overflow-hidden border-t border-line bg-panel/50 backdrop-blur-[2px] px-6 pb-8 pt-24 md:px-10 md:pt-36"
 			aria-label="Contact"
 		>
 			<motion.div

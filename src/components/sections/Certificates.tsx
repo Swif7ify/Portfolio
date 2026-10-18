@@ -101,7 +101,7 @@ export function Certificates() {
   return (
     <section
       id="certificates"
-      className="relative w-full border-t border-line bg-panel px-6 py-24 md:px-10 md:py-36"
+      className="relative w-full border-t border-line bg-panel/40 backdrop-blur-[2px] px-6 py-24 md:px-10 md:py-36"
       aria-label="Certificates"
     >
       <div className="mb-16 flex items-end justify-between md:mb-24">
