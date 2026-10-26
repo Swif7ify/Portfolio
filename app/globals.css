@@ -1,76 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #0a0a0a;
-  --color-panel: #141412;
-  --color-line: #26261f;
-  --color-cream: #ebe9e4;
-  --color-muted: #8a8880;
-  --color-accent: #ff4d00;
+  --color-bg: rgb(var(--bg) / <alpha-value>);
+  --color-surface: rgb(var(--surface) / <alpha-value>);
+  --color-fg: rgb(var(--fg) / <alpha-value>);
+  --color-muted: rgb(var(--muted) / <alpha-value>);
+  --color-accent: rgb(var(--accent) / <alpha-value>);
+  --color-accent2: rgb(var(--accent-2) / <alpha-value>);
+  --color-hair: var(--hairline);
 
-  --font-display: var(--font-anton), sans-serif;
-  --font-serif: var(--font-instrument-serif), serif;
-  --font-sans: var(--font-inter), sans-serif;
+  /* Legacy / current token compatibility */
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-accent-ink: var(--accent-ink);
+  --color-line: var(--line);
+
+  --font-display: 'Roboto Flex', system-ui, sans-serif;
+  --font-sans: 'Geist', 'Roboto Flex', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+  --font-pixel: 'Pixelify Sans', 'JetBrains Mono', monospace;
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* Default Theme: Swiss Tactile Warm Paper */
+:root,
+[data-theme='swiss'] {
+  --bg: 243 240 233;
+  --surface: 250 248 244;
+  --fg: 18 18 20;
+  --muted: 105 102 96;
+  --accent: 255 79 26;
+  --accent-2: 18 18 20;
+  --panel: 250 248 244;
+  --hairline: rgba(18, 18, 20, 0.08);
+
+  --paper: rgb(243, 240, 233);
+  --paper-2: rgb(250, 248, 244);
+  --ink: rgb(18, 18, 20);
+  --accent-ink: rgb(18, 18, 20);
+  --line: rgba(18, 18, 20, 0.08);
+  color-scheme: light;
+}
+
+/* Optional Obsidian Dark Mode */
+[data-theme='cyber'] {
+  --bg: 7 8 10;
+  --surface: 15 17 21;
+  --fg: 236 238 241;
+  --muted: 134 141 151;
+  --accent: 198 255 61;
+  --accent-2: 64 224 255;
+  --panel: 18 20 25;
+  --hairline: rgba(255, 255, 255, 0.09);
+
+  --paper: rgb(7, 8, 10);
+  --paper-2: rgb(15, 17, 21);
+  --ink: rgb(236, 238, 241);
+  --accent-ink: rgb(7, 8, 10);
+  --line: rgba(255, 255, 255, 0.09);
+  color-scheme: dark;
+}
+
+/* Deep Navy Liquid Theme */
+[data-theme='liquid'] {
+  --bg: 6 10 26;
+  --surface: 14 21 46;
+  --fg: 232 239 255;
+  --muted: 140 155 194;
+  --accent: 150 205 255;
+  --accent-2: 255 150 225;
+  --panel: 20 30 64;
+  --hairline: rgba(170, 200, 255, 0.13);
+
+  --paper: rgb(6, 10, 26);
+  --paper-2: rgb(14, 21, 46);
+  --ink: rgb(232, 239, 255);
+  --accent-ink: rgb(6, 10, 26);
+  --line: rgba(170, 200, 255, 0.13);
+  color-scheme: dark;
+}
+
+/* User Accent Switcher Overrides */
+[data-accent='ember'] {
+  --accent: 255 79 26;
+  --accent-ink: rgb(18, 18, 20);
+}
+
+[data-accent='lime'] {
+  --accent: 182 240 60;
+  --accent-ink: rgb(18, 18, 20);
+}
+
+[data-accent='cobalt'] {
+  --accent: 47 75 255;
+  --accent-ink: rgb(255, 255, 255);
 }
 
 html {
-  scroll-behavior: auto;
+  --scroll-velocity: 0;
+  --chroma: 0;
+  background: rgb(var(--bg));
 }
 
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 250ms ease-out, color 250ms ease-out;
+}
+
+::selection {
+  background: rgb(var(--accent));
+  color: rgb(var(--bg));
+}
+
+/* Lenis Smooth Scroll Rules */
 html.lenis,
 html.lenis body {
   height: auto;
 }
-
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-
-body {
-  background-color: #0a0a0a;
-  color: #ebe9e4;
-  font-family: var(--font-inter), sans-serif;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
-::selection {
-  background: #ff4d00;
-  color: #0a0a0a;
+/* Velocity-bound deformation & optical chromatic aberration */
+.skew-velocity {
+  transform: skewY(calc(var(--scroll-velocity, 0) * -0.12deg));
+  will-change: transform;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
+.chroma {
+  text-shadow:
+    calc(var(--chroma, 0) * 1px) 0 0 rgb(255 30 90 / 0.7),
+    calc(var(--chroma, 0) * -1px) 0 0 rgb(0 210 255 / 0.7);
 }
 
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
+.glass {
+  background: rgb(var(--panel) / 0.7);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid var(--hairline);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #3a3a38;
-  border-radius: 999px;
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px currentColor;
 }
 
-/* Hide native cursor on devices with fine pointer when custom cursor is active */
+/* Stepped 4px corners — precision CNC hardware chamfer */
+.pixel-corners {
+  clip-path: polygon(
+    0 4px, 4px 4px, 4px 0,
+    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+    4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+  );
+}
+
+.pixel-blink {
+  animation: pixel-blink 1.2s steps(1, end) infinite;
+}
+
+@keyframes pixel-blink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.15; }
+}
+
 @media (pointer: fine) {
-  .custom-cursor-active,
-  .custom-cursor-active * {
+  html.has-pixel-cursor,
+  html.has-pixel-cursor * {
     cursor: none !important;
   }
 }
 
-/* Film-grain noise overlay */
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.text-stroke {
-  -webkit-text-stroke: 1px #3a3a38;
-  color: transparent;
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquee, .pixel-blink, .skew-velocity { animation: none; transform: none !important; }
 }

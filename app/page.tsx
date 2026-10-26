@@ -1,85 +1,127 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useSmoothScroll } from "@/src/hooks/useSmoothScroll";
-import { Cursor } from "@/src/components/Cursor";
-import { FlowFieldBackground } from "@/src/components/FlowFieldBackground";
-import { Preloader } from "@/src/components/Preloader";
-import { Navbar } from "@/src/components/Navbar";
-import { Hero } from "@/src/components/sections/Hero";
-import { Marquee } from "@/src/components/sections/Marquee";
-import { Work } from "@/src/components/sections/Work";
-import { About } from "@/src/components/sections/About";
-import { Services } from "@/src/components/sections/Services";
-import { Certificates } from "@/src/components/sections/Certificates";
-import { Testimonials } from "@/src/components/sections/Testimonials";
-import { Contact } from "@/src/components/sections/Contact";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { PixelGridBackground } from '../src/components/pixel/PixelGridBackground';
+import { PixelCursor } from '../src/components/pixel/PixelCursor';
+import { PixelTransition, type WipePhase } from '../src/components/pixel/PixelTransition';
+import { SiteNav } from '../src/components/SiteNav';
+import { Hero } from '../src/components/Hero';
+import { WorkSection } from '../src/components/work/WorkSection';
+import { ToolsMarquee } from '../src/components/ToolsMarquee';
+import { AboutSection } from '../src/components/AboutSection';
+import { CapabilitiesSection } from '../src/components/CapabilitiesSection';
+import { CertificatesSection } from '../src/components/CertificatesSection';
+import { ProcessSection } from '../src/components/process/ProcessSection';
+import { ContactSection } from '../src/components/ContactSection';
+import { ProjectDetail } from '../src/components/ProjectDetail';
+import { projects } from '../src/data/projects';
+import { KineticProvider } from '../src/contexts/KineticContext';
+import { SmoothScroll } from '../src/components/SmoothScroll';
 
-const marqueeItems = [
-	"Design",
-	"Development",
-	"Motion",
-	"Strategy",
-	"Direction",
-];
+type PointerLike = { clientX: number; clientY: number } | null;
 
 export default function Home() {
-	const [loaded, setLoaded] = useState<boolean>(false);
-	useSmoothScroll();
+  const [accent, setAccent] = useState<'ember' | 'lime' | 'cobalt'>('ember');
+  const reduce = useReducedMotion();
+  const [phase, setPhase] = useState<WipePhase>(reduce ? 'idle' : 'hold');
+  const [origin, setOrigin] = useState({ x: 0.5, y: 0.5 });
+  const [openId, setOpenId] = useState<string | null>(null);
 
-	return (
-		<div className="relative min-h-screen w-full bg-ink text-cream">
-			<FlowFieldBackground />
-			<div className="noise-overlay" aria-hidden="true" />
-			<Cursor />
+  useEffect(() => {
+    document.documentElement.setAttribute('data-accent', accent);
+  }, [accent]);
 
-			<AnimatePresence mode="wait">
-				{!loaded && (
-					<Preloader
-						key="preloader"
-						onComplete={() => setLoaded(true)}
-					/>
-				)}
-			</AnimatePresence>
+  useEffect(() => {
+    if (reduce) {
+      setPhase('idle');
+      return;
+    }
+    const t1 = window.setTimeout(() => setPhase('reveal'), 900);
+    const t2 = window.setTimeout(() => setPhase('idle'), 1400);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [reduce]);
 
-			<Navbar ready={loaded} />
+  const wipe = useCallback(
+    (e: PointerLike, swap: () => void) => {
+      if (reduce) {
+        swap();
+        return;
+      }
+      setOrigin(
+        e && (e.clientX || e.clientY)
+          ? { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
+          : { x: 0.5, y: 0.5 }
+      );
+      setPhase('cover');
+      window.setTimeout(() => {
+        swap();
+        setPhase('reveal');
+        window.setTimeout(() => setPhase('idle'), 480);
+      }, 460);
+    },
+    [reduce]
+  );
 
-			<main className="relative z-10">
-				<Hero ready={loaded} />
+  const openProject = useCallback(
+    (id: string, e: PointerLike) => wipe(e, () => setOpenId(id)),
+    [wipe]
+  );
+  const closeProject = useCallback(
+    (e: PointerLike) => wipe(e, () => setOpenId(null)),
+    [wipe]
+  );
 
-				<div className="border-y border-line bg-ink/60 backdrop-blur-[2px] py-6 md:py-8">
-					<Marquee baseVelocity={2.5}>
-						{marqueeItems.map((item) => (
-							<span
-								key={item}
-								className="mx-6 flex items-center gap-12 font-display text-4xl uppercase text-cream md:text-6xl"
-							>
-								{item}
-								<motion.span
-									className="text-accent"
-									animate={{ rotate: 360 }}
-									transition={{
-										duration: 6,
-										repeat: Infinity,
-										ease: "linear",
-									}}
-								>
-									✳
-								</motion.span>
-							</span>
-						))}
-					</Marquee>
-				</div>
+  const index = projects.findIndex((p) => p.id === openId);
+  const project = index >= 0 ? projects[index] : null;
+  const nextProject = project ? projects[(index + 1) % projects.length] : null;
 
-				<Work />
-				<About />
-				<Services />
-				<Certificates />
-				<Testimonials />
-			</main>
+  return (
+    <KineticProvider initialTheme="swiss">
+      <SmoothScroll />
+      <div
+        data-accent={accent}
+        className="relative min-h-screen w-full bg-paper font-sans text-ink selection:bg-accent selection:text-accent-ink transition-colors duration-200"
+      >
+        <a
+          href="#work"
+          className="pixel-corners fixed left-4 top-4 z-[150] -translate-y-24 bg-ink px-4 py-2 font-mono text-sm text-paper focus:translate-y-0 transition-transform"
+        >
+          Skip to work
+        </a>
 
-			<Contact />
-		</div>
-	);
+        <PixelGridBackground enabled={true} accent={accent} />
+        <PixelCursor />
+        <SiteNav accent={accent} onAccentChange={setAccent} />
+
+        <main className="relative z-10">
+          <Hero accent={accent} ready={phase !== 'hold'} />
+          <WorkSection onOpen={openProject} />
+          <ToolsMarquee />
+          <AboutSection />
+          <CapabilitiesSection />
+          <CertificatesSection />
+          <ProcessSection />
+          <ContactSection />
+        </main>
+
+        {project && nextProject && (
+          <ProjectDetail
+            key={project.id}
+            project={project}
+            nextProject={nextProject}
+            position={index + 1}
+            total={projects.length}
+            onClose={closeProject}
+            onNext={(e: React.MouseEvent<HTMLElement>) => openProject(nextProject.id, e)}
+          />
+        )}
+
+        <PixelTransition phase={phase} origin={origin} />
+      </div>
+    </KineticProvider>
+  );
 }

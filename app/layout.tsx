@@ -1,37 +1,18 @@
 import type { Metadata } from 'next';
-import { Anton, Instrument_Serif, Inter } from 'next/font/google';
 import './globals.css';
-
-const anton = Anton({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-anton',
-});
-
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-instrument-serif',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://earl-portfolio.onedevph.online'),
-  title: 'Earl Romeo Ordovez — Full Stack Developer',
+  title: 'Earl Romeo Ordovez — Fullstack Developer & Creative Technologist',
   description:
-    'Portfolio of Earl Romeo Ordovez, a full stack developer crafting immersive digital experiences.',
+    'Portfolio of Earl Romeo Ordovez — Fullstack developer crafting developer tools, embedded IoT systems, robotics simulations, and interactive web applications.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Earl Romeo Ordovez — Full Stack Developer',
+    title: 'Earl Romeo Ordovez — Fullstack Developer & Creative Technologist',
     description:
-      'Portfolio of Earl Romeo Ordovez, a full stack developer crafting immersive digital experiences.',
+      'Portfolio of Earl Romeo Ordovez — Fullstack developer crafting developer tools, embedded IoT systems, robotics simulations, and interactive web applications.',
     url: 'https://earl-portfolio.onedevph.online',
     siteName: 'Earl Romeo Ordovez Portfolio',
     images: [
@@ -47,9 +28,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Earl Romeo Ordovez — Full Stack Developer',
+    title: 'Earl Romeo Ordovez — Fullstack Developer & Creative Technologist',
     description:
-      'Portfolio of Earl Romeo Ordovez, a full stack developer crafting immersive digital experiences.',
+      'Portfolio of Earl Romeo Ordovez — Fullstack developer crafting developer tools, embedded IoT systems, robotics simulations, and interactive web applications.',
     images: ['/EARL_ORDOVEZ.JPG'],
   },
 };
@@ -60,11 +41,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${anton.variable} ${instrumentSerif.variable} ${inter.variable}`}
-    >
-      <body className="bg-ink text-cream font-sans antialiased">{children}</body>
+    <html lang="en" data-accent="ember">
+      <body className="bg-paper text-ink font-sans antialiased selection:bg-accent selection:text-accent-ink">
+        {children}
+      </body>
     </html>
   );
 }
