@@ -25,11 +25,11 @@ export function PixelImage({
   const imageRef = useRef<HTMLImageElement | null>(null);
   const bufferRef = useRef<HTMLCanvasElement | null>(null);
   const levelRef = useRef(0);
-  const [loaded, setLoaded] = useState(false);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const resolvedSrc = getImagePath(src);
+  const loaded = loadedSrc === resolvedSrc;
   const reduce = useReducedMotion();
   const levels = useMemo(() => buildLevels(restingBlock), [restingBlock]);
-
-  const resolvedSrc = getImagePath(src);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -83,13 +83,12 @@ export function PixelImage({
 
   useEffect(() => {
     let cancelled = false;
-    setLoaded(false);
     const img = new Image();
     img.decoding = 'async';
     img.onload = () => {
       if (cancelled) return;
       imageRef.current = img;
-      setLoaded(true);
+      setLoadedSrc(resolvedSrc);
     };
     img.src = resolvedSrc;
     return () => {

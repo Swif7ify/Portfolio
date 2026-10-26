@@ -1,23 +1,28 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from 'react';
 
-export function useLocalTime(timeZone: string): string {
-  const format = () =>
-    new Intl.DateTimeFormat("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
+function getFormattedTime(timeZone: string): string {
+  try {
+    return new Intl.DateTimeFormat('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
       timeZone,
     }).format(new Date());
+  } catch {
+    return '12:00';
+  }
+}
 
-  const [time, setTime] = useState<string>("12:00");
-
-  useEffect(() => {
-    setTime(format());
-    const id = window.setInterval(() => setTime(format()), 15000);
-    return () => window.clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeZone]);
-
-  return time;
+/** Returns the local time formatted for the given time zone, updated every 15s via useSyncExternalStore. */
+export function useLocalTime(timeZone: string): string {
+  return useSyncExternalStore(
+    (callback) => {
+      if (typeof window === 'undefined') return () => {};
+      const id = window.setInterval(callback, 15000);
+      return () => window.clearInterval(id);
+    },
+    () => getFormattedTime(timeZone),
+    () => '12:00'
+  );
 }

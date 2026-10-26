@@ -24,19 +24,19 @@ type PointerLike = { clientX: number; clientY: number } | null;
 export default function Home() {
   const [accent, setAccent] = useState<'ember' | 'lime' | 'cobalt'>('ember');
   const reduce = useReducedMotion();
-  const [phase, setPhase] = useState<WipePhase>(reduce ? 'idle' : 'hold');
+  const [phase, setPhase] = useState<WipePhase>('hold');
   const [origin, setOrigin] = useState({ x: 0.5, y: 0.5 });
   const [openId, setOpenId] = useState<string | null>(null);
+
+  // Derive effective phase during render instead of triggering cascading renders in effects
+  const effectivePhase: WipePhase = reduce ? 'idle' : phase;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-accent', accent);
   }, [accent]);
 
   useEffect(() => {
-    if (reduce) {
-      setPhase('idle');
-      return;
-    }
+    if (reduce) return;
     const t1 = window.setTimeout(() => setPhase('reveal'), 900);
     const t2 = window.setTimeout(() => setPhase('idle'), 1400);
     return () => {
@@ -98,7 +98,7 @@ export default function Home() {
         <SiteNav accent={accent} onAccentChange={setAccent} />
 
         <main className="relative z-10">
-          <Hero accent={accent} ready={phase !== 'hold'} />
+          <Hero accent={accent} ready={effectivePhase !== 'hold'} />
           <WorkSection onOpen={openProject} />
           <ToolsMarquee />
           <AboutSection />
@@ -120,7 +120,7 @@ export default function Home() {
           />
         )}
 
-        <PixelTransition phase={phase} origin={origin} />
+        <PixelTransition phase={effectivePhase} origin={origin} />
       </div>
     </KineticProvider>
   );

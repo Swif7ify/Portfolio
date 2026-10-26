@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 type CursorMode = 'default' | 'link' | 'label';
 
 const SIZES: Record<CursorMode, number> = { default: 12, link: 40, label: 92 };
 
 export function PixelCursor() {
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useMediaQuery('(pointer: fine)');
   const [mode, setMode] = useState<CursorMode>('default');
   const [label, setLabel] = useState('');
   const [visible, setVisible] = useState(false);
@@ -19,10 +20,6 @@ export function PixelCursor() {
   const sy = useSpring(y, { stiffness: 900, damping: 50, mass: 0.35 });
   const gx = useTransform(sx, (v) => Math.round(v / 4) * 4);
   const gy = useTransform(sy, (v) => Math.round(v / 4) * 4);
-
-  useEffect(() => {
-    setEnabled(window.matchMedia('(pointer: fine)').matches);
-  }, []);
 
   useEffect(() => {
     if (!enabled) return;
