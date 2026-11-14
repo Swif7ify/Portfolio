@@ -1,41 +1,144 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 
 interface PreloaderProps {
 	onComplete: () => void;
 }
 
-const LINE_1 = "earl ordovez";
-const LINE_2 = "creative developer";
-
-// Parallelogram accent dot matching the exact geometric cut from the reference video
-function AccentMark({ direction }: { direction: "left" | "right" }) {
-	return (
-		<svg
-			width="10"
-			height="6"
-			viewBox="0 0 10 6"
-			fill="currentColor"
-			className="block text-[#f6f4e8]"
-			aria-hidden="true"
-		>
-			<path d="M7 0H0L3 6H10L7 0Z" />
-		</svg>
-	);
-}
+// The exact 20 SVG glyph paths from the reference video
+const PRELOADER_PATHS = [
+	{
+		id: 0,
+		isDot: false,
+		dotDirection: null,
+		d: "M0 67.9246H7.49307V73.4517C9.0084 71.3841 10.8871 69.8178 13.1329 68.7604C15.3786 67.6993 17.8387 67.1687 20.5133 67.1687C23.9437 67.1687 26.9235 68.0263 29.4454 69.7415C31.9673 71.4567 33.9005 73.8406 35.2378 76.8966C36.5751 79.9491 37.2437 83.4195 37.2437 87.3041C37.2437 91.1887 36.5751 94.6591 35.2378 97.7115C33.9005 100.764 31.9564 103.162 29.409 104.903C26.8617 106.644 23.871 107.516 20.437 107.516C17.7116 107.516 15.226 107.011 12.9802 106C10.7345 104.99 8.90665 103.428 7.49307 101.309V120.158H0V67.9246ZM26.531 97.4463C28.5732 95.0225 29.598 91.6175 29.598 87.2278C29.598 82.8381 28.5769 79.593 26.531 77.1983C24.4888 74.7999 21.6979 73.6007 18.1658 73.6007C14.6337 73.6007 12.0863 74.8253 10.0659 77.2709C8.04542 79.7202 7.03883 83.0379 7.03883 87.2242C7.03883 91.4104 8.04906 94.8953 10.0659 97.3663C12.0827 99.8374 14.7826 101.077 18.1658 101.077C21.5489 101.077 24.4851 99.8664 26.531 97.4426V97.4463Z",
+	},
+	{
+		id: 1,
+		isDot: false,
+		dotDirection: null,
+		d: "M44.5333 104.525C42.2367 102.53 41.0883 99.8446 41.0883 96.4615C41.0883 91.5158 43.7374 87.831 49.0357 85.4109C52.9712 83.6957 57.866 82.8381 63.7202 82.8381C65.032 82.8381 66.0422 82.8635 66.7472 82.9144V80.04C66.7472 75.4467 63.8692 73.1501 58.1167 73.1501C55.3405 73.1501 53.0584 73.6661 51.2669 74.7018C49.4754 75.7374 48.5778 77.4635 48.5778 79.8873H41.5389C41.5389 75.6466 43.1161 72.4706 46.2703 70.3484C49.4245 68.2298 53.2473 67.1687 57.7388 67.1687C62.2303 67.1687 66.2675 68.2807 69.2437 70.501C72.2199 72.7213 73.7097 76.0536 73.7097 80.4942V106.687H66.7472V101.538C63.266 105.524 58.8508 107.519 53.4981 107.519C49.8133 107.519 46.8226 106.524 44.526 104.529L44.5333 104.525ZM61.8705 99.8701C63.8147 98.7617 65.4427 97.1955 66.7545 95.1787V87.911C65.3409 87.8092 64.2834 87.7583 63.5748 87.7583C59.4867 87.7583 56.1326 88.4161 53.5053 89.7243C50.5292 91.1887 49.0393 93.231 49.0393 95.8583C49.0393 97.6243 49.6571 99.0125 50.8926 100.023C52.1281 101.033 53.7561 101.538 55.7765 101.538C57.8951 101.538 59.9264 100.982 61.8705 99.8737V99.8701Z",
+	},
+	{
+		id: 2,
+		isDot: false,
+		dotDirection: null,
+		d: "M80.0872 67.9246H87.5803V73.1501C88.4379 71.3841 89.6625 69.9705 91.2505 68.9094C92.8422 67.8483 94.6446 67.3177 96.6614 67.3177C97.7697 67.3177 99.0597 67.5212 100.521 67.9246V74.9634C100.521 74.9634 97.0139 74.3566 96.0545 74.3566C93.4817 74.3566 91.4504 75.3268 89.9605 77.271C88.4706 79.2151 87.7293 81.6498 87.7293 84.5751V106.68H80.0836V67.921L80.0872 67.9246Z",
+	},
+	{
+		id: 3,
+		isDot: false,
+		dotDirection: null,
+		d: "M134.665 67.9246H142.234V72.9975C143.495 71.1297 145.148 69.6907 147.191 68.6804C149.233 67.6702 151.519 67.1651 154.04 67.1651C158.027 67.1651 161.206 68.4406 163.579 70.988C165.952 73.5353 167.137 76.9802 167.137 81.3227V106.684H159.568V82.9144C159.568 76.8094 157.067 73.7533 152.074 73.7533C149.149 73.7533 146.787 74.6982 144.996 76.5914C143.204 78.4847 142.307 81.0466 142.307 84.2734V106.68H134.661V67.921L134.665 67.9246Z",
+	},
+	{
+		id: 4,
+		isDot: false,
+		dotDirection: null,
+		d: "M215.159 13.4817H222.728V18.5546C223.989 16.6868 225.642 15.2478 227.685 14.2376C229.727 13.2273 232.013 12.7222 234.535 12.7222C238.521 12.7222 241.701 13.9977 244.074 16.5451C246.447 19.0924 247.631 22.5374 247.631 26.8798V52.2407H240.062V28.4715C240.062 22.3666 237.562 19.3105 232.569 19.3105C229.643 19.3105 227.281 20.2553 225.49 22.1485C223.698 24.0418 222.801 26.6037 222.801 29.8306V52.2371H215.155V13.4781L215.159 13.4817Z",
+	},
+	{
+		id: 5,
+		isDot: false,
+		dotDirection: null,
+		d: "M58.3021 13.4817H65.8715V18.5546C67.1324 16.6868 68.7858 15.2478 70.8281 14.2376C72.8703 13.2273 75.156 12.7222 77.678 12.7222C81.6643 12.7222 84.844 13.9977 87.2169 16.5451C89.5898 19.0924 90.7745 22.5374 90.7745 26.8798V52.2407H83.2051V28.4715C83.2051 22.3666 80.705 19.3105 75.712 19.3105C72.7867 19.3105 70.4247 20.2553 68.6332 22.1485C66.8417 24.0418 65.9441 26.6037 65.9441 29.8306V52.2371H58.2984V13.4781L58.3021 13.4817Z",
+	},
+	{
+		id: 6,
+		isDot: false,
+		dotDirection: null,
+		d: "M206.652 89.499H179.401C179.703 93.2346 180.789 96.1235 182.657 98.1658C184.525 100.208 187.072 101.233 190.303 101.233C193.028 101.233 195.172 100.55 196.739 99.1905C198.305 97.8278 199.235 95.96 199.54 93.5871H206.125C205.518 98.0786 203.803 101.509 200.976 103.882C198.149 106.255 194.744 107.439 190.757 107.439C186.771 107.439 183.453 106.556 180.651 104.79C177.85 103.024 175.731 100.626 174.292 97.5989C172.853 94.5719 172.134 91.1887 172.134 87.4567C172.134 83.7247 172.791 80.3161 174.103 77.2382C175.415 74.1603 177.421 71.7111 180.121 69.8942C182.821 68.0772 186.113 67.1687 190.001 67.1687C193.89 67.1687 197.091 68.0772 199.617 69.8942C202.142 71.7111 203.97 74.0949 205.104 77.0493C206.238 80 206.808 83.2196 206.808 86.7009C206.808 87.762 206.757 88.6922 206.655 89.5026L206.652 89.499ZM182.468 76.1735C180.677 77.9905 179.656 80.5378 179.401 83.8192H199.689C199.588 80.6904 198.719 78.1794 197.077 76.2862C195.434 74.3929 193.028 73.4481 189.849 73.4481C186.669 73.4481 184.26 74.3566 182.468 76.1735Z",
+	},
+	{
+		id: 7,
+		isDot: false,
+		dotDirection: null,
+		d: "M287.844 34.3002H260.593C260.895 38.0359 261.981 40.9248 263.849 42.9671C265.717 45.0093 268.264 46.0341 271.495 46.0341C274.22 46.0341 276.364 45.3509 277.93 43.9918C279.497 42.6291 280.427 40.7613 280.732 38.3884H287.317C286.71 42.8799 284.995 46.3102 282.168 48.6832C279.34 51.0561 275.935 52.2407 271.949 52.2407C267.963 52.2407 264.645 51.3577 261.843 49.5916C259.042 47.8256 256.923 45.4272 255.484 42.4002C254.045 39.3731 253.325 35.99 253.325 32.258C253.325 28.526 253.983 25.1174 255.295 22.0395C256.607 18.9616 258.613 16.5124 261.313 14.6954C264.013 12.8785 267.305 11.97 271.193 11.97C275.082 11.97 278.283 12.8785 280.809 14.6954C283.334 16.5124 285.162 18.8962 286.296 21.8506C287.429 24.8013 288 28.0209 288 31.5022C288 32.5633 287.949 33.4935 287.847 34.3039L287.844 34.3002ZM263.657 20.9784C261.865 22.7954 260.844 25.3427 260.59 28.6241H280.878C280.776 25.4953 279.907 22.9843 278.265 21.0911C276.626 19.1978 274.217 18.253 271.037 18.253C267.857 18.253 265.448 19.1615 263.657 20.9784Z",
+	},
+	{
+		id: 8,
+		isDot: false,
+		dotDirection: null,
+		d: "M212.332 67.9246H219.825V73.1501C220.682 71.3841 221.907 69.9705 223.495 68.9094C225.087 67.8483 226.889 67.3177 228.906 67.3177C230.018 67.3177 231.304 67.5212 232.765 67.9246V74.9634C232.765 74.9634 229.258 74.3566 228.299 74.3566C225.726 74.3566 223.695 75.3268 222.205 77.271C220.715 79.2151 219.974 81.6498 219.974 84.5751V106.68H212.328V67.921L212.332 67.9246Z",
+	},
+	{
+		id: 9,
+		isDot: false,
+		dotDirection: null,
+		d: "M241.185 104.485C237.703 102.061 235.963 98.4274 235.963 93.5835H242.925C242.925 96.4615 243.783 98.5546 245.498 99.8664C247.115 101.077 249.484 101.683 252.613 101.683C254.681 101.633 256.385 101.127 257.722 100.168C259.06 99.2087 259.728 97.7951 259.728 95.9273C259.728 94.6155 259.314 93.5689 258.478 92.784C257.646 92.0027 256.636 91.4213 255.451 91.0434C254.267 90.6655 252.41 90.1712 249.888 89.568C247.061 88.9103 244.779 88.2416 243.038 87.5621C241.297 86.8789 239.822 85.8324 238.608 84.4224C237.398 83.0089 236.791 81.1156 236.791 78.7463C236.791 75.0107 238.103 72.1472 240.727 70.1558C243.35 68.1644 246.806 67.1651 251.098 67.1651C255.389 67.1651 258.616 68.0227 261.091 69.7379C262.806 70.8499 264.107 72.2743 264.99 74.015C265.873 75.7556 266.317 77.7106 266.317 79.8801H259.656C259.656 77.3582 258.824 75.5412 257.159 74.4292C255.695 73.4699 253.852 72.9902 251.632 72.9902C249.412 72.9902 247.431 73.4299 245.992 74.313C244.553 75.196 243.834 76.4461 243.834 78.0595C243.834 79.1715 244.277 80.0654 245.16 80.7486C246.043 81.4317 247.053 81.9478 248.187 82.3002C249.325 82.6527 251.381 83.1833 254.357 83.8919C257.032 84.5496 259.252 85.2546 261.018 86.0104C262.784 86.7663 264.234 87.8783 265.372 89.3427C266.509 90.8072 267.076 92.7513 267.076 95.1715C267.076 99.0561 265.79 102.087 263.217 104.256C260.644 106.426 257.414 107.512 253.529 107.512C248.231 107.512 244.117 106.502 241.188 104.485H241.185Z",
+	},
+	{
+		id: 10,
+		isDot: false,
+		dotDirection: null,
+		d: "M119.715 67.9246V58.9925H112.145V67.9246H106.469V74.9634H112.145V96.5378C112.145 103.3 115.376 106.68 121.833 106.68H128.723V100.55H124.711C122.894 100.55 121.608 100.121 120.852 99.2632C120.096 98.4056 119.715 96.9157 119.715 94.7972V74.9634H128.723V67.9246H119.715Z",
+	},
+	{
+		id: 11,
+		isDot: false,
+		dotDirection: null,
+		d: "M7.64569 0.00726378H0V46.0595H7.64569V0.00726378Z",
+	},
+	{
+		id: 12,
+		isDot: true,
+		dotDirection: "left" as const,
+		d: "M15.2914 46.0595H7.64569L10.4838 52.2407H18.1295L15.2914 46.0595Z",
+	},
+	{
+		id: 13,
+		isDot: false,
+		dotDirection: null,
+		d: "M184.794 0.00726378H177.148V46.0595H184.794V0.00726378Z",
+	},
+	{
+		id: 14,
+		isDot: true,
+		dotDirection: "right" as const,
+		d: "M192.44 46.0595H184.794L187.632 52.2407H195.278L192.44 46.0595Z",
+	},
+	{
+		id: 15,
+		isDot: false,
+		dotDirection: null,
+		d: "M22.4174 48.3816C20.0445 45.8088 18.8599 42.3747 18.8599 38.0868V13.4854H26.5056V36.6514C26.5056 42.5056 29.0275 45.4308 34.075 45.4308C37.0002 45.4308 39.3477 44.486 41.1138 42.5928C42.8799 40.6995 43.7629 38.2648 43.7629 35.2887V13.4854H51.4086V52.2444H43.8392V46.4156C41.012 50.3003 37.1274 52.2444 32.1817 52.2444C28.0427 52.2444 24.7867 50.958 22.4174 48.3852V48.3816Z",
+	},
+	{
+		id: 16,
+		isDot: false,
+		dotDirection: null,
+		d: "M104.918 49.8933C102.09 48.327 99.8846 46.045 98.293 43.0434C96.7014 40.0418 95.9092 36.4188 95.9092 32.1817C95.9092 27.9446 96.705 24.2199 98.293 21.1674C99.881 18.1149 102.09 15.8038 104.918 14.2412C107.745 12.675 110.975 11.8937 114.609 11.8937C119.606 11.8937 123.73 13.2928 126.986 16.0945C130.242 18.8962 132.019 22.7699 132.324 27.7156H124.98C124.777 24.6886 123.756 22.392 121.913 20.8258C120.071 19.2596 117.662 18.4783 114.685 18.4783C111.204 18.4783 108.479 19.6121 106.509 21.8833C104.54 24.1544 103.558 27.5848 103.558 32.1781C103.558 36.7713 104.543 40.0273 106.509 42.2476C108.479 44.4679 111.201 45.5798 114.685 45.5798C117.611 45.5798 119.998 44.824 121.841 43.3087C123.683 41.7933 124.704 39.573 124.908 36.6477H132.324C131.972 41.5426 130.166 45.3654 126.913 48.1163C123.658 50.8671 119.558 52.2407 114.613 52.2407C110.979 52.2407 107.748 51.4595 104.921 49.8933H104.918Z",
+	},
+	{
+		id: 17,
+		isDot: false,
+		dotDirection: null,
+		d: "M138.237 0.00726378H145.882V18.402C147.042 16.6359 148.695 15.2478 150.839 14.2376C152.983 13.2273 155.294 12.7222 157.765 12.7222C161.802 12.7222 164.968 14.0086 167.264 16.5814C169.561 19.1542 170.709 22.5882 170.709 26.8762V52.2371H163.14V28.0136C163.14 25.1356 162.496 22.9553 161.21 21.4654C159.924 19.9755 158.045 19.2305 155.57 19.2305C152.743 19.2305 150.421 20.2008 148.608 22.1449C146.791 24.089 145.882 26.4983 145.882 29.3727V52.2335H138.237V0V0.00726378Z",
+	},
+	{
+		id: 18,
+		isDot: false,
+		dotDirection: null,
+		d: "M207.891 0.00726378H200.245V7.72927H207.891V0.00726378Z",
+	},
+	{
+		id: 19,
+		isDot: false,
+		dotDirection: null,
+		d: "M207.891 13.4817H200.245V52.2407H207.891V13.4817Z",
+	},
+];
 
 export function Preloader({ onComplete }: PreloaderProps) {
-	const [dotsActive, setDotsActive] = useState<boolean>(false);
-	const [textActive, setTextActive] = useState<boolean>(false);
+	const svgRef = useRef<SVGSVGElement>(null);
 
 	const handleSkip = useCallback(() => {
 		onComplete();
 	}, [onComplete]);
 
 	useEffect(() => {
-		// Keyboard shortcut to skip intro immediately
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape" || e.key === " " || e.key === "Enter") {
 				handleSkip();
@@ -43,167 +146,128 @@ export function Preloader({ onComplete }: PreloaderProps) {
 		};
 		window.addEventListener("keydown", onKeyDown);
 
-		// Sequence timing matching reference video
-		// 1. Initial dark delay -> dots glide together
-		const dotsTimer = setTimeout(() => {
-			setDotsActive(true);
-		}, 350);
+		const svgEl = svgRef.current;
+		if (!svgEl) return;
 
-		// 2. Letters slice up in staggered cascade
-		const textTimer = setTimeout(() => {
-			setTextActive(true);
-		}, 650);
+		const dotLeft = svgEl.querySelector<SVGPathElement>(".logo-animatable-dot-left");
+		const dotRight = svgEl.querySelector<SVGPathElement>(".logo-animatable-dot-right");
+		const paths = svgEl.querySelectorAll<SVGPathElement>(
+			"path:not(.logo-animatable-dot-left):not(.logo-animatable-dot-right)"
+		);
 
-		// 3. Complete hold & trigger site entrance
+		// 1. Initial GSAP-equivalent setup
+		if (dotLeft) {
+			dotLeft.style.opacity = "0";
+			dotLeft.style.transform = "translateX(12px)";
+		}
+		if (dotRight) {
+			dotRight.style.opacity = "0";
+			dotRight.style.transform = "translateX(-12px)";
+		}
+		paths.forEach((p) => {
+			p.style.opacity = "0";
+			p.style.transform = "translateY(20px)";
+			p.style.clipPath = "inset(100% 0% 0% 0%)";
+		});
+
+		// 2. Dots glide together from opposing sides (duration 0.6s, ease: power2.out)
+		const dotsAnimTimer = setTimeout(() => {
+			if (dotLeft) {
+				dotLeft.animate(
+					[
+						{ opacity: 0, transform: "translateX(12px)" },
+						{ opacity: 1, transform: "translateX(0px)" },
+					],
+					{
+						duration: 600,
+						easing: "cubic-bezier(0.25, 1, 0.5, 1)", // power2.out
+						fill: "forwards",
+					}
+				);
+			}
+			if (dotRight) {
+				dotRight.animate(
+					[
+						{ opacity: 0, transform: "translateX(-12px)" },
+						{ opacity: 1, transform: "translateX(0px)" },
+					],
+					{
+						duration: 600,
+						easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+						fill: "forwards",
+					}
+				);
+			}
+		}, 400);
+
+		// 3. Staggered path reveals with translateY + inset bottom-up clip mask
+		// Starts 0.2s before dots finish (at t = 800ms) with 0.03s stagger per path
+		const pathsAnimTimer = setTimeout(() => {
+			paths.forEach((p, idx) => {
+				p.animate(
+					[
+						{ opacity: 0, transform: "translateY(20px)", clipPath: "inset(100% 0% 0% 0%)" },
+						{ opacity: 1, transform: "translateY(0px)", clipPath: "inset(0% 0% 0% 0%)" },
+					],
+					{
+						duration: 1000,
+						delay: idx * 30, // 0.03s stagger
+						easing: "cubic-bezier(0.25, 1, 0.5, 1)", // power2.out
+						fill: "forwards",
+					}
+				);
+			});
+		}, 750);
+
+		// 4. Hold & complete transition after ~2.6s
 		const exitTimer = setTimeout(() => {
 			onComplete();
-		}, 2600);
+		}, 2650);
 
 		return () => {
 			window.removeEventListener("keydown", onKeyDown);
-			clearTimeout(dotsTimer);
-			clearTimeout(textTimer);
+			clearTimeout(dotsAnimTimer);
+			clearTimeout(pathsAnimTimer);
 			clearTimeout(exitTimer);
 		};
 	}, [onComplete, handleSkip]);
 
-	let globalCharIndex = 0;
-
 	return (
 		<motion.div
-			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#141412] text-[#f6f4e8] select-none cursor-pointer"
+			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#272727] text-[#f6f4e8] select-none cursor-pointer"
 			initial={{ opacity: 1 }}
 			exit={{
 				opacity: 0,
-				transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] },
+				transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
 			}}
 			onClick={handleSkip}
-			aria-label="Loading intro"
+			aria-label="Loading"
 			role="status"
 		>
-			<div className="relative flex flex-col items-start px-6">
-				{/* Line 1: earl ordovez */}
-				<div className="relative flex items-baseline font-sans text-[clamp(1.75rem,5.5vw,2.75rem)] font-normal tracking-[-0.035em] leading-[1.08] lowercase text-[#f6f4e8]">
-					{LINE_1.split("").map((char, i) => {
-						const charIdx = globalCharIndex++;
-						const isSpace = char === " ";
-
-						if (isSpace) {
-							return (
-								<span key={i} className="inline-block w-[0.28em]">
-									&nbsp;
-								</span>
-							);
-						}
-
-						const isLeftDotAnchor = i === 3; // 'l' in "earl"
-						const isRightDotAnchor = i === LINE_1.length - 1; // 'z' in "ordovez"
-
-						return (
-							<span key={i} className="relative inline-block">
-								<motion.span
-									className="inline-block"
-									initial={{
-										y: 20,
-										clipPath: "inset(100% 0% 0% 0%)",
-										opacity: 0,
-									}}
-									animate={
-										textActive
-											? {
-													y: 0,
-													clipPath: "inset(0% 0% 0% 0%)",
-													opacity: 1,
-												}
-											: {}
-									}
-									transition={{
-										duration: 0.85,
-										ease: [0.16, 1, 0.3, 1],
-										delay: charIdx * 0.026,
-									}}
-								>
-									{char}
-								</motion.span>
-
-								{/* Left accent dot anchored at the foot of 'l' */}
-								{isLeftDotAnchor && (
-									<motion.span
-										className="absolute -bottom-[2px] right-0 pointer-events-none"
-										initial={{ opacity: 0, x: 14 }}
-										animate={dotsActive ? { opacity: 1, x: 0 } : {}}
-										transition={{
-											duration: 0.6,
-											ease: [0.16, 1, 0.3, 1],
-										}}
-									>
-										<AccentMark direction="left" />
-									</motion.span>
-								)}
-
-								{/* Right accent dot anchored at the foot of 'z' */}
-								{isRightDotAnchor && (
-									<motion.span
-										className="absolute -bottom-[2px] right-0 pointer-events-none"
-										initial={{ opacity: 0, x: -14 }}
-										animate={dotsActive ? { opacity: 1, x: 0 } : {}}
-										transition={{
-											duration: 0.6,
-											ease: [0.16, 1, 0.3, 1],
-										}}
-									>
-										<AccentMark direction="right" />
-									</motion.span>
-								)}
-							</span>
-						);
-					})}
-				</div>
-
-				{/* Line 2: creative developer */}
-				<div className="relative flex items-baseline font-sans text-[clamp(1.75rem,5.5vw,2.75rem)] font-normal tracking-[-0.035em] leading-[1.08] lowercase text-[#f6f4e8] mt-0.5">
-					{LINE_2.split("").map((char, i) => {
-						const charIdx = globalCharIndex++;
-						const isSpace = char === " ";
-
-						if (isSpace) {
-							return (
-								<span key={i} className="inline-block w-[0.28em]">
-									&nbsp;
-								</span>
-							);
-						}
-
-						return (
-							<span key={i} className="relative inline-block">
-								<motion.span
-									className="inline-block"
-									initial={{
-										y: 20,
-										clipPath: "inset(100% 0% 0% 0%)",
-										opacity: 0,
-									}}
-									animate={
-										textActive
-											? {
-													y: 0,
-													clipPath: "inset(0% 0% 0% 0%)",
-													opacity: 1,
-												}
-											: {}
-									}
-									transition={{
-										duration: 0.85,
-										ease: [0.16, 1, 0.3, 1],
-										delay: charIdx * 0.026,
-									}}
-								>
-									{char}
-								</motion.span>
-							</span>
-						);
-					})}
-				</div>
+			<div className="relative w-[334px] max-w-[calc(100%-32px)]">
+				<svg
+					ref={svgRef}
+					viewBox="0 0 288 121"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					className="block w-full h-auto text-[#f6f4e8]"
+					aria-label="Site logo animation"
+				>
+					{PRELOADER_PATHS.map((item) => (
+						<path
+							key={item.id}
+							className={
+								item.isDot
+									? item.dotDirection === "left"
+										? "logo-animatable-dot-left"
+										: "logo-animatable-dot-right"
+									: undefined
+							}
+							d={item.d}
+							fill="currentColor"
+						/>
+					))}
+				</svg>
 			</div>
 		</motion.div>
 	);
