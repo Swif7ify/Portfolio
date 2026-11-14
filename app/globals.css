@@ -1,4 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap');
 @import "tailwindcss";
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root,
+[data-theme='cyber'] {
+  --bg: 10 10 10;
+  --surface: 20 20 18;
+  --fg: 235 233 228;
+  --muted: 138 136 128;
+  --accent: 255 77 0;
+  --accent-2: 64 224 255;
+  --panel: 22 22 20;
+  --hairline: rgb(255 255 255 / 0.1);
+  color-scheme: dark;
+}
+
+[data-theme='swiss'] {
+  --bg: 239 237 231;
+  --surface: 250 249 246;
+  --fg: 14 14 14;
+  --muted: 92 90 86;
+  --accent: 228 48 12;
+  --accent-2: 14 14 14;
+  --panel: 250 249 246;
+  --hairline: rgb(0 0 0 / 0.14);
+  color-scheme: light;
+}
+
+[data-theme='liquid'] {
+  --bg: 6 10 26;
+  --surface: 14 21 46;
+  --fg: 232 239 255;
+  --muted: 140 155 194;
+  --accent: 150 205 255;
+  --accent-2: 255 150 225;
+  --panel: 20 30 64;
+  --hairline: rgb(170 200 255 / 0.13);
+  color-scheme: dark;
+}
 
 @theme {
   --color-ink: #0a0a0a;
@@ -8,13 +52,22 @@
   --color-muted: #8a8880;
   --color-accent: #ff4d00;
 
-  --font-display: var(--font-anton), sans-serif;
+  --color-bg: rgb(var(--bg) / <alpha-value>);
+  --color-surface: rgb(var(--surface) / <alpha-value>);
+  --color-fg: rgb(var(--fg) / <alpha-value>);
+  --color-hair: var(--hairline);
+  --border-color-hair: var(--hairline);
+
+  --font-display: "Roboto Flex", var(--font-anton), system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), serif;
-  --font-sans: var(--font-inter), sans-serif;
+  --font-sans: "Roboto Flex", var(--font-inter), system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 html {
   scroll-behavior: auto;
+  --scroll-velocity: 0;
+  --chroma: 0;
 }
 
 html.lenis,
@@ -27,16 +80,16 @@ html.lenis body {
 }
 
 body {
-  background-color: #0a0a0a;
-  color: #ebe9e4;
-  font-family: var(--font-inter), sans-serif;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #ff4d00;
-  color: #0a0a0a;
+  background: rgb(var(--accent));
+  color: rgb(var(--bg));
 }
 
 ::-webkit-scrollbar {
@@ -50,6 +103,28 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #3a3a38;
   border-radius: 999px;
+}
+
+/* Velocity-bound deformation */
+.skew-velocity {
+  transform: skewY(calc(var(--scroll-velocity) * -0.12deg));
+  will-change: transform;
+}
+
+.chroma {
+  text-shadow: none;
+}
+
+.glass {
+  background: rgb(var(--panel) / 0.6);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid var(--hairline);
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(var(--fg) / 0.35);
 }
 
 /* Hide native cursor on devices with fine pointer when custom cursor is active */
@@ -73,4 +148,79 @@ body {
 .text-stroke {
   -webkit-text-stroke: 1px #3a3a38;
   color: transparent;
+}
+
+/* Native scroll-driven animations */
+.sda-progress {
+  transform: scaleX(0);
+}
+@supports (animation-timeline: view()) {
+  .sda-section {
+    view-timeline: --sda-section block;
+  }
+  .sda-scope {
+    timeline-scope: --sda-1, --sda-2;
+  }
+  .sda-step-1 {
+    view-timeline: --sda-1 block;
+  }
+  .sda-step-2 {
+    view-timeline: --sda-2 block;
+  }
+  @keyframes sda-wipe {
+    from {
+      clip-path: inset(0 0 0 0);
+    }
+    to {
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+  .sda-layer {
+    animation: sda-wipe linear both;
+    animation-range: entry 0% contain 0%;
+  }
+  .sda-layer-0 {
+    animation-timeline: --sda-1;
+  }
+  .sda-layer-1 {
+    animation-timeline: --sda-2;
+  }
+  .sda-layer-2 {
+    animation: none;
+  }
+  @keyframes sda-reveal {
+    from {
+      opacity: 0;
+      clip-path: inset(45% 20% 45% 20% round 16px);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0 round 16px);
+    }
+  }
+  .sda-reveal {
+    animation: sda-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 25% cover 50%;
+  }
+  @keyframes sda-grow {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .sda-progress {
+    animation: sda-grow linear both;
+    animation-timeline: --sda-section;
+    animation-range: contain 0% contain 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sda-layer,
+  .sda-reveal,
+  .sda-progress {
+    animation: none !important;
+  }
+  .skew-velocity {
+    transform: none;
+  }
 }

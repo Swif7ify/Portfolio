@@ -1,0 +1,75 @@
+'use client';
+
+import React, { useRef } from "react";
+import { useKinetic } from "@/src/contexts/KineticContext";
+import { elasticImages } from "@/src/data/motionLab";
+import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { clamp } from "@/src/utils/math";
+import { ChapterHeader } from "@/src/components/ChapterHeader";
+
+const COLS = 5;
+const ASPECTS = ["aspect-[3/4]", "aspect-square", "aspect-[4/5]", "aspect-[2/3]"];
+
+/** Columns follow scroll with lag proportional to their distance from the centre column. */
+export function ElasticGrid() {
+  const { metrics, reducedMotion } = useKinetic();
+  const gridRef = useRef<HTMLDivElement>(null);
+  const colRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const offsets = useRef<number[]>(Array(COLS).fill(0));
+  const inView = useInView(gridRef);
+
+  useAnimationFrame(() => {
+    if (typeof window === "undefined") return;
+    const v = reducedMotion ? 0 : clamp(metrics.current.velocity, -60, 60);
+    const center = (COLS - 1) / 2;
+    colRefs.current.forEach((el, c) => {
+      if (!el) return;
+      const dist = Math.abs(c - center);
+      const target = v * 4.2 * dist;
+      const ease = 0.06 + (center - dist) * 0.02;
+      offsets.current[c] += (target - offsets.current[c]) * ease;
+      el.style.transform = `translate3d(0, ${offsets.current[c].toFixed(2)}px, 0)`;
+    });
+  }, inView);
+
+  const columns = Array.from({ length: COLS }, (_, c) => elasticImages.filter((_, i) => i % COLS === c));
+
+  return (
+    <section id="elastic" aria-labelledby="elastic-title" className="relative overflow-hidden bg-bg px-4 py-32 md:px-6 md:py-40">
+      <div className="mx-auto max-w-[1440px]">
+        <ChapterHeader
+          id="elastic-title"
+          number="14"
+          kicker="Visual Archive & Artifact Grid"
+          title={
+            <>
+              A grid that
+              <br />
+              <span className="text-muted">stretches with motion.</span>
+            </>
+          }
+          description="An elastic gallery of creative experiments, visual studies, and interface artifacts that react dynamically to your scroll velocity."
+        />
+
+        <div ref={gridRef} className="mt-16 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-5">
+          {columns.map((col, c) => (
+            <div
+              key={c}
+              ref={(el) => {
+                colRefs.current[c] = el;
+              }}
+              className={`flex flex-col gap-3 will-change-transform md:gap-5 ${c >= 2 ? "hidden md:flex" : ""} ${c % 2 ? "md:pt-24" : ""}`}
+            >
+              {col.map((src, i) => (
+                <figure key={i} className={`overflow-hidden rounded-xl bg-surface ${ASPECTS[(c + i) % ASPECTS.length]}`}>
+                  <img src={src} alt="" aria-hidden className="h-full w-full object-cover" />
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

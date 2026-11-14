@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import {
+	AnimatePresence,
+	motion,
+	useScroll,
+	useTransform,
+} from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { scrollToSection } from "../../hooks/useSmoothScroll";
 
@@ -17,7 +22,7 @@ export const heroRotatingWords = [
 	"interactive worlds",
 ];
 
-const line1 = "Fullstack developer";
+const line1 = "Agentic Developer";
 const line3 = "that refuse to be ordinary.";
 
 const LETTER_STAGGER = 0.02;
@@ -77,7 +82,8 @@ function RotatingPhrase({
 
 	useEffect(() => {
 		if (!ready) return;
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+			return;
 		const id = window.setInterval(() => {
 			setIndex((v) => (v + 1) % words.length);
 		}, 2800);
@@ -87,14 +93,19 @@ function RotatingPhrase({
 	const phrase = words[index];
 
 	return (
-		<span className="block overflow-hidden pb-[0.08em] font-serif italic text-accent font-normal">
+		<span
+			className="block overflow-hidden pb-[0.08em] font-display uppercase tracking-[-0.03em] text-accent"
+			style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
+		>
 			<motion.span
 				className="inline-block"
 				initial={{ y: "115%" }}
 				animate={ready ? { y: "0%" } : { y: "115%" }}
 				transition={{ duration: 0.75, ease: [0.33, 1, 0.68, 1], delay }}
 			>
-				<span className="text-cream/90 not-italic mr-[0.24em]">crafting</span>
+				<span className="text-muted mr-[0.24em]">
+					crafting
+				</span>
 				<AnimatePresence mode="wait" initial={false}>
 					<motion.span
 						key={phrase}
@@ -120,7 +131,8 @@ function RotatingPhrase({
 												transition: {
 													duration: 0.35,
 													ease: EASE,
-													delay: (wi * 8 + ci) * 0.018,
+													delay:
+														(wi * 8 + ci) * 0.018,
 												},
 											},
 											exit: {
@@ -129,7 +141,8 @@ function RotatingPhrase({
 												transition: {
 													duration: 0.25,
 													ease: EASE,
-													delay: (wi * 8 + ci) * 0.012,
+													delay:
+														(wi * 8 + ci) * 0.012,
 												},
 											},
 										}}
@@ -171,9 +184,9 @@ export function Hero({ ready }: HeroProps) {
 				className="pointer-events-none absolute inset-0"
 				aria-hidden="true"
 			>
-				<div className="absolute left-1/4 top-0 h-full w-px bg-line/40" />
-				<div className="absolute left-2/4 top-0 h-full w-px bg-line/40" />
-				<div className="absolute left-3/4 top-0 h-full w-px bg-line/40" />
+				<div className="absolute left-1/4 top-0 h-full w-px bg-hair" />
+				<div className="absolute left-2/4 top-0 h-full w-px bg-hair" />
+				<div className="absolute left-3/4 top-0 h-full w-px bg-hair" />
 			</div>
 
 			<motion.div
@@ -189,22 +202,37 @@ export function Hero({ ready }: HeroProps) {
 							ease: [0.33, 1, 0.68, 1],
 							delay: 0.45,
 						}}
-						className="font-serif text-xl italic text-muted md:text-2xl"
+						className="font-mono text-xs uppercase tracking-[0.2em] text-muted"
 					>
-						Earl Ordovez — OneDev PH
+						<span className="text-accent">00</span> — Earl Ordovez · OneDev PH
 					</motion.p>
 				</div>
 
-				<h1 className="font-serif text-[clamp(2.6rem,7.4vw,7.6rem)] leading-[0.92] tracking-[-0.02em] text-cream">
+				<h1
+					className="font-display text-[clamp(2.8rem,7.5vw,7.8rem)] uppercase leading-[0.92] tracking-[-0.03em] text-fg"
+					style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
+				>
 					<span className="sr-only">
-						Fullstack developer crafting digital experiences that refuse to be ordinary.
+						Agentic Developer crafting digital experiences that
+						refuse to be ordinary.
 					</span>
 					<span aria-hidden="true" className="block">
-						<SplitLine text={line1} ready={ready} delay={line1Delay} />
+						<SplitLine
+							text={line1}
+							ready={ready}
+							delay={line1Delay}
+						/>
 						<span className="block pl-[4vw] md:pl-[10vw]">
-							<RotatingPhrase ready={ready} delay={rotatingDelay} />
+							<RotatingPhrase
+								ready={ready}
+								delay={rotatingDelay}
+							/>
 						</span>
-						<SplitLine text={line3} ready={ready} delay={line3Delay} />
+						<SplitLine
+							text={line3}
+							ready={ready}
+							delay={line3Delay}
+						/>
 					</span>
 				</h1>
 
@@ -237,7 +265,7 @@ export function Hero({ ready }: HeroProps) {
 						<button
 							onClick={() => scrollToSection("#work")}
 							data-cursor
-							className="group flex items-center gap-3 rounded-full border border-line px-6 py-3 font-sans text-xs font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
+							className="group flex items-center gap-3 rounded-full border border-hair px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] text-fg transition-colors duration-300 hover:border-accent hover:text-accent"
 						>
 							Selected Work
 							<ArrowDown
@@ -254,9 +282,9 @@ export function Hero({ ready }: HeroProps) {
 				initial={{ opacity: 0 }}
 				animate={ready ? { opacity: 1 } : {}}
 				transition={{ delay: 1.8, duration: 1 }}
-				className="relative mt-10 flex items-center justify-between border-t border-line pt-4 font-sans text-[11px] uppercase tracking-[0.2em] text-muted"
+				className="relative mt-10 flex items-center justify-between border-t border-hair pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted"
 			>
-				<span>Fullstack Developer</span>
+				<span>Agentic Developer</span>
 				<span className="flex items-center gap-2">
 					<span className="relative flex h-2 w-2">
 						<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
