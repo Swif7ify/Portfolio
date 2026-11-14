@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 
@@ -16,30 +16,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
 	const brandRef = useRef<HTMLDivElement>(null);
 	const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-	const handleSkip = useCallback(() => {
-		if (tlRef.current) {
-			tlRef.current.kill();
-		}
-		if (containerRef.current) {
-			gsap.to(containerRef.current, {
-				opacity: 0,
-				duration: 0.3,
-				ease: "power2.inOut",
-				onComplete,
-			});
-		} else {
-			onComplete();
-		}
-	}, [onComplete]);
-
 	useEffect(() => {
-		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape" || e.key === " " || e.key === "Enter") {
-				handleSkip();
-			}
-		};
-		window.addEventListener("keydown", onKeyDown);
-
 		const brandEl = brandRef.current;
 		const containerEl = containerRef.current;
 		if (!brandEl || !containerEl) return;
@@ -100,23 +77,21 @@ export function Preloader({ onComplete }: PreloaderProps) {
 		tl.to({}, { duration: 0.45 });
 
 		return () => {
-			window.removeEventListener("keydown", onKeyDown);
 			if (tlRef.current) {
 				tlRef.current.kill();
 			}
 		};
-	}, [onComplete, handleSkip]);
+	}, [onComplete]);
 
 	return (
 		<motion.div
 			ref={containerRef}
-			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#0a0a0a] text-[#f6f4e8] select-none cursor-pointer"
+			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#0a0a0a] text-[#f6f4e8] select-none cursor-default"
 			initial={{ opacity: 1 }}
 			exit={{
 				opacity: 0,
 				transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
 			}}
-			onClick={handleSkip}
 			aria-label="Loading portfolio"
 			role="status"
 		>
