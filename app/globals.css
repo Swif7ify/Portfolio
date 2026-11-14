@@ -52,9 +52,9 @@
   --color-muted: #8a8880;
   --color-accent: #ff4d00;
 
-  --color-bg: rgb(var(--bg) / <alpha-value>);
-  --color-surface: rgb(var(--surface) / <alpha-value>);
-  --color-fg: rgb(var(--fg) / <alpha-value>);
+  --color-bg: rgb(var(--bg));
+  --color-surface: rgb(var(--surface));
+  --color-fg: rgb(var(--fg));
   --color-hair: var(--hairline);
   --border-color-hair: var(--hairline);
 

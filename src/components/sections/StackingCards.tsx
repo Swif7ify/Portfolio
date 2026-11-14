@@ -31,8 +31,6 @@ export function StackingCards() {
       <div className="mx-auto max-w-[1440px]">
         <ChapterHeader
           id="stack-title"
-          number="12"
-          kicker="Flagship Case Studies & Depth Stack"
           title={
             <>
               Flagship files,
@@ -59,6 +57,9 @@ export function StackingCards() {
                 cardRefs.current[i] = el;
               }}
               className="relative grid h-[min(70vh,600px)] w-full origin-top overflow-hidden rounded-3xl border border-hair bg-surface will-change-transform md:grid-cols-12 shadow-2xl"
+              style={{
+                backgroundColor: "rgb(var(--surface))",
+              }}
             >
               <div className="relative h-48 md:col-span-6 md:h-auto">
                 <img src={c.image} alt={`${c.title} illustration`} className="absolute inset-0 h-full w-full object-cover" />
@@ -83,7 +84,10 @@ export function StackingCards() {
                   shadeRefs.current[i] = el;
                 }}
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-bg opacity-0"
+                className="pointer-events-none absolute inset-0 opacity-0"
+                style={{
+                  backgroundColor: "rgb(var(--bg))",
+                }}
               />
             </article>
           </div>
