@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
 
 interface PreloaderProps {
 	onComplete: () => void;
 }
 
-// The exact 20 SVG glyph paths from the reference video
+// The exact 20 SVG glyph paths from Lunchline Partners (viewBox: 0 0 288 121)
 const PRELOADER_PATHS = [
 	{
 		id: 0,
@@ -132,10 +133,24 @@ const PRELOADER_PATHS = [
 ];
 
 export function Preloader({ onComplete }: PreloaderProps) {
-	const svgRef = useRef<SVGSVGElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const logoRef = useRef<HTMLDivElement>(null);
+	const tlRef = useRef<gsap.core.Timeline | null>(null);
 
 	const handleSkip = useCallback(() => {
-		onComplete();
+		if (tlRef.current) {
+			tlRef.current.kill();
+		}
+		if (containerRef.current) {
+			gsap.to(containerRef.current, {
+				opacity: 0,
+				duration: 0.3,
+				ease: "power2.inOut",
+				onComplete,
+			});
+		} else {
+			onComplete();
+		}
 	}, [onComplete]);
 
 	useEffect(() => {
@@ -146,94 +161,78 @@ export function Preloader({ onComplete }: PreloaderProps) {
 		};
 		window.addEventListener("keydown", onKeyDown);
 
-		const svgEl = svgRef.current;
-		if (!svgEl) return;
+		const logoEl = logoRef.current;
+		const containerEl = containerRef.current;
+		if (!logoEl || !containerEl) return;
 
-		const dotLeft = svgEl.querySelector<SVGPathElement>(".logo-animatable-dot-left");
-		const dotRight = svgEl.querySelector<SVGPathElement>(".logo-animatable-dot-right");
-		const paths = svgEl.querySelectorAll<SVGPathElement>(
-			"path:not(.logo-animatable-dot-left):not(.logo-animatable-dot-right)"
+		const dotLeft = logoEl.querySelector<SVGPathElement>(".logo-animatable-dot-left");
+		const dotRight = logoEl.querySelector<SVGPathElement>(".logo-animatable-dot-right");
+		const paths = logoEl.querySelectorAll<SVGPathElement>(
+			"svg path:not(.logo-animatable-dot-left):not(.logo-animatable-dot-right)"
 		);
 
-		// 1. Initial GSAP-equivalent setup
-		if (dotLeft) {
-			dotLeft.style.opacity = "0";
-			dotLeft.style.transform = "translateX(12px)";
+		// 1. Initial GSAP state matching original Logo.js
+		gsap.set(logoEl, { opacity: 1 });
+		if (dotLeft && dotRight) {
+			gsap.set([dotLeft, dotRight], { opacity: 0 });
+			gsap.set(dotLeft, { x: 12 });
+			gsap.set(dotRight, { x: -12 });
 		}
-		if (dotRight) {
-			dotRight.style.opacity = "0";
-			dotRight.style.transform = "translateX(-12px)";
-		}
-		paths.forEach((p) => {
-			p.style.opacity = "0";
-			p.style.transform = "translateY(20px)";
-			p.style.clipPath = "inset(100% 0% 0% 0%)";
+		gsap.set(paths, { y: 20, clipPath: "inset(100% 0 0 0)" });
+
+		// 2. Timeline matching Logo.js & Splash.js
+		const tl = gsap.timeline({
+			onComplete: () => {
+				// Smooth fade out of splash screen matching Splash.js (ease: power4.inOut)
+				gsap.to(containerEl, {
+					opacity: 0,
+					duration: 0.5,
+					ease: "power4.inOut",
+					onComplete,
+				});
+			},
 		});
+		tlRef.current = tl;
 
-		// 2. Dots glide together from opposing sides (duration 0.6s, ease: power2.out)
-		const dotsAnimTimer = setTimeout(() => {
-			if (dotLeft) {
-				dotLeft.animate(
-					[
-						{ opacity: 0, transform: "translateX(12px)" },
-						{ opacity: 1, transform: "translateX(0px)" },
-					],
-					{
-						duration: 600,
-						easing: "cubic-bezier(0.25, 1, 0.5, 1)", // power2.out
-						fill: "forwards",
-					}
-				);
-			}
-			if (dotRight) {
-				dotRight.animate(
-					[
-						{ opacity: 0, transform: "translateX(-12px)" },
-						{ opacity: 1, transform: "translateX(0px)" },
-					],
-					{
-						duration: 600,
-						easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-						fill: "forwards",
-					}
-				);
-			}
-		}, 400);
-
-		// 3. Staggered path reveals with translateY + inset bottom-up clip mask
-		// Starts 0.2s before dots finish (at t = 800ms) with 0.03s stagger per path
-		const pathsAnimTimer = setTimeout(() => {
-			paths.forEach((p, idx) => {
-				p.animate(
-					[
-						{ opacity: 0, transform: "translateY(20px)", clipPath: "inset(100% 0% 0% 0%)" },
-						{ opacity: 1, transform: "translateY(0px)", clipPath: "inset(0% 0% 0% 0%)" },
-					],
-					{
-						duration: 1000,
-						delay: idx * 30, // 0.03s stagger
-						easing: "cubic-bezier(0.25, 1, 0.5, 1)", // power2.out
-						fill: "forwards",
-					}
-				);
+		// 3. Two dots slide together from opposing sides (duration 0.6s, ease: power2.out, delay 0.5s)
+		if (dotLeft && dotRight) {
+			tl.to([dotLeft, dotRight], {
+				opacity: 1,
+				x: 0,
+				duration: 0.6,
+				ease: "power2.out",
+				delay: 0.5,
 			});
-		}, 750);
+		}
 
-		// 4. Hold & complete transition after ~2.6s
-		const exitTimer = setTimeout(() => {
-			onComplete();
-		}, 2650);
+		// 4. Staggered letter upward slice reveal with clipPath: inset(0% 0 0 0)
+		// Starts 0.2s before dots finish (-=0.2) with 0.03s stagger
+		tl.to(
+			paths,
+			{
+				y: 0,
+				clipPath: "inset(0% 0 0 0)",
+				duration: 1.0,
+				stagger: 0.03,
+				ease: "power2.out",
+			},
+			"-=0.2"
+		);
+
+		// 5. Hold fully assembled for ~0.4s before exit transition
+		tl.to({}, { duration: 0.4 });
 
 		return () => {
 			window.removeEventListener("keydown", onKeyDown);
-			clearTimeout(dotsAnimTimer);
-			clearTimeout(pathsAnimTimer);
-			clearTimeout(exitTimer);
+			if (tlRef.current) {
+				tlRef.current.kill();
+			}
 		};
 	}, [onComplete, handleSkip]);
 
 	return (
 		<motion.div
+			ref={containerRef}
 			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#272727] text-[#f6f4e8] select-none cursor-pointer"
 			initial={{ opacity: 1 }}
 			exit={{
@@ -244,9 +243,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
 			aria-label="Loading"
 			role="status"
 		>
-			<div className="relative w-[334px] max-w-[calc(100%-32px)]">
+			<div ref={logoRef} className="relative w-[334px] max-w-[calc(100%-32px)] opacity-0">
 				<svg
-					ref={svgRef}
 					viewBox="0 0 288 121"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
