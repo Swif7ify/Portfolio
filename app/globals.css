@@ -58,7 +58,7 @@
   --color-hair: var(--hairline);
   --border-color-hair: var(--hairline);
 
-  --font-display: "Roboto Flex", var(--font-anton), system-ui, sans-serif;
+  --font-display: "Roboto Flex", system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-instrument-serif), serif;
   --font-sans: "Roboto Flex", var(--font-inter), system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;

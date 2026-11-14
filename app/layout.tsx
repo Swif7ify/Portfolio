@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
-import { Anton, Instrument_Serif, Inter } from 'next/font/google';
+import { Instrument_Serif, Inter } from 'next/font/google';
 import './globals.css';
-
-const anton = Anton({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-anton',
-});
 
 const instrumentSerif = Instrument_Serif({
   weight: '400',
@@ -62,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${anton.variable} ${instrumentSerif.variable} ${inter.variable}`}
+      className={`${instrumentSerif.variable} ${inter.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
