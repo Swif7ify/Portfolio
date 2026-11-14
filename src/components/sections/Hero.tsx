@@ -27,8 +27,8 @@ export function Hero({ ready }: HeroProps) {
 	});
 
 	// Subtle parallax on scroll
-	const portraitY = useTransform(scrollYProgress, [0, 1], [0, 90]);
-	const contentY = useTransform(scrollYProgress, [0, 1], [0, 50]);
+	const portraitY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+	const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
 	const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
 	return (
@@ -38,16 +38,16 @@ export function Hero({ ready }: HeroProps) {
 			className="relative flex min-h-screen w-full flex-col justify-end overflow-hidden bg-[#000000] px-6 pb-10 pt-28 sm:px-10 md:pb-14 lg:px-14"
 			aria-label="Introduction"
 		>
-			{/* Ambient Cobalt/Electric Blue Spotlight Glows */}
+			{/* Ambient Cobalt/Electric Blue Spotlight Glows centered behind head */}
 			<motion.div
 				initial={{ opacity: 0, scale: 0.85 }}
 				animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
 				transition={{ duration: 1.4, ease: EASE }}
-				className="pointer-events-none absolute left-1/2 top-[38%] h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[860px] sm:w-[860px] md:h-[1000px] md:w-[1000px]"
+				className="pointer-events-none absolute left-1/2 top-[40%] h-[750px] w-[750px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[900px] sm:w-[900px] md:h-[1050px] md:w-[1050px]"
 				style={{
 					background:
-						"radial-gradient(ellipse 65% 55% at 50% 45%, rgba(18, 98, 255, 0.55) 0%, rgba(12, 65, 210, 0.32) 35%, rgba(3, 20, 90, 0.10) 62%, transparent 80%)",
-					filter: "blur(75px)",
+						"radial-gradient(ellipse 70% 55% at 50% 48%, rgba(18, 98, 255, 0.58) 0%, rgba(10, 60, 200, 0.34) 36%, rgba(2, 14, 70, 0.08) 62%, transparent 80%)",
+					filter: "blur(80px)",
 				}}
 				aria-hidden="true"
 			/>
@@ -56,34 +56,34 @@ export function Hero({ ready }: HeroProps) {
 				initial={{ opacity: 0, scale: 0.8 }}
 				animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
 				transition={{ duration: 1.2, delay: 0.1, ease: EASE }}
-				className="pointer-events-none absolute left-1/2 top-[35%] h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[480px] sm:w-[480px] md:h-[580px] md:w-[580px]"
+				className="pointer-events-none absolute left-1/2 top-[36%] h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[480px] sm:w-[480px] md:h-[580px] md:w-[580px]"
 				style={{
 					background:
-						"radial-gradient(circle, rgba(35, 130, 255, 0.72) 0%, rgba(16, 85, 240, 0.40) 40%, transparent 72%)",
-					filter: "blur(45px)",
+						"radial-gradient(circle, rgba(35, 130, 255, 0.78) 0%, rgba(16, 85, 240, 0.45) 42%, transparent 74%)",
+					filter: "blur(48px)",
 				}}
 				aria-hidden="true"
 			/>
 
-			{/* Center Stage: Earl's Portrait */}
+			{/* Center Stage: Earl's Portrait — Close-Up Framing with Shoulders & Collar */}
 			<motion.div
 				style={{ y: portraitY }}
-				initial={{ opacity: 0, y: 35, scale: 0.96 }}
+				initial={{ opacity: 0, y: 30, scale: 0.97 }}
 				animate={
 					ready
 						? { opacity: 1, y: 0, scale: 1 }
-						: { opacity: 0, y: 35, scale: 0.96 }
+						: { opacity: 0, y: 30, scale: 0.97 }
 				}
 				transition={{ duration: 1.2, delay: 0.25, ease: EASE }}
-				className="pointer-events-none absolute left-1/2 top-1/2 z-[2] flex h-[84vh] max-h-[1020px] w-[90vw] max-w-[760px] -translate-x-1/2 -translate-y-[47%] items-start justify-center sm:w-[76vw] md:w-[56vw] lg:w-[50vw]"
+				className="pointer-events-none absolute left-1/2 top-0 z-[2] flex h-screen w-[92vw] max-w-[800px] -translate-x-1/2 items-start justify-center sm:w-[78vw] md:w-[58vw] lg:w-[52vw]"
 			>
 				<div
-					className="relative h-full w-full"
+					className="relative h-full w-full overflow-hidden"
 					style={{
 						WebkitMaskImage:
-							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, black 26%, black 100%)",
+							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.15) 12%, rgba(0,0,0,0.75) 24%, black 38%, black 100%)",
 						maskImage:
-							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, black 26%, black 100%)",
+							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.15) 12%, rgba(0,0,0,0.75) 24%, black 38%, black 100%)",
 					}}
 				>
 					<Image
@@ -91,15 +91,15 @@ export function Hero({ ready }: HeroProps) {
 						alt="Earl Romeo Ordovez — Agentic Developer"
 						fill
 						priority
-						sizes="(max-width: 768px) 88vw, 50vw"
-						className="object-contain object-top"
+						sizes="(max-width: 768px) 92vw, 52vw"
+						className="scale-[1.42] object-cover object-top origin-[center_18%]"
 					/>
 				</div>
 			</motion.div>
 
-			{/* Vignette fade at very bottom to guarantee seamless blend */}
+			{/* Vignette fade at bottom to guarantee seamless blend with page flow */}
 			<div
-				className="pointer-events-none absolute bottom-0 left-0 right-0 z-[3] h-28 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent"
+				className="pointer-events-none absolute bottom-0 left-0 right-0 z-[3] h-28 bg-gradient-to-t from-[#000000] via-[#000000]/85 to-transparent"
 				aria-hidden="true"
 			/>
 
