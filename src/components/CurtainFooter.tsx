@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { ArrowUpIcon, Mail } from "lucide-react";
 import { useKinetic } from "@/src/contexts/KineticContext";
+import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { clamp, lerp } from "@/src/utils/math";
 
 const socialLinks = [
   {
@@ -39,14 +42,33 @@ const socialLinks = [
   }
 ];
 
-/** Smooth finale and contact section in the document flow with responsive variable typography. */
+/** Smooth finale and contact section in the document flow with scroll-reactive variable typography. */
 export function CurtainFooter() {
   const { scrollToId } = useKinetic();
-  const [wordHovered, setWordHovered] = useState(false);
+  const footRef = useRef<HTMLElement>(null);
+  const wordRef = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(footRef, "200px");
+
+  useAnimationFrame(() => {
+    if (typeof window === "undefined") return;
+    const foot = footRef.current;
+    const word = wordRef.current;
+    if (!foot || !word) return;
+
+    const r = foot.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const totalDist = r.height || 600;
+    const scrolledIn = vh - r.top;
+    const p = clamp(scrolledIn / (totalDist * 0.82));
+
+    word.style.transform = `translate3d(0, ${((1 - p) * 35).toFixed(2)}%, 0) scale(${lerp(0.5, 1, p).toFixed(4)})`;
+    word.style.fontVariationSettings = `'wght' ${lerp(200, 950, p).toFixed(0)}, 'wdth' ${lerp(40, 151, p).toFixed(1)}`;
+  }, inView);
 
   return (
     <footer
       id="contact"
+      ref={footRef}
       className="relative z-10 flex min-h-[90vh] w-full flex-col justify-between border-t border-hair bg-surface px-6 pb-12 pt-24 md:px-12 md:pb-16 md:pt-32"
       aria-label="Footer & Contact"
     >
@@ -102,17 +124,14 @@ export function CurtainFooter() {
         </div>
       </div>
 
-      <div className="mt-16 flex flex-col items-center">
+      <div className="mt-16 flex flex-col items-center overflow-hidden">
         <p
-          onMouseEnter={() => setWordHovered(true)}
-          onMouseLeave={() => setWordHovered(false)}
+          ref={wordRef}
           aria-hidden
-          className="select-none whitespace-nowrap text-center font-display text-[15vw] leading-[0.8] tracking-[-0.03em] text-fg transition-all duration-700 cursor-default"
+          className="select-none whitespace-nowrap text-center font-display text-[15vw] leading-[0.8] tracking-[-0.03em] text-fg will-change-transform cursor-default"
           style={{
             fontFamily: '"Roboto Flex", system-ui, sans-serif',
-            fontVariationSettings: wordHovered
-              ? "'wght' 950, 'wdth' 145"
-              : "'wght' 780, 'wdth' 78",
+            fontVariationSettings: "'wght' 200, 'wdth' 40",
             transformOrigin: "50% 100%"
           }}
         >
