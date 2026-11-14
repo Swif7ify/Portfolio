@@ -15,7 +15,7 @@ export function ChapterHeader({ title, description, id }: ChapterHeaderProps) {
       <div className="md:col-span-8">
         <h2
           id={id}
-          className="skew-velocity font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]"
+          className="font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]"
           style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}
         >
           {title}

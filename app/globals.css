@@ -107,8 +107,7 @@ body {
 
 /* Velocity-bound deformation */
 .skew-velocity {
-  transform: skewY(calc(var(--scroll-velocity) * -0.12deg));
-  will-change: transform;
+  transform: none;
 }
 
 .chroma {
