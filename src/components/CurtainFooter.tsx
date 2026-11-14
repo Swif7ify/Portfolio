@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ArrowUpIcon, Mail } from "lucide-react";
 import { useKinetic } from "@/src/contexts/KineticContext";
-import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
-import { clamp, lerp } from "@/src/utils/math";
 
 const socialLinks = [
   {
@@ -41,50 +39,35 @@ const socialLinks = [
   }
 ];
 
-/** Fixed beneath the page; revealed as the last spacer scrolls away, with type that grows to fill the viewport. */
+/** Smooth finale and contact section in the document flow with responsive variable typography. */
 export function CurtainFooter() {
   const { scrollToId } = useKinetic();
-  const footRef = useRef<HTMLElement>(null);
-  const wordRef = useRef<HTMLParagraphElement>(null);
-
-  useAnimationFrame(() => {
-    if (typeof window === "undefined") return;
-    const spacer = document.getElementById("footer-spacer") || document.getElementById("contact");
-    const foot = footRef.current;
-    const word = wordRef.current;
-    if (!spacer || !foot || !word) return;
-
-    const p = clamp(1 - spacer.getBoundingClientRect().top / window.innerHeight);
-    foot.style.visibility = p <= 0.001 ? "hidden" : "visible";
-    foot.style.pointerEvents = p > 0.05 ? "auto" : "none";
-
-    word.style.transform = `translate3d(0, ${((1 - p) * 30).toFixed(2)}%, 0) scale(${lerp(0.5, 1, p).toFixed(4)})`;
-    word.style.fontVariationSettings = `'wght' ${lerp(200, 950, p).toFixed(0)}, 'wdth' ${lerp(40, 151, p).toFixed(1)}`;
-  });
+  const [wordHovered, setWordHovered] = useState(false);
 
   return (
     <footer
-      id="curtain-footer"
-      ref={footRef}
-      className="fixed inset-0 z-0 flex flex-col justify-between overflow-y-auto bg-surface px-6 pb-12 pt-20 md:px-12 md:pb-16 md:pt-24"
-      style={{ visibility: "hidden" }}
+      id="contact"
+      className="relative z-10 flex min-h-[90vh] w-full flex-col justify-between border-t border-hair bg-surface px-6 pb-12 pt-24 md:px-12 md:pb-16 md:pt-32"
       aria-label="Footer & Contact"
     >
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-10 md:flex-row md:items-end">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-12 md:flex-row md:items-end">
         <div className="max-w-xl">
           <h3
-            className="font-display text-[clamp(2.2rem,4.5vw,4rem)] leading-[0.95] tracking-[-0.03em] text-fg"
-            style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
+            className="font-display text-[clamp(2.2rem,4.5vw,4.2rem)] leading-[0.95] tracking-[-0.03em] text-fg"
+            style={{
+              fontFamily: '"Roboto Flex", system-ui, sans-serif',
+              fontVariationSettings: "'wght' 780, 'wdth' 78"
+            }}
           >
             Have an idea worth building?
           </h3>
-          <p className="mt-4 text-sm leading-relaxed text-muted md:text-base">
+          <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
             Crafting digital experiences with heart, velocity, and uncompromising attention to detail. Available for select freelance projects & engineering collaborations worldwide.
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <a
               href="mailto:earl.coding@gmail.com"
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-bg transition-transform hover:scale-105"
+              className="inline-flex items-center gap-2.5 rounded-full bg-accent px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-bg transition-transform hover:scale-105 active:scale-95 shadow-lg"
             >
               <Mail className="h-4 w-4" aria-hidden />
               earl.coding@gmail.com
@@ -92,7 +75,7 @@ export function CurtainFooter() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start gap-4 md:items-end">
+        <div className="flex flex-col items-start gap-5 md:items-end">
           <div className="flex gap-3">
             {socialLinks.map((s) => (
               <a
@@ -100,7 +83,7 @@ export function CurtainFooter() {
                 href={s.href}
                 target={s.href.startsWith("http") ? "_blank" : undefined}
                 rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="rounded-full border border-hair p-3 text-muted hover:border-fg hover:text-fg transition-colors"
+                className="rounded-full border border-hair p-3.5 text-muted hover:border-fg hover:text-fg hover:scale-105 transition-all"
                 aria-label={s.label}
               >
                 {s.icon}
@@ -111,7 +94,7 @@ export function CurtainFooter() {
           <button
             type="button"
             onClick={() => scrollToId("hero")}
-            className="mt-2 flex items-center gap-2 rounded-full bg-fg px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-bg hover:bg-accent hover:text-bg transition-colors shadow-lg"
+            className="mt-2 flex items-center gap-2 rounded-full bg-fg px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-bg hover:bg-accent hover:text-bg transition-colors shadow-lg active:scale-95 cursor-pointer"
           >
             <ArrowUpIcon className="h-3.5 w-3.5" aria-hidden />
             Back to top
@@ -119,16 +102,23 @@ export function CurtainFooter() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col items-center">
+      <div className="mt-16 flex flex-col items-center">
         <p
-          ref={wordRef}
+          onMouseEnter={() => setWordHovered(true)}
+          onMouseLeave={() => setWordHovered(false)}
           aria-hidden
-          className="select-none whitespace-nowrap text-center font-display text-[15vw] leading-[0.8] tracking-[-0.03em] text-fg"
-          style={{ transformOrigin: "50% 100%" }}
+          className="select-none whitespace-nowrap text-center font-display text-[15vw] leading-[0.8] tracking-[-0.03em] text-fg transition-all duration-700 cursor-default"
+          style={{
+            fontFamily: '"Roboto Flex", system-ui, sans-serif',
+            fontVariationSettings: wordHovered
+              ? "'wght' 950, 'wdth' 145"
+              : "'wght' 780, 'wdth' 78",
+            transformOrigin: "50% 100%"
+          }}
         >
           KINETIC
         </p>
-        <p className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           © 2026 Earl Ordovez — Designed & built with obsession
         </p>
       </div>

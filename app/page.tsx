@@ -60,7 +60,7 @@ export default function Home() {
 
         <Navbar ready={loaded} />
 
-        <main className="pointer-events-none relative z-10 w-full [&>section]:pointer-events-auto [&>div:not(#footer-spacer)]:pointer-events-auto">
+        <main className="relative z-10 w-full">
           {/* Chapter 00: Prologue & Hero */}
           <Hero ready={loaded} />
 
@@ -124,14 +124,9 @@ export default function Home() {
           <Certificates />
           <Testimonials />
 
-          {/* Fixed Spacer for Grand Curtain Reveal */}
-          <div id="footer-spacer" aria-hidden className="relative pointer-events-none h-screen min-h-[100dvh]">
-            <span id="contact" className="absolute top-0 left-0" />
-          </div>
+          {/* Finale & Contact */}
+          <CurtainFooter />
         </main>
-
-        {/* The Curtain Finale with expanding "KINETIC" */}
-        <CurtainFooter />
       </div>
     </KineticProvider>
   );
