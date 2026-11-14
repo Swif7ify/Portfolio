@@ -35,14 +35,11 @@ export function InlineStatement() {
   return (
     <section ref={sectionRef} id="statement" aria-labelledby="statement-title" className="relative bg-bg px-4 py-[20vh] md:px-6">
       <div className="mx-auto max-w-[1440px]">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-          <span className="text-accent">01</span> — Personal Philosophy & Creed
-        </p>
         <h2 id="statement-title" className="sr-only">
           Personal Statement
         </h2>
         <p
-          className="mt-8 font-display text-[clamp(2.5rem,6.2vw,6.5rem)] leading-[1.02] tracking-[-0.035em] text-fg"
+          className="font-display text-[clamp(2.5rem,6.2vw,6.5rem)] leading-[1.02] tracking-[-0.035em] text-fg"
           style={{ fontVariationSettings: "'wght' 720, 'wdth' 78" }}
           aria-label={statementTokens.map((t) => "word" in t ? t.word : "").filter(Boolean).join(" ")}
         >

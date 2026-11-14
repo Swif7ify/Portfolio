@@ -193,21 +193,6 @@ export function Hero({ ready }: HeroProps) {
 				style={{ y, opacity }}
 				className="relative flex flex-1 flex-col justify-center"
 			>
-				<div className="mb-6 flex items-center gap-4 overflow-hidden">
-					<motion.p
-						initial={{ y: "120%" }}
-						animate={ready ? { y: 0 } : {}}
-						transition={{
-							duration: 0.8,
-							ease: [0.33, 1, 0.68, 1],
-							delay: 0.45,
-						}}
-						className="font-mono text-xs uppercase tracking-[0.2em] text-muted"
-					>
-						<span className="text-accent">00</span> — Earl Ordovez · OneDev PH
-					</motion.p>
-				</div>
-
 				<h1
 					className="font-display text-[clamp(2.8rem,7.5vw,7.8rem)] uppercase leading-[0.92] tracking-[-0.03em] text-fg"
 					style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}

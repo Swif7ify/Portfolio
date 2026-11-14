@@ -44,10 +44,7 @@ export function Testimonials() {
 				</span>
 
 				<div className="relative mx-auto max-w-4xl">
-					<div className="mb-12 flex items-center justify-between md:mb-16">
-						<p className="font-sans text-xs uppercase tracking-[0.3em] text-accent">
-							(Testimonials) — Kind words
-						</p>
+					<div className="mb-12 flex items-center justify-end md:mb-16">
 						<span className="font-sans text-xs tabular-nums tracking-[0.2em] text-muted">
 							00 / 00
 						</span>
@@ -98,10 +95,7 @@ export function Testimonials() {
 			</span>
 
 			<div className="relative mx-auto max-w-4xl">
-				<div className="mb-12 flex items-center justify-between md:mb-16">
-					<p className="font-sans text-xs uppercase tracking-[0.3em] text-accent">
-						(Testimonials) — Kind words
-					</p>
+				<div className="mb-12 flex items-center justify-end md:mb-16">
 					<span
 						className="font-sans text-xs tabular-nums tracking-[0.2em] text-muted"
 						aria-live="polite"

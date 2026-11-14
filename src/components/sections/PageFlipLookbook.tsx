@@ -57,10 +57,7 @@ export function PageFlipLookbook() {
     <section ref={sectionRef} id="lookbook" aria-labelledby="lookbook-title" className="relative h-[520vh] bg-bg">
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-4 pb-16 pt-24">
         <div className="mb-6 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-            <span className="text-accent">05</span> — The Archival Lookbook & Life Folio
-          </p>
-          <h2 id="lookbook-title" className="mt-2 font-display text-[clamp(2rem,4.5vw,4rem)] leading-[0.92] tracking-[-0.03em]" style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}>
+          <h2 id="lookbook-title" className="font-display text-[clamp(2rem,4.5vw,4rem)] leading-[0.92] tracking-[-0.03em]" style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}>
             The physical book, turned by scroll.
           </h2>
         </div>

@@ -115,16 +115,9 @@ export function ComicCamera() {
           ))}
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-24 px-4 md:top-28 md:px-6">
-          <div className="mx-auto max-w-[1440px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-              <span className="text-accent">04</span> — Life In Panels: The Graphic Memoir
-            </p>
-            <h2 id="comic-title" className="sr-only">
-              Life In Comic Panels
-            </h2>
-          </div>
-        </div>
+        <h2 id="comic-title" className="sr-only">
+          Life In Comic Panels
+        </h2>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-24 flex justify-center px-4 md:bottom-28">
           <p className="glass max-w-xl rounded-xl px-5 py-3.5 text-center text-sm font-medium text-fg shadow-2xl" aria-live="polite">

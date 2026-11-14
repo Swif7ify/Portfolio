@@ -80,9 +80,8 @@ export function CurtainFooter() {
     >
       <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-10 md:flex-row md:items-end">
         <div className="max-w-xl">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">Earl Ordovez — Portfolio</p>
           <h3
-            className="mt-4 font-display text-[clamp(2.2rem,4.5vw,4rem)] leading-[0.95] tracking-[-0.03em] text-fg"
+            className="font-display text-[clamp(2.2rem,4.5vw,4rem)] leading-[0.95] tracking-[-0.03em] text-fg"
             style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
           >
             Have an idea worth building?

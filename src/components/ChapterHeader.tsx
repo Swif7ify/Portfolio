@@ -2,23 +2,20 @@ import React from "react";
 import type { ReactNode } from "react";
 
 interface ChapterHeaderProps {
-  number: string;
-  kicker: string;
+  number?: string;
+  kicker?: string;
   title: ReactNode;
   description: string;
   id?: string;
 }
 
-export function ChapterHeader({ number, kicker, title, description, id }: ChapterHeaderProps) {
+export function ChapterHeader({ title, description, id }: ChapterHeaderProps) {
   return (
     <header className="grid gap-6 md:grid-cols-12 md:items-end md:gap-8">
       <div className="md:col-span-8">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-          <span className="text-accent">{number}</span> — {kicker}
-        </p>
         <h2
           id={id}
-          className="skew-velocity mt-4 font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]"
+          className="skew-velocity font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]"
           style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}
         >
           {title}

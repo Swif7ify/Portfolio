@@ -98,10 +98,7 @@ export function ProcessPath() {
   return (
     <section id="process" aria-labelledby="process-title" className="relative bg-bg px-4 py-32 md:px-6 md:py-40">
       <div className="mx-auto max-w-[1440px]">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-          <span className="text-accent">06</span> — Life Roadmap & Evolution
-        </p>
-        <h2 id="process-title" className="mt-4 font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]" style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}>
+        <h2 id="process-title" className="font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.03em]" style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}>
           The path walked,
           <br />
           <span className="text-muted">drawn step by step.</span>

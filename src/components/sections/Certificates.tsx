@@ -115,9 +115,6 @@ export function Certificates() {
     >
       <div className="mb-16 flex items-end justify-between md:mb-24">
         <div>
-          <p className="mb-4 font-sans text-xs uppercase tracking-[0.3em] text-accent">
-            (Credentials) — Proof of obsession
-          </p>
           <h2 className="font-display text-[13vw] uppercase leading-none text-cream md:text-[8vw]">
             Certifi<span className="text-stroke">cates</span>
           </h2>

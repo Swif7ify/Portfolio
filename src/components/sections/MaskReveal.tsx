@@ -81,14 +81,6 @@ export function MaskReveal() {
           <rect ref={coverRef} width={box.w} height={box.h} fill="rgb(var(--bg))" mask={`url(#mask-${uid})`} />
         </svg>
 
-        <div className="pointer-events-none absolute inset-x-0 top-24 px-4 md:top-28 md:px-6">
-          <div className="mx-auto flex max-w-[1440px] items-start justify-between gap-6">
-            <p id="reveal-title" className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-              <span className="text-accent">03</span> — The Aperture
-            </p>
-          </div>
-        </div>
-
         <p ref={hintRef} className="absolute inset-x-0 bottom-24 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           Scroll to explore
         </p>

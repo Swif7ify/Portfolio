@@ -72,10 +72,9 @@ export function ZoomOutGrid() {
         </div>
 
         <div ref={headRef} className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/45 px-4 text-center text-white">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">07 — The Bigger Picture</p>
           <h2
             id="zoomout-title"
-            className="mt-4 max-w-4xl font-display text-[clamp(2.75rem,7vw,7rem)] leading-[0.9] tracking-[-0.035em]"
+            className="max-w-4xl font-display text-[clamp(2.75rem,7vw,7rem)] leading-[0.9] tracking-[-0.035em]"
             style={{ fontVariationSettings: "'wght' 800, 'wdth' 72" }}
           >
             Every single milestone is part of a larger canvas.
