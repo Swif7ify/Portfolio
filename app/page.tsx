@@ -60,7 +60,7 @@ export default function Home() {
 
         <Navbar ready={loaded} />
 
-        <main className="relative z-10 w-full">
+        <main className="pointer-events-none relative z-10 w-full [&>section]:pointer-events-auto [&>div:not(#footer-spacer)]:pointer-events-auto">
           {/* Chapter 00: Prologue & Hero */}
           <Hero ready={loaded} />
 

@@ -56,15 +56,7 @@ export function CurtainFooter() {
 
     const p = clamp(1 - spacer.getBoundingClientRect().top / window.innerHeight);
     foot.style.visibility = p <= 0.001 ? "hidden" : "visible";
-
-    // Elevate z-index and enable pointer-events as footer is revealed so all interactive controls work reliably
-    if (p >= 0.7) {
-      foot.style.zIndex = "25";
-      foot.style.pointerEvents = "auto";
-    } else {
-      foot.style.zIndex = "0";
-      foot.style.pointerEvents = "none";
-    }
+    foot.style.pointerEvents = p > 0.05 ? "auto" : "none";
 
     word.style.transform = `translate3d(0, ${((1 - p) * 30).toFixed(2)}%, 0) scale(${lerp(0.5, 1, p).toFixed(4)})`;
     word.style.fontVariationSettings = `'wght' ${lerp(200, 950, p).toFixed(0)}, 'wdth' ${lerp(40, 151, p).toFixed(1)}`;
