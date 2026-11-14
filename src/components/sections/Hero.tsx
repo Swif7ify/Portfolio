@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-	AnimatePresence,
-	motion,
-	useScroll,
-	useTransform,
-} from "framer-motion";
-import { ArrowDown } from "lucide-react";
-import { scrollToSection } from "../../hooks/useSmoothScroll";
+import { useRef } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { getImagePath } from "../../utils/image";
 
 interface HeroProps {
 	ready: boolean;
@@ -22,142 +17,7 @@ export const heroRotatingWords = [
 	"interactive worlds",
 ];
 
-const line1 = "Agentic Developer";
-const line3 = "that refuse to be ordinary.";
-
-const LETTER_STAGGER = 0.02;
-const EASE: [number, number, number, number] = [0.23, 1, 0.32, 1];
-
-interface SplitLineProps {
-	text: string;
-	ready: boolean;
-	delay?: number;
-}
-
-function SplitLine({ text, ready, delay = 0.45 }: SplitLineProps) {
-	let index = 0;
-	return (
-		<span className="block overflow-hidden pb-[0.06em]">
-			{text.split(" ").map((word, wi) => (
-				<span
-					key={wi}
-					className="mr-[0.24em] inline-block whitespace-nowrap last:mr-0"
-				>
-					{word.split("").map((char, ci) => {
-						const i = index++;
-						return (
-							<motion.span
-								key={ci}
-								className="inline-block"
-								initial={{ y: "115%" }}
-								animate={ready ? { y: "0%" } : { y: "115%" }}
-								transition={{
-									duration: 0.75,
-									ease: [0.33, 1, 0.68, 1],
-									delay: delay + i * LETTER_STAGGER,
-								}}
-							>
-								{char}
-							</motion.span>
-						);
-					})}
-				</span>
-			))}
-		</span>
-	);
-}
-
-interface RotatingPhraseProps {
-	words?: string[];
-	ready: boolean;
-	delay?: number;
-}
-
-function RotatingPhrase({
-	words = heroRotatingWords,
-	ready,
-	delay = 0.65,
-}: RotatingPhraseProps) {
-	const [index, setIndex] = useState(0);
-
-	useEffect(() => {
-		if (!ready) return;
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-			return;
-		const id = window.setInterval(() => {
-			setIndex((v) => (v + 1) % words.length);
-		}, 2800);
-		return () => window.clearInterval(id);
-	}, [ready, words.length]);
-
-	const phrase = words[index];
-
-	return (
-		<span
-			className="block overflow-hidden pb-[0.08em] font-display uppercase tracking-[-0.03em] text-accent"
-			style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
-		>
-			<motion.span
-				className="inline-block"
-				initial={{ y: "115%" }}
-				animate={ready ? { y: "0%" } : { y: "115%" }}
-				transition={{ duration: 0.75, ease: [0.33, 1, 0.68, 1], delay }}
-			>
-				<span className="text-muted mr-[0.24em]">
-					crafting
-				</span>
-				<AnimatePresence mode="wait" initial={false}>
-					<motion.span
-						key={phrase}
-						className="inline-block"
-						initial="hidden"
-						animate="show"
-						exit="exit"
-					>
-						{phrase.split(" ").map((word, wi) => (
-							<span
-								key={wi}
-								className="mr-[0.22em] inline-block whitespace-nowrap last:mr-0"
-							>
-								{word.split("").map((char, ci) => (
-									<motion.span
-										key={ci}
-										className="inline-block"
-										variants={{
-											hidden: { y: "115%", opacity: 0 },
-											show: {
-												y: "0%",
-												opacity: 1,
-												transition: {
-													duration: 0.35,
-													ease: EASE,
-													delay:
-														(wi * 8 + ci) * 0.018,
-												},
-											},
-											exit: {
-												y: "-115%",
-												opacity: 0,
-												transition: {
-													duration: 0.25,
-													ease: EASE,
-													delay:
-														(wi * 8 + ci) * 0.012,
-												},
-											},
-										}}
-									>
-										{char}
-									</motion.span>
-								))}
-							</span>
-						))}
-					</motion.span>
-				</AnimatePresence>
-			</motion.span>
-		</span>
-	);
-}
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function Hero({ ready }: HeroProps) {
 	const ref = useRef<HTMLElement>(null);
@@ -165,119 +25,143 @@ export function Hero({ ready }: HeroProps) {
 		target: ref,
 		offset: ["start start", "end start"],
 	});
-	const y = useTransform(scrollYProgress, [0, 1], [0, 220]);
-	const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-	const line1Delay = 0.5;
-	const rotatingDelay = line1Delay + line1.length * LETTER_STAGGER;
-	const line3Delay = rotatingDelay + 0.25;
+	// Subtle parallax on scroll
+	const portraitY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+	const contentY = useTransform(scrollYProgress, [0, 1], [0, 50]);
+	const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
 	return (
 		<section
 			id="hero"
 			ref={ref}
-			className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-transparent px-6 pb-10 pt-28 md:px-10"
+			className="relative flex min-h-screen w-full flex-col justify-end overflow-hidden bg-[#000000] px-6 pb-10 pt-28 sm:px-10 md:pb-14 lg:px-14"
 			aria-label="Introduction"
 		>
-			{/* faint grid lines */}
-			<div
-				className="pointer-events-none absolute inset-0"
+			{/* Ambient Cobalt/Electric Blue Spotlight Glows */}
+			<motion.div
+				initial={{ opacity: 0, scale: 0.85 }}
+				animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
+				transition={{ duration: 1.4, ease: EASE }}
+				className="pointer-events-none absolute left-1/2 top-[38%] h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[860px] sm:w-[860px] md:h-[1000px] md:w-[1000px]"
+				style={{
+					background:
+						"radial-gradient(ellipse 65% 55% at 50% 45%, rgba(18, 98, 255, 0.55) 0%, rgba(12, 65, 210, 0.32) 35%, rgba(3, 20, 90, 0.10) 62%, transparent 80%)",
+					filter: "blur(75px)",
+				}}
 				aria-hidden="true"
-			>
-				<div className="absolute left-1/4 top-0 h-full w-px bg-hair" />
-				<div className="absolute left-2/4 top-0 h-full w-px bg-hair" />
-				<div className="absolute left-3/4 top-0 h-full w-px bg-hair" />
-			</div>
+			/>
 
 			<motion.div
-				style={{ y, opacity }}
-				className="relative flex flex-1 flex-col justify-center"
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+				transition={{ duration: 1.2, delay: 0.1, ease: EASE }}
+				className="pointer-events-none absolute left-1/2 top-[35%] h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[480px] sm:w-[480px] md:h-[580px] md:w-[580px]"
+				style={{
+					background:
+						"radial-gradient(circle, rgba(35, 130, 255, 0.72) 0%, rgba(16, 85, 240, 0.40) 40%, transparent 72%)",
+					filter: "blur(45px)",
+				}}
+				aria-hidden="true"
+			/>
+
+			{/* Center Stage: Earl's Portrait */}
+			<motion.div
+				style={{ y: portraitY }}
+				initial={{ opacity: 0, y: 35, scale: 0.96 }}
+				animate={
+					ready
+						? { opacity: 1, y: 0, scale: 1 }
+						: { opacity: 0, y: 35, scale: 0.96 }
+				}
+				transition={{ duration: 1.2, delay: 0.25, ease: EASE }}
+				className="pointer-events-none absolute left-1/2 top-1/2 z-[2] flex h-[84vh] max-h-[1020px] w-[90vw] max-w-[760px] -translate-x-1/2 -translate-y-[47%] items-start justify-center sm:w-[76vw] md:w-[56vw] lg:w-[50vw]"
 			>
-				<h1
-					className="font-display text-[clamp(2.8rem,7.5vw,7.8rem)] uppercase leading-[0.92] tracking-[-0.03em] text-fg"
-					style={{ fontVariationSettings: "'wght' 780, 'wdth' 78" }}
+				<div
+					className="relative h-full w-full"
+					style={{
+						WebkitMaskImage:
+							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, black 26%, black 100%)",
+						maskImage:
+							"linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, black 26%, black 100%)",
+					}}
 				>
-					<span className="sr-only">
-						Agentic Developer crafting digital experiences that
-						refuse to be ordinary.
-					</span>
-					<span aria-hidden="true" className="block">
-						<SplitLine
-							text={line1}
-							ready={ready}
-							delay={line1Delay}
-						/>
-						<span className="block pl-[4vw] md:pl-[10vw]">
-							<RotatingPhrase
-								ready={ready}
-								delay={rotatingDelay}
-							/>
-						</span>
-						<SplitLine
-							text={line3}
-							ready={ready}
-							delay={line3Delay}
-						/>
-					</span>
-				</h1>
-
-				<div className="mt-8 flex flex-col gap-6 md:mt-12 md:flex-row md:items-end md:justify-between">
-					<motion.p
-						initial={{ opacity: 0, y: 20 }}
-						animate={ready ? { opacity: 1, y: 0 } : {}}
-						transition={{
-							duration: 0.8,
-							delay: 1.3,
-							ease: [0.33, 1, 0.68, 1],
-						}}
-						className="max-w-md font-sans text-sm leading-relaxed text-muted md:text-base"
-					>
-						I design and build immersive digital experiences for
-						brands that refuse to be ordinary. Currently crafting
-						the web&apos;s next generation of interfaces.
-					</motion.p>
-
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={ready ? { opacity: 1, y: 0 } : {}}
-						transition={{
-							duration: 0.8,
-							delay: 1.45,
-							ease: [0.33, 1, 0.68, 1],
-						}}
-						className="flex items-center gap-4"
-					>
-						<button
-							onClick={() => scrollToSection("#work")}
-							data-cursor
-							className="group flex items-center gap-3 rounded-full border border-hair px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] text-fg transition-colors duration-300 hover:border-accent hover:text-accent"
-						>
-							Selected Work
-							<ArrowDown
-								size={14}
-								className="transition-transform duration-300 group-hover:translate-y-1"
-								aria-hidden="true"
-							/>
-						</button>
-					</motion.div>
+					<Image
+						src={getImagePath("/earl-portrait-cutout.png")}
+						alt="Earl Romeo Ordovez — Agentic Developer"
+						fill
+						priority
+						sizes="(max-width: 768px) 88vw, 50vw"
+						className="object-contain object-top"
+					/>
 				</div>
 			</motion.div>
 
+			{/* Vignette fade at very bottom to guarantee seamless blend */}
+			<div
+				className="pointer-events-none absolute bottom-0 left-0 right-0 z-[3] h-28 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent"
+				aria-hidden="true"
+			/>
+
+			{/* Bottom Content Grid */}
 			<motion.div
-				initial={{ opacity: 0 }}
-				animate={ready ? { opacity: 1 } : {}}
-				transition={{ delay: 1.8, duration: 1 }}
-				className="relative mt-10 flex items-center justify-between border-t border-hair pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted"
+				style={{ y: contentY, opacity }}
+				className="relative z-10 flex w-full flex-col justify-between gap-8 md:flex-row md:items-end md:gap-12"
 			>
-				<span>Agentic Developer</span>
-				<span className="flex items-center gap-2">
-					<span className="relative flex h-2 w-2">
-						<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-						<span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-					</span>
-					Open for Projects
-				</span>
-				<span className="hidden md:inline">Scroll to explore</span>
+				{/* Left Block: Greeting, Huge Name & Title, Status Badge */}
+				<div className="flex max-w-2xl flex-col">
+					<motion.span
+						initial={{ opacity: 0, y: 20 }}
+						animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+						transition={{ duration: 0.8, delay: 0.45, ease: EASE }}
+						className="font-serif text-2xl italic tracking-tight text-[#edeae1] sm:text-3xl md:text-4xl"
+					>
+						Hi, I&apos;m
+					</motion.span>
+
+					<motion.h1
+						initial={{ opacity: 0, y: 24 }}
+						animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+						transition={{ duration: 0.85, delay: 0.55, ease: EASE }}
+						className="mt-1 font-display font-black uppercase leading-[0.92] tracking-[-0.04em] text-white"
+					>
+						<span className="block text-[clamp(2.8rem,6.4vw,6.4rem)]">
+							EARL,
+						</span>
+						<span className="block pl-6 text-[clamp(2rem,4.4vw,4.4rem)] text-white sm:pl-10 md:pl-14">
+							AGENTIC DEVELOPER
+						</span>
+					</motion.h1>
+
+					<motion.div
+						initial={{ opacity: 0, y: 16 }}
+						animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+						transition={{ duration: 0.8, delay: 0.7, ease: EASE }}
+						className="mt-5 flex items-center gap-3 sm:mt-6 sm:gap-3.5"
+					>
+						<span className="font-serif text-xl italic text-[#cdc9b7] sm:text-2xl md:text-[26px]">
+							Working at
+						</span>
+						<span className="inline-flex items-center rounded-full bg-white px-3.5 py-1 font-sans text-xs font-bold tracking-tight text-black shadow-[0_4px_16px_rgba(255,255,255,0.18)] transition-transform duration-300 hover:scale-105 sm:text-sm">
+							OneDev
+						</span>
+					</motion.div>
+				</div>
+
+				{/* Right Block: Editorial Bio Paragraph */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+					transition={{ duration: 0.8, delay: 0.8, ease: EASE }}
+					className="max-w-md pb-1 text-xs leading-relaxed text-[#8f9ea9] sm:text-sm md:text-[15px]"
+				>
+					<p>
+						Logic showed me how things work; design showed me why
+						they matter. Building scalable systems and intuitive
+						digital experiences that balance clarity, function, and
+						emotion.
+					</p>
+				</motion.div>
 			</motion.div>
 		</section>
 	);
