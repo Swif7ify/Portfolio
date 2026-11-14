@@ -64,6 +64,14 @@ export default function RootLayout({
       lang="en"
       className={`${anton.variable} ${instrumentSerif.variable} ${inter.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="bg-ink text-cream font-sans antialiased">{children}</body>
     </html>
   );
