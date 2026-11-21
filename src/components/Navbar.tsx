@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Magnetic } from "./Magnetic";
 import { scrollToSection } from "../hooks/useSmoothScroll";
@@ -17,23 +16,6 @@ interface NavbarProps {
 }
 
 export function Navbar({ ready }: NavbarProps) {
-	const [time, setTime] = useState<string>("");
-
-	useEffect(() => {
-		const update = () => {
-			const nextTime = new Date().toLocaleTimeString("en-US", {
-				timeZone: "Asia/Manila",
-				hour: "numeric",
-				minute: "2-digit",
-				hour12: true,
-			});
-			setTime((prev) => (prev === nextTime ? prev : nextTime));
-		};
-		update();
-		const interval = setInterval(update, 10000);
-		return () => clearInterval(interval);
-	}, []);
-
 	return (
 		<motion.header
 			className="fixed inset-x-0 top-0 z-50 mix-blend-difference"
@@ -48,7 +30,6 @@ export function Navbar({ ready }: NavbarProps) {
 				<Magnetic strength={0.25}>
 					<button
 						onClick={() => scrollToSection("#hero")}
-						data-cursor
 						className="font-display text-lg uppercase tracking-wide text-cream"
 						aria-label="Back to top"
 					>
@@ -61,7 +42,6 @@ export function Navbar({ ready }: NavbarProps) {
 						<Magnetic key={link.label} strength={0.3}>
 							<button
 								onClick={() => scrollToSection(link.target)}
-								data-cursor
 								className="group relative font-sans text-xs font-medium uppercase tracking-[0.2em] text-cream"
 							>
 								{link.label}
@@ -69,13 +49,6 @@ export function Navbar({ ready }: NavbarProps) {
 							</button>
 						</Magnetic>
 					))}
-				</div>
-
-				<div className="flex items-center gap-2 font-sans text-xs tracking-widest text-cream">
-					<span className="hidden sm:inline text-muted">
-						Zambales, PH
-					</span>
-					<span className="tabular-nums">{time}</span>
 				</div>
 			</nav>
 		</motion.header>

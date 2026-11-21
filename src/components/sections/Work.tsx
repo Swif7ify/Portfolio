@@ -51,7 +51,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            data-cursor="View"
             className="block"
             aria-label={`View live demo of ${project.title}`}
           >
@@ -134,7 +133,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              data-cursor
               className="flex items-center gap-2 rounded-full border border-line px-4 py-2 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
               aria-label={`Live demo of ${project.title}`}
             >
@@ -147,7 +145,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              data-cursor
               className="flex items-center gap-2 rounded-full border border-line px-4 py-2 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-muted transition-colors duration-300 hover:border-cream hover:text-cream"
               aria-label={`GitHub repository of ${project.title}`}
             >
@@ -188,7 +185,6 @@ export function Work() {
       <div className="mt-20 flex justify-center md:mt-28">
         <button
           onClick={() => setShowAll((v) => !v)}
-          data-cursor
           aria-expanded={showAll}
           className="group flex items-center gap-3 rounded-full border border-line px-8 py-4 font-sans text-xs font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
         >

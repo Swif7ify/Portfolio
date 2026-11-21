@@ -65,7 +65,6 @@ export function Testimonials() {
 						</p>
 						<button
 							onClick={() => scrollToSection("#contact")}
-							data-cursor="Contact"
 							className="mt-8 flex items-center gap-3 rounded-full border border-line px-6 py-3 font-sans text-xs font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
 						>
 							Get In Touch
@@ -172,7 +171,6 @@ export function Testimonials() {
 									onClick={() =>
 										setIndex([i, i > index ? 1 : -1])
 									}
-									data-cursor
 									className="group flex h-6 items-center"
 								>
 									<span
@@ -188,7 +186,6 @@ export function Testimonials() {
 						<div className="flex gap-3">
 							<button
 								onClick={() => paginate(-1)}
-								data-cursor
 								aria-label="Previous testimonial"
 								className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
 							>
@@ -196,7 +193,6 @@ export function Testimonials() {
 							</button>
 							<button
 								onClick={() => paginate(1)}
-								data-cursor
 								aria-label="Next testimonial"
 								className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-cream transition-colors duration-300 hover:border-accent hover:text-accent"
 							>

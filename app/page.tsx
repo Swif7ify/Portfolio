@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { KineticProvider } from "@/src/contexts/KineticContext";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
-import { Cursor } from "@/src/components/Cursor";
 import { Preloader } from "@/src/components/Preloader";
 import { Navbar } from "@/src/components/Navbar";
 import { Hero } from "@/src/components/sections/Hero";
@@ -47,7 +46,6 @@ export default function Home() {
       <SmoothScroll />
       <div className="relative min-h-screen w-full bg-bg text-fg">
         <div className="noise-overlay" aria-hidden="true" />
-        <Cursor />
 
         <AnimatePresence mode="wait">
           {!loaded && (

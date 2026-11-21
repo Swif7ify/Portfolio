@@ -34,7 +34,6 @@ export function Services() {
 						>
 							<button
 								onClick={() => setOpenIndex(isOpen ? null : i)}
-								data-cursor
 								aria-expanded={isOpen}
 								aria-controls={`service-panel-${i}`}
 								className="group flex w-full items-center justify-between gap-6 py-8 text-left md:py-10"

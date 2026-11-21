@@ -136,7 +136,6 @@ export function VariableSpecimen() {
             pointerDoc.current = { x: -99999, y: -99999 };
             setHovered(false);
           }}
-          data-cursor="Breathe"
           className="mt-16 select-none border-y border-hair py-16 cursor-crosshair overflow-hidden"
           aria-label={specimenLines.join(" ")}
           role="img"

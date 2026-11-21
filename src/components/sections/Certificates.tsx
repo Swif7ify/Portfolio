@@ -28,7 +28,6 @@ function CertificateCard({
     >
       <button
         onClick={() => onOpen(cert)}
-        data-cursor="Enlarge"
         className="block w-full text-left"
         aria-label={`View certificate: ${cert.title} by ${cert.issuer}`}
       >
@@ -64,7 +63,6 @@ function CertificateCard({
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
-          data-cursor
           className="mt-2 inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-muted transition-colors duration-300 hover:text-accent"
           aria-label={`Verify credential for ${cert.title}`}
         >
@@ -181,7 +179,6 @@ export function Certificates() {
                         href={active.credentialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        data-cursor="Verify"
                         className="flex shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-ink"
                       >
                         Verify
@@ -191,7 +188,6 @@ export function Certificates() {
                   </figcaption>
                   <button
                     onClick={() => setActive(null)}
-                    data-cursor="Close"
                     aria-label="Close certificate view"
                     className="absolute -right-3 -top-3 sm:-right-4 sm:-top-4 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-ink text-cream transition-colors duration-300 hover:border-accent hover:text-accent shadow-lg z-30"
                   >

@@ -39,7 +39,6 @@ export function Contact() {
 				<Magnetic strength={0.15}>
 					<a
 						href="mailto:earl.coding@gmail.com"
-						data-cursor="Say hi"
 						className="group block font-display text-[13vw] uppercase leading-[0.9] text-cream transition-colors duration-300 hover:text-accent md:text-[9vw]"
 					>
 						Let&apos;s Talk
@@ -65,7 +64,6 @@ export function Contact() {
 								href={social.href}
 								target="_blank"
 								rel="noopener noreferrer"
-								data-cursor
 								className="group relative font-sans text-xs font-medium uppercase tracking-[0.2em] text-muted transition-colors duration-300 hover:text-cream"
 							>
 								{social.label}

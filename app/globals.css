@@ -125,14 +125,6 @@ body {
   -webkit-text-stroke: 1px rgb(var(--fg) / 0.35);
 }
 
-/* Hide native cursor on devices with fine pointer when custom cursor is active */
-@media (pointer: fine) {
-  .custom-cursor-active,
-  .custom-cursor-active * {
-    cursor: none !important;
-  }
-}
-
 /* Film-grain noise overlay — tiled 180x180 GPU texture to avoid full-screen SVG filter cost */
 .noise-overlay {
   position: fixed;
