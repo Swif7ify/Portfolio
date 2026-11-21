@@ -25,7 +25,6 @@ import { ExpandingPanels } from "@/src/components/sections/ExpandingPanels";
 import { InfiniteCanvas } from "@/src/components/sections/InfiniteCanvas";
 import { NativeScrollCSS } from "@/src/components/sections/NativeScrollCSS";
 import { TransitionLab } from "@/src/components/sections/TransitionLab";
-import { Certificates } from "@/src/components/sections/Certificates";
 import { Testimonials } from "@/src/components/sections/Testimonials";
 import { CurtainFooter } from "@/src/components/CurtainFooter";
 
@@ -108,10 +107,9 @@ export default function Home() {
           {/* Chapter 15-17: Platform Engineering & Labs */}
           <InfiniteCanvas />
           <NativeScrollCSS />
-          <TransitionLab />
 
-          {/* Chapter 18: Credentials & Testimonials */}
-          <Certificates />
+          {/* Chapter 18: Verified Credentials & Testimonials */}
+          <TransitionLab />
           <Testimonials />
 
           {/* Finale & Contact */}

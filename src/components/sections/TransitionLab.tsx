@@ -1,242 +1,333 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import type { MotionProps } from "framer-motion";
-import { ArrowLeftIcon } from "lucide-react";
-import { labProjects, transitionModes } from "@/src/data/motionLab";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRight } from "lucide-react";
+import { certificates } from "@/src/data/certificates";
+import type { Certificate } from "@/src/data/certificates";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
 import { PixelCurtain } from "@/src/components/transitions/PixelCurtain";
-import { FrameMovers } from "@/src/components/transitions/FrameMovers";
-import type { Rect } from "@/src/components/transitions/FrameMovers";
 import { getImagePath } from "@/src/utils/image";
 
-type Mode = (typeof transitionModes)[number]["id"];
-const MOVERS = 8;
 const EASE = [0.23, 1, 0.32, 1] as const;
 
-/** Four production page-transition techniques between a grid and a detail view, on one stage. */
+function hasCredentialUrl(
+	cert: Certificate,
+): cert is Certificate & { credentialUrl: string } {
+	return Boolean(
+		cert.credentialUrl &&
+		cert.credentialUrl.trim() !== "" &&
+		cert.credentialUrl !== "#",
+	);
+}
+
+/** Single-row swipeable certificates showcase with pixelated curtain view transitions. */
 export function TransitionLab() {
-  const [mode, setMode] = useState<Mode>("pixel");
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [pixel, setPixel] = useState<"off" | "in" | "out">("off");
-  const [movers, setMovers] = useState<{ key: number; image: string; rects: Rect[] } | null>(null);
-  const [busy, setBusy] = useState(false);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const timers = useRef<number[]>([]);
-  const moverKeyRef = useRef<number>(0);
+	const [openId, setOpenId] = useState<string | null>(null);
+	const [pixel, setPixel] = useState<"off" | "in" | "out">("off");
+	const [busy, setBusy] = useState<boolean>(false);
+	const [canPrev, setCanPrev] = useState<boolean>(false);
+	const [canNext, setCanNext] = useState<boolean>(true);
 
-  const later = (ms: number, fn: () => void) => timers.current.push(window.setTimeout(fn, ms));
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+	const trackRef = useRef<HTMLDivElement>(null);
+	const dragRef = useRef({
+		active: false,
+		startX: 0,
+		startScroll: 0,
+		moved: false,
+	});
+	const timers = useRef<number[]>([]);
 
-  const runPixel = (swap: () => void) => {
-    setBusy(true);
-    setPixel("in");
-    later(440, () => {
-      swap();
-      setPixel("out");
-    });
-    later(900, () => {
-      setPixel("off");
-      setBusy(false);
-    });
-  };
+	const later = useCallback((ms: number, fn: () => void) => {
+		timers.current.push(window.setTimeout(fn, ms));
+	}, []);
 
-  const panelRect = (): Rect => {
-    const s = stageRef.current;
-    const w = s?.clientWidth ?? 1000;
-    const h = s?.clientHeight ?? 600;
-    return w >= 768 ? { x: 24, y: 24, w: w / 2 - 36, h: h - 48 } : { x: 16, y: 16, w: w - 32, h: h * 0.45 };
-  };
+	useEffect(
+		() => () => timers.current.forEach((t) => window.clearTimeout(t)),
+		[],
+	);
 
-  const open = (id: string) => {
-    if (busy) return;
-    const project = labProjects.find((p) => p.id === id);
-    if (!project) return;
-    if (mode === "pixel") return runPixel(() => setOpenId(id));
-    if (mode === "frames") {
-      const stage = stageRef.current?.getBoundingClientRect();
-      const card = cardRefs.current[id]?.querySelector("img")?.getBoundingClientRect();
-      if (!stage || !card) return setOpenId(id);
-      const from: Rect = { x: card.left - stage.left, y: card.top - stage.top, w: card.width, h: card.height };
-      const to = panelRect();
-      const rects = Array.from({ length: MOVERS + 1 }, (_, i) => {
-        const t = i / MOVERS;
-        return {
-          x: from.x + (to.x - from.x) * t,
-          y: from.y + (to.y - from.y) * t - Math.sin(t * Math.PI) * 70,
-          w: from.w + (to.w - from.w) * t,
-          h: from.h + (to.h - from.h) * t
-        };
-      });
-      setBusy(true);
-      moverKeyRef.current += 1;
-      setMovers({ key: moverKeyRef.current, image: project.image, rects });
-      later(MOVERS * 50 + 280, () => setOpenId(id));
-      later(MOVERS * 50 + 560, () => {
-        setMovers(null);
-        setBusy(false);
-      });
-      return;
-    }
-    setOpenId(id);
-  };
+	const syncBounds = useCallback(() => {
+		const el = trackRef.current;
+		if (!el) return;
+		setCanPrev(el.scrollLeft > 4);
+		setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+	}, []);
 
-  const close = () => {
-    if (busy) return;
-    if (mode === "pixel") return runPixel(() => setOpenId(null));
-    setOpenId(null);
-  };
+	useEffect(() => {
+		syncBounds();
+		window.addEventListener("resize", syncBounds, { passive: true });
+		return () => window.removeEventListener("resize", syncBounds);
+	}, [syncBounds]);
 
-  useEffect(() => {
-    if (!openId) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  });
+	const slideBy = (dir: -1 | 1) => {
+		const el = trackRef.current;
+		if (!el) return;
+		const step = Math.max(260, el.clientWidth * 0.52);
+		el.scrollBy({ left: dir * step, behavior: "smooth" });
+	};
 
-  const project = labProjects.find((p) => p.id === openId);
-  const detailMotion: Pick<MotionProps, "initial" | "animate" | "exit" | "transition"> =
-    mode === "mask"
-      ? {
-          initial: { clipPath: "inset(0 0 0 100%)" },
-          animate: { clipPath: "inset(0 0 0 0%)" },
-          exit: { clipPath: "inset(0 0 0 100%)" },
-          transition: { duration: 0.3, ease: [0.76, 0, 0.24, 1] as const }
-        }
-      : mode === "pixel"
-      ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0, transition: { duration: 0 } } }
-      : { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.18, ease: "easeOut" } };
+	const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+		if (e.pointerType !== "mouse" || e.button !== 0) return;
+		const el = trackRef.current;
+		if (!el) return;
+		dragRef.current = {
+			active: true,
+			startX: e.clientX,
+			startScroll: el.scrollLeft,
+			moved: false,
+		};
+	};
 
-  return (
-    <section id="transitions" aria-labelledby="transitions-title" className="relative bg-bg px-4 py-32 md:px-6 md:py-40">
-      <div className="mx-auto max-w-[1440px]">
-        <ChapterHeader
-          id="transitions-title"
-          number="19"
-          kicker="View Transitions & Motion Architecture"
-          title={
-            <>
-              One interaction.
-              <br />
-              <span className="text-muted">Four transition modes.</span>
-            </>
-          }
-          description="Select a transition style below and click any artifact to observe seamless view handoffs and layout morphing."
-        />
+	const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+		const d = dragRef.current;
+		if (!d.active) return;
+		const el = trackRef.current;
+		if (!el) return;
+		const dx = e.clientX - d.startX;
+		if (Math.abs(dx) > 6) d.moved = true;
+		if (d.moved) {
+			el.scrollLeft = d.startScroll - dx;
+		}
+	};
 
-        <div role="radiogroup" aria-label="Transition technique" className="mt-12 flex flex-wrap gap-2">
-          {transitionModes.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              role="radio"
-              aria-checked={mode === m.id}
-              disabled={busy}
-              onClick={() => {
-                setOpenId(null);
-                setMode(m.id);
-              }}
-              className={`rounded-xl border px-4 py-2.5 text-left transition-[background-color,border-color,color] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
-                mode === m.id ? "border-fg bg-fg text-bg" : "border-hair text-fg hover:border-fg/40"
-              }`}
-            >
-              <span className="block text-sm font-medium">{m.label}</span>
-            </button>
-          ))}
-        </div>
+	const endDrag = () => {
+		dragRef.current.active = false;
+	};
 
-        <LayoutGroup id={`lab-${mode}`}>
-          <div ref={stageRef} className="relative mt-6 h-[78vh] min-h-[520px] overflow-hidden rounded-3xl border border-hair bg-surface">
-            <div className="flex h-full flex-col p-4 md:p-6">
-              <div className="flex items-baseline justify-between">
-                <p className="text-lg font-display" style={{ fontVariationSettings: "'wght' 700, 'wdth' 85" }}>
-                  Selected Artifacts
-                </p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Click any item</p>
-              </div>
-              <div className="mt-4 grid min-h-0 flex-1 grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-                {labProjects.map((p) => (
-                  <button
-                    key={p.id}
-                    ref={(el) => {
-                      cardRefs.current[p.id] = el;
-                    }}
-                    type="button"
-                    onClick={() => open(p.id)}
-                    className="group flex min-h-0 flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-                  >
-                    <motion.div
-                      layoutId={mode === "flip" ? `lab-img-${p.id}` : undefined}
-                      className="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl"
-                      transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                    >
-                      <Image src={getImagePath(p.image)} alt={p.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]" />
-                    </motion.div>
-                    <span className="mt-3 flex items-baseline justify-between gap-2">
-                      <span className="truncate text-sm text-fg">{p.title}</span>
-                      <span className="font-mono text-[10px] text-muted">{p.year}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
+	const runPixel = useCallback(
+		(swap: () => void) => {
+			setBusy(true);
+			setPixel("in");
+			later(440, () => {
+				swap();
+				setPixel("out");
+			});
+			later(900, () => {
+				setPixel("off");
+				setBusy(false);
+			});
+		},
+		[later],
+	);
 
-            <AnimatePresence>
-              {project && (
-                <motion.div key={`${mode}-${project.id}`} className="absolute inset-0 z-20 bg-surface" {...detailMotion}>
-                  <motion.div
-                    layoutId={mode === "flip" ? `lab-img-${project.id}` : undefined}
-                    transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                    className="absolute left-4 right-4 top-4 h-[45%] overflow-hidden rounded-xl md:bottom-6 md:left-6 md:right-auto md:top-6 md:h-auto md:w-[calc(50%-36px)]"
-                  >
-                    <motion.div
-                      className="relative h-full w-full"
-                      initial={mode === "mask" ? { scale: 1.15 } : false}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.3, ease: EASE }}
-                    >
-                      <Image
-                        src={getImagePath(project.image)}
-                        alt={project.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover"
-                      />
-                    </motion.div>
-                  </motion.div>
-                  <motion.div
-                    className="absolute bottom-4 left-4 right-4 top-[calc(45%+32px)] flex flex-col md:bottom-6 md:left-[calc(50%+12px)] md:right-6 md:top-6"
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25, delay: 0.15, ease: EASE }}
-                  >
-                    <button
-                      type="button"
-                      onClick={close}
-                      className="flex w-fit items-center gap-2 rounded-full border border-hair px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-fg hover:border-fg transition-colors"
-                    >
-                      <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden /> Back
-                    </button>
-                    <p className="mt-auto font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-                      {project.role} · {project.year}
-                    </p>
-                    <h3 className="mt-3 text-[clamp(2rem,5vw,4.5rem)] leading-[0.92] tracking-[-0.03em]" style={{ fontVariationSettings: "'wght' 800, 'wdth' 72" }}>
-                      {project.title}
-                    </h3>
-                    <p className="mt-4 max-w-md text-base leading-relaxed text-muted">{project.body}</p>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+	const open = (id: string) => {
+		if (busy || dragRef.current.moved) {
+			dragRef.current.moved = false;
+			return;
+		}
+		runPixel(() => setOpenId(id));
+	};
 
-            {movers && <FrameMovers key={movers.key} image={movers.image} rects={movers.rects} />}
-            {pixel !== "off" && <PixelCurtain phase={pixel} />}
-          </div>
-        </LayoutGroup>
-      </div>
-    </section>
-  );
+	const close = useCallback(() => {
+		if (busy) return;
+		runPixel(() => setOpenId(null));
+	}, [busy, runPixel]);
+
+	useEffect(() => {
+		if (!openId) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") close();
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [openId, close]);
+
+	const activeCert = certificates.find((c) => c.id === openId) ?? null;
+
+	return (
+		<section
+			id="certificates"
+			aria-labelledby="certificates-title"
+			className="relative bg-bg px-4 py-32 md:px-6 md:py-40"
+		>
+			<div className="mx-auto max-w-[1440px]">
+				<ChapterHeader
+					id="certificates-title"
+					number="18"
+					kicker="Verified Credentials & Honors"
+					title={
+						<>
+							Certificates
+							<br />
+							<span className="text-muted">
+								&amp; Credentials.
+							</span>
+						</>
+					}
+					description="Swipe through verified technical certifications, engineering foundations, and hackathon honors. Click any card to inspect the full credential."
+				/>
+
+				<div className="relative mt-12 h-[78vh] min-h-[520px] overflow-hidden ">
+					<div className="flex h-full flex-col p-4 md:p-6">
+						<div className="flex items-center justify-between gap-4">
+							<p
+								className="text-lg font-display"
+								style={{
+									fontVariationSettings:
+										"'wght' 700, 'wdth' 85",
+								}}
+							>
+								Verified Certificates
+							</p>
+
+							<div className="flex items-center gap-3">
+								<div className="flex items-center gap-1.5">
+									<button
+										type="button"
+										onClick={() => slideBy(-1)}
+										disabled={!canPrev}
+										aria-label="Slide certificates left"
+										className="flex h-8 w-8 items-center justify-center rounded-full border border-hair text-fg transition-colors hover:border-fg disabled:opacity-30 disabled:hover:border-hair"
+									>
+										<ArrowLeftIcon
+											className="h-3.5 w-3.5"
+											aria-hidden
+										/>
+									</button>
+									<button
+										type="button"
+										onClick={() => slideBy(1)}
+										disabled={!canNext}
+										aria-label="Slide certificates right"
+										className="flex h-8 w-8 items-center justify-center rounded-full border border-hair text-fg transition-colors hover:border-fg disabled:opacity-30 disabled:hover:border-hair"
+									>
+										<ArrowRightIcon
+											className="h-3.5 w-3.5"
+											aria-hidden
+										/>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div
+							ref={trackRef}
+							onScroll={syncBounds}
+							onPointerDown={onPointerDown}
+							onPointerMove={onPointerMove}
+							onPointerUp={endDrag}
+							onPointerCancel={endDrag}
+							onPointerLeave={endDrag}
+							className="mt-4 flex min-h-0 flex-1 gap-3 overflow-x-auto select-none cursor-grab active:cursor-grabbing [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4"
+						>
+							{certificates.map((cert) => (
+								<button
+									key={cert.id}
+									type="button"
+									onClick={() => open(cert.id)}
+									className="group flex h-full w-[78%] shrink-0 flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-[46%] lg:w-[calc((100%-3rem)/4)]"
+									aria-label={`View certificate: ${cert.title} by ${cert.issuer}`}
+								>
+									<div className="relative h-full w-full overflow-hidden rounded-xl">
+										<Image
+											src={getImagePath(cert.image)}
+											alt={`${cert.title} — ${cert.issuer}`}
+											fill
+											draggable={false}
+											sizes="(max-width: 640px) 80vw, (max-width: 1024px) 46vw, 25vw"
+											className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+										/>
+										<div
+											aria-hidden="true"
+											className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/10 transition-opacity duration-300 group-hover:from-black/95"
+										/>
+										<div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-4 md:p-5">
+											<span className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-white/75">
+												{cert.year}
+											</span>
+											<span className="line-clamp-2 font-sans text-sm font-medium leading-snug text-white md:text-base">
+												{cert.title}
+											</span>
+										</div>
+									</div>
+								</button>
+							))}
+						</div>
+					</div>
+
+					<AnimatePresence>
+						{activeCert && (
+							<motion.div
+								key={activeCert.id}
+								className="absolute inset-0 z-20 bg-surface"
+								initial={false}
+								animate={{ opacity: 1 }}
+								exit={{
+									opacity: 0,
+									transition: { duration: 0 },
+								}}
+							>
+								<div className="absolute left-4 right-4 top-4 h-[45%] overflow-hidden rounded-xl bg-bg/50 md:bottom-6 md:left-6 md:right-auto md:top-6 md:h-auto md:w-[calc(50%-36px)]">
+									<div className="relative h-full w-full">
+										<Image
+											src={getImagePath(activeCert.image)}
+											alt={`Certificate: ${activeCert.title} issued by ${activeCert.issuer}`}
+											fill
+											sizes="(max-width: 768px) 100vw, 50vw"
+											className="object-contain p-2 md:p-4"
+										/>
+									</div>
+								</div>
+
+								<motion.div
+									className="absolute bottom-4 left-4 right-4 top-[calc(45%+32px)] flex flex-col md:bottom-6 md:left-[calc(50%+12px)] md:right-6 md:top-6"
+									initial={{ opacity: 0, y: 14 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{
+										duration: 0.25,
+										delay: 0.15,
+										ease: EASE,
+									}}
+								>
+									<button
+										type="button"
+										onClick={close}
+										className="flex w-fit items-center gap-2 rounded-full border border-hair px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-fg transition-colors hover:border-fg"
+									>
+										<ArrowLeftIcon
+											className="h-3.5 w-3.5"
+											aria-hidden
+										/>{" "}
+										Back
+									</button>
+
+									<p className="mt-auto font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+										{activeCert.issuer} · {activeCert.year}
+									</p>
+									<h3
+										className="mt-3 text-balance text-[clamp(1.6rem,3.6vw,3.4rem)] leading-[0.96] tracking-[-0.03em]"
+										style={{
+											fontVariationSettings:
+												"'wght' 800, 'wdth' 74",
+										}}
+									>
+										{activeCert.title}
+									</h3>
+
+									{hasCredentialUrl(activeCert) && (
+										<a
+											href={activeCert.credentialUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-hair px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-fg transition-colors hover:border-accent hover:bg-accent hover:text-bg"
+										>
+											Verify Credential
+											<ArrowUpRight
+												className="h-3.5 w-3.5"
+												aria-hidden
+											/>
+										</a>
+									)}
+								</motion.div>
+							</motion.div>
+						)}
+					</AnimatePresence>
+
+					{pixel !== "off" && <PixelCurtain phase={pixel} />}
+				</div>
+			</div>
+		</section>
+	);
 }
