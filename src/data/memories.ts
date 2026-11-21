@@ -1,0 +1,167 @@
+export interface MemoryFrame {
+	id: string;
+	image: string;
+	year: string;
+	label: string;
+	/** Horizontal offset from center in vw */
+	x: number;
+	/** Vertical offset from center in vh */
+	y: number;
+	/** Subtle resting tilt in degrees */
+	rotate: number;
+	/** Card aspect ratio class */
+	aspect: string;
+}
+
+export const memoryFrames: MemoryFrame[] = [
+	{
+		id: "memory-01",
+		image: "/Memories/1.jpg",
+		year: "2025",
+		label: "Team Outing",
+		x: -28,
+		y: -18,
+		rotate: -3,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-02",
+		image: "/Memories/2.jpg",
+		year: "2026",
+		label: "Live Demo Setup",
+		x: 29,
+		y: -17,
+		rotate: 2.5,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-03",
+		image: "/Memories/3.jpg",
+		year: "2025",
+		label: "Presentation Prep",
+		x: -33,
+		y: 12,
+		rotate: 2,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-04",
+		image: "/Memories/4.jpg",
+		year: "2026",
+		label: "Road To Launch",
+		x: 31,
+		y: 16,
+		rotate: -2.5,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-05",
+		image: "/Memories/5.JPG",
+		year: "2026",
+		label: "Project METRO · San Marcelino",
+		x: -25,
+		y: 23,
+		rotate: -2,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-06",
+		image: "/Memories/6.jpeg",
+		year: "2026",
+		label: "Project METRO · San Antonio",
+		x: 27,
+		y: -21,
+		rotate: 3,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-07",
+		image: "/Memories/7.JPG",
+		year: "2026",
+		label: "Project METRO · Iba Market",
+		x: -32,
+		y: -14,
+		rotate: -2.5,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-08",
+		image: "/Memories/8.jpg",
+		year: "2025",
+		label: "Gordon College CCS",
+		x: 32,
+		y: 6,
+		rotate: 2,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-09",
+		image: "/Memories/9.jpg",
+		year: "2025",
+		label: "Conference Hall",
+		x: -26,
+		y: 20,
+		rotate: 2.5,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-10",
+		image: "/Memories/10.jpg",
+		year: "2025",
+		label: "Backstage Brief",
+		x: 26,
+		y: -19,
+		rotate: -3,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-11",
+		image: "/Memories/11.jpg",
+		year: "2025",
+		label: "Campus Event",
+		x: -33,
+		y: -4,
+		rotate: -2,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-12",
+		image: "/Memories/12.jpeg",
+		year: "2026",
+		label: "DTI Provincial Culmination",
+		x: 29,
+		y: 21,
+		rotate: 2.5,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-13",
+		image: "/Memories/13.JPG",
+		year: "2026",
+		label: "DTI Zambales Community",
+		x: -27,
+		y: -21,
+		rotate: 3,
+		aspect: "aspect-[4/3]",
+	},
+	{
+		id: "memory-14",
+		image: "/Memories/14.jpg",
+		year: "2025",
+		label: "Seminar Session",
+		x: 32,
+		y: -8,
+		rotate: -2.5,
+		aspect: "aspect-[3/4]",
+	},
+	{
+		id: "memory-15",
+		image: "/Memories/15.jpg",
+		year: "2025",
+		label: "Tech Summit Lobby",
+		x: -25,
+		y: 18,
+		rotate: -2,
+		aspect: "aspect-[3/4]",
+	},
+];

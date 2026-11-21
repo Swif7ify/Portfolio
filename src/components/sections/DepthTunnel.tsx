@@ -1,97 +1,202 @@
-'use client';
+"use client";
 
 import React, { useRef } from "react";
-import { tunnelLayers } from "@/src/data/showcase";
+import Image from "next/image";
+import { useKinetic } from "@/src/contexts/KineticContext";
+import { memoryFrames } from "@/src/data/memories";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
-import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
+import {
+	calcSectionProgress,
+	useElementMetrics,
+} from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 
-const TRAVEL = 1800;
+const PERSPECTIVE = 920;
+const COUNT = memoryFrames.length;
+const FLIGHT_END = 0.86;
+const WINDOW_SIZE = 0.15;
+const STEP = COUNT > 1 ? (FLIGHT_END - WINDOW_SIZE) / (COUNT - 1) : 1;
 
-/** Five planes in a shared perspective, each advancing toward the camera at its own ratio. */
+/** 3D Z-axis memory flight: 15 photo frames fly past "The Memories" one by one, settling on a closing beat. */
 export function DepthTunnel() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const lastPRef = useRef<number>(-1);
-  const inView = useInView(sectionRef, "200px");
-  const sectionMetrics = useElementMetrics(sectionRef);
+	const { reducedMotion } = useKinetic();
+	const sectionRef = useRef<HTMLElement>(null);
+	const titleRef = useRef<HTMLDivElement>(null);
+	const finaleRef = useRef<HTMLDivElement>(null);
+	const counterRef = useRef<HTMLDivElement>(null);
+	const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+	const lastPRef = useRef<number>(-1);
+	const activeIdxRef = useRef<number>(0);
+	const inView = useInView(sectionRef, "200px");
+	const sectionMetrics = useElementMetrics(sectionRef);
 
-  useAnimationFrame(() => {
-    if (typeof window === "undefined") return;
-    const p = calcSectionProgress(sectionMetrics.current, window.scrollY);
-    if (Math.abs(p - lastPRef.current) < 0.0001) return;
-    lastPRef.current = p;
+	useAnimationFrame(() => {
+		if (typeof window === "undefined") return;
+		const p = reducedMotion
+			? 0.95
+			: calcSectionProgress(sectionMetrics.current, window.scrollY);
+		if (Math.abs(p - lastPRef.current) < 0.0001) return;
+		lastPRef.current = p;
 
-    tunnelLayers.forEach((layer, i) => {
-      const el = layerRefs.current[i];
-      if (!el) return;
-      const z = layer.baseZ + p * layer.ratio * TRAVEL;
-      const y = (0.5 - p) * layer.ratio * 260;
-      el.style.transform = `translate3d(0, ${y.toFixed(1)}px, ${z.toFixed(1)}px)`;
-      el.style.opacity = String(clamp((820 - z) / 260));
-    });
-  }, inView);
+		const titleEl = titleRef.current;
+		if (titleEl) {
+			const tz = -120 + clamp(p / FLIGHT_END) * 260;
+			const titleOpacity =
+				clamp((p + 0.08) / 0.12) * (1 - clamp((p - 0.77) / 0.08));
+			titleEl.style.transform = `translate3d(0, 0, ${tz.toFixed(1)}px)`;
+			titleEl.style.opacity = titleOpacity.toFixed(3);
+			titleEl.style.visibility =
+				titleOpacity <= 0.002 ? "hidden" : "visible";
+		}
 
-  return (
-    <section ref={sectionRef} id="tunnel" aria-labelledby="tunnel-title" className="relative h-[360vh] bg-bg">
-      <div className="sticky top-0 h-screen overflow-hidden" style={{ perspective: "1000px" }}>
-        {/* Background — nested frames */}
-        <div ref={(el) => { layerRefs.current[0] = el; }} aria-hidden className="absolute inset-0 flex items-center justify-center will-change-transform">
-          {[150, 125, 100, 78, 58, 40].map((s) => (
-            <span
-              key={s}
-              className="absolute rounded-[2vmin] border border-hair"
-              style={{ width: `${s}vmin`, height: `${s * 0.62}vmin` }}
-            />
-          ))}
-        </div>
+		// Closing beat emerges as the final memory clears and stays anchored until scroll exits
+		const finaleEl = finaleRef.current;
+		if (finaleEl) {
+			const f = clamp((p - 0.83) / 0.1);
+			const easedF = f * f * (3 - 2 * f);
+			const fz = -180 + easedF * 180;
+			finaleEl.style.transform = `translate3d(0, ${((1 - easedF) * 20).toFixed(1)}px, ${fz.toFixed(1)}px)`;
+			finaleEl.style.opacity = easedF.toFixed(3);
+			finaleEl.style.visibility = easedF <= 0.002 ? "hidden" : "visible";
+		}
 
-        {/* Far — ambient orbital accents */}
-        <div ref={(el) => { layerRefs.current[1] = el; }} aria-hidden className="absolute inset-0 flex items-center justify-center will-change-transform">
-          {Array.from({ length: 12 }).map((_, i) => {
-            const a = (i / 12) * Math.PI * 2;
-            return (
-              <span
-                key={i}
-                className="absolute h-1.5 w-1.5 rounded-full bg-accent/40"
-                style={{ transform: `translate(${Math.cos(a) * 46}vmin, ${Math.sin(a) * 30}vmin)` }}
-              />
-            );
-          })}
-        </div>
+		const counterEl = counterRef.current;
+		if (counterEl) {
+			const cOp = 1 - clamp((p - 0.8) / 0.08);
+			counterEl.style.opacity = cOp.toFixed(3);
+		}
 
-        {/* Mid — title */}
-        <div ref={(el) => { layerRefs.current[2] = el; }} className="absolute inset-0 flex items-center justify-center will-change-transform">
-          <h2
-            id="tunnel-title"
-            className="text-center font-display text-[clamp(2.5rem,7vw,6.5rem)] leading-[0.9] tracking-[-0.03em]"
-            style={{ fontVariationSettings: "'wght' 800, 'wdth' 70" }}
-          >
-            Entering The Mind.
-            <br />
-            <span className="text-accent">Diving In Depth.</span>
-          </h2>
-        </div>
+		let closestIdx = 0;
+		let bestDist = Infinity;
 
-        {/* Near — outlined initials */}
-        <div ref={(el) => { layerRefs.current[3] = el; }} aria-hidden className="absolute inset-0 flex items-center justify-between px-[4vw] will-change-transform">
-          <span className="text-outline font-display text-[34vmin] leading-none select-none" style={{ fontVariationSettings: "'wght' 900, 'wdth' 40" }}>
-            E
-          </span>
-          <span className="text-outline font-display text-[34vmin] leading-none select-none" style={{ fontVariationSettings: "'wght' 900, 'wdth' 40" }}>
-            O
-          </span>
-        </div>
+		for (let i = 0; i < COUNT; i++) {
+			const el = cardRefs.current[i];
+			if (!el) continue;
+			const frame = memoryFrames[i];
+			const start = i * STEP;
+			const local = (p - start) / WINDOW_SIZE;
 
-        {/* Foreground — corner brackets that pass the camera */}
-        <div ref={(el) => { layerRefs.current[4] = el; }} aria-hidden className="absolute inset-[8vmin] will-change-transform pointer-events-none">
-          <span className="absolute left-0 top-0 h-[14vmin] w-[14vmin] border-l-2 border-t-2 border-fg/60" />
-          <span className="absolute right-0 top-0 h-[14vmin] w-[14vmin] border-r-2 border-t-2 border-fg/60" />
-          <span className="absolute bottom-0 left-0 h-[14vmin] w-[14vmin] border-b-2 border-l-2 border-fg/60" />
-          <span className="absolute bottom-0 right-0 h-[14vmin] w-[14vmin] border-b-2 border-r-2 border-fg/60" />
-        </div>
-      </div>
-    </section>
-  );
+			if (local <= 0 || local >= 1) {
+				if (el.style.visibility !== "hidden") {
+					el.style.opacity = "0";
+					el.style.visibility = "hidden";
+				}
+				continue;
+			}
+
+			// Accelerate naturally as the frame approaches the camera lens
+			const eased = Math.pow(local, 1.18);
+			const z = -1450 + eased * 2280;
+			const fadeIn = clamp(local / 0.22);
+			const fadeOut = 1 - clamp((local - 0.78) / 0.22);
+			const opacity = fadeIn * fadeOut;
+
+			el.style.transform = `translate3d(-50%, -50%, ${z.toFixed(1)}px) rotate(${frame.rotate}deg)`;
+			el.style.opacity = opacity.toFixed(3);
+			el.style.visibility = opacity <= 0.002 ? "hidden" : "visible";
+
+			const distFromPeak = Math.abs(local - 0.55);
+			if (distFromPeak < bestDist) {
+				bestDist = distFromPeak;
+				closestIdx = i;
+			}
+		}
+
+		if (closestIdx !== activeIdxRef.current) {
+			activeIdxRef.current = closestIdx;
+		}
+	}, inView);
+
+	return (
+		<section
+			ref={sectionRef}
+			id="tunnel"
+			aria-labelledby="tunnel-title"
+			className="relative h-[720vh] bg-bg"
+		>
+			<div
+				className="sticky top-0 h-screen overflow-hidden"
+				style={{ perspective: `${PERSPECTIVE}px` }}
+			>
+				{/* Subtle depth vignette */}
+				<div
+					aria-hidden="true"
+					className="pointer-events-none absolute inset-0 z-0"
+					style={{
+						background:
+							"radial-gradient(ellipse 65% 60% at 50% 50%, rgba(255, 77, 0, 0.04) 0%, transparent 62%)",
+					}}
+				/>
+
+				{/* Centerpiece title */}
+				<div
+					ref={titleRef}
+					className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center will-change-transform"
+				>
+					<h2
+						id="tunnel-title"
+						className="mt-3 font-display text-[clamp(3rem,8vw,7.5rem)] leading-[0.88] tracking-[-0.035em] text-fg"
+						style={{
+							fontVariationSettings: "'wght' 820, 'wdth' 74",
+						}}
+					>
+						The Memories
+					</h2>
+				</div>
+
+				{/* 15 floating 3D memory frames flying past one by one */}
+				{memoryFrames.map((frame, i) => (
+					<div
+						key={frame.id}
+						ref={(el) => {
+							cardRefs.current[i] = el;
+						}}
+						style={{
+							left: `calc(50% + ${frame.x}vw)`,
+							top: `calc(50% + ${frame.y}vh)`,
+							opacity: 0,
+							visibility: "hidden",
+						}}
+						className="pointer-events-none absolute z-20 w-[clamp(160px,24vw,330px)] will-change-[transform,opacity]"
+					>
+						<figure className="overflow-hidden rounded-2xl border border-hair bg-surface shadow-2xl">
+							<div className={`relative w-full ${frame.aspect}`}>
+								<Image
+									src={getImagePath(frame.image)}
+									alt={`${frame.label} (${frame.year})`}
+									fill
+									sizes="(max-width: 768px) 48vw, 330px"
+									className="object-cover"
+								/>
+							</div>
+						</figure>
+					</div>
+				))}
+
+				{/* Closing anchor beat — stays visible at the end of the flight */}
+				<div
+					ref={finaleRef}
+					style={{ opacity: 0, visibility: "hidden" }}
+					className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center will-change-[transform,opacity]"
+				>
+					<p
+						className="mt-4 max-w-3xl text-balance font-display text-[clamp(2.5rem,6.5vw,5.75rem)] leading-[0.92] tracking-[-0.03em] text-fg"
+						style={{
+							fontVariationSettings: "'wght' 780, 'wdth' 76",
+						}}
+					>
+						And this is only
+						<br />
+						<span className="text-muted">the beginning.</span>
+					</p>
+					<span
+						aria-hidden="true"
+						className="mt-8 block h-px w-16 bg-hair"
+					/>
+				</div>
+			</div>
+		</section>
+	);
 }
