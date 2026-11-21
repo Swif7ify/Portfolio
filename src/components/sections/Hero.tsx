@@ -147,12 +147,12 @@ export function Hero({ ready }: HeroProps) {
 			{/* Dramatic close-up monochrome B&W face portrait melting into darkness */}
 			<motion.div
 				style={{ y: portraitY, opacity: contentOpacity }}
-				initial={{ opacity: 0, scale: 1.04 }}
-				animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
-				transition={revealTransition(0.05, 1.25)}
 				className="pointer-events-none absolute left-1/2 top-[-6svh] z-20 aspect-[1365/2048] h-[155svh] -ml-[calc(155svh*1365/2048/2)] will-change-transform sm:top-[-8svh] sm:h-[195svh] sm:-ml-[calc(195svh*1365/2048/2)]"
 			>
-				<div
+				<motion.div
+					initial={{ opacity: 0, scale: 1.04 }}
+					animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
+					transition={revealTransition(0.05, 1.25)}
 					className="relative h-full w-full"
 					style={{
 						WebkitMaskImage:
@@ -169,7 +169,7 @@ export function Hero({ ready }: HeroProps) {
 						sizes="(max-width: 768px) 170vw, 1300px"
 						className="object-cover object-top grayscale contrast-[1.18] brightness-[0.82]"
 					/>
-				</div>
+				</motion.div>
 			</motion.div>
 
 			{/* Soft noir vignette to blend edges seamlessly into page bg */}

@@ -12,85 +12,77 @@ const LINE_1 = ["E", "a", "r", "l"];
 const LINE_2 = ["O", "r", "d", "o", "v", "e", "z"];
 
 export function Preloader({ onComplete }: PreloaderProps) {
-	const containerRef = useRef<HTMLDivElement>(null);
 	const brandRef = useRef<HTMLDivElement>(null);
-	const tlRef = useRef<gsap.core.Timeline | null>(null);
+	const onCompleteRef = useRef<() => void>(onComplete);
+
+	useEffect(() => {
+		onCompleteRef.current = onComplete;
+	}, [onComplete]);
 
 	useEffect(() => {
 		const brandEl = brandRef.current;
-		const containerEl = containerRef.current;
-		if (!brandEl || !containerEl) return;
+		if (!brandEl) return;
 
-		const dot1 = brandEl.querySelector<HTMLElement>(".preloader-dot-1");
-		const dot2 = brandEl.querySelector<HTMLElement>(".preloader-dot-2");
-		const chars = brandEl.querySelectorAll<HTMLElement>(".preloader-char");
+		const ctx = gsap.context(() => {
+			const dot1 = brandEl.querySelector<HTMLElement>(".preloader-dot-1");
+			const dot2 = brandEl.querySelector<HTMLElement>(".preloader-dot-2");
+			const chars = brandEl.querySelectorAll<HTMLElement>(".preloader-char");
 
-		// 1. Initial setup matching Lunchline choreography
-		gsap.set(brandEl, { opacity: 1 });
-		if (dot1 && dot2) {
-			gsap.set([dot1, dot2], { opacity: 0 });
-			gsap.set(dot1, { x: 14 });
-			gsap.set(dot2, { x: -14 });
-		}
-		gsap.set(chars, { y: 24, clipPath: "inset(100% 0 0 0)" });
-
-		// 2. Main timeline
-		const tl = gsap.timeline({
-			onComplete: () => {
-				// Smooth fade out into the site background
-				gsap.to(containerEl, {
-					opacity: 0,
-					duration: 0.5,
-					ease: "power4.inOut",
-					onComplete,
-				});
-			},
-		});
-		tlRef.current = tl;
-
-		// 3. Two parallelogram dots glide together from opposing sides
-		if (dot1 && dot2) {
-			tl.to([dot1, dot2], {
-				opacity: 1,
-				x: 0,
-				duration: 0.6,
-				ease: "power2.out",
-				delay: 0.4,
-			});
-		}
-
-		// 4. Staggered letter upward slice reveal with clipPath: inset(0% 0 0 0)
-		// Starts 0.2s before dots finish (-=0.2) with 0.03s stagger
-		tl.to(
-			chars,
-			{
-				y: 0,
-				clipPath: "inset(0% 0 0 0)",
-				duration: 1.0,
-				stagger: 0.03,
-				ease: "power2.out",
-			},
-			"-=0.2"
-		);
-
-		// 5. Hold fully assembled before exit transition
-		tl.to({}, { duration: 0.45 });
-
-		return () => {
-			if (tlRef.current) {
-				tlRef.current.kill();
+			// 1. Initial setup
+			gsap.set(brandEl, { opacity: 1 });
+			if (dot1 && dot2) {
+				gsap.set([dot1, dot2], { opacity: 0 });
+				gsap.set(dot1, { x: 14 });
+				gsap.set(dot2, { x: -14 });
 			}
-		};
-	}, [onComplete]);
+			gsap.set(chars, { y: 24, clipPath: "inset(100% 0 0 0)" });
+
+			// 2. Main timeline — let Framer Motion AnimatePresence handle the single exit fade
+			const tl = gsap.timeline({
+				onComplete: () => {
+					onCompleteRef.current();
+				},
+			});
+
+			// 3. Two parallelogram dots glide together from opposing sides
+			if (dot1 && dot2) {
+				tl.to([dot1, dot2], {
+					opacity: 1,
+					x: 0,
+					duration: 0.6,
+					ease: "power2.out",
+					delay: 0.4,
+				});
+			}
+
+			// 4. Staggered letter upward slice reveal
+			tl.to(
+				chars,
+				{
+					y: 0,
+					clipPath: "inset(0% 0 0 0)",
+					duration: 1.0,
+					stagger: 0.03,
+					ease: "power2.out",
+				},
+				"-=0.2"
+			);
+
+			// 5. Hold fully assembled before Framer Motion exit fades out smoothly
+			tl.to({}, { duration: 0.45 });
+		}, brandRef);
+
+		return () => ctx.revert();
+	}, []);
 
 	return (
 		<motion.div
-			ref={containerRef}
 			className="fixed inset-0 z-[300] flex items-center justify-center bg-[#0a0a0a] text-[#f6f4e8] select-none cursor-default"
 			initial={{ opacity: 1 }}
+			animate={{ opacity: 1 }}
 			exit={{
 				opacity: 0,
-				transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
+				transition: { duration: 0.55, ease: [0.76, 0, 0.24, 1] },
 			}}
 			aria-label="Loading portfolio"
 			role="status"

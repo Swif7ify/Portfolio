@@ -184,7 +184,7 @@ export function MaskReveal() {
                 &ldquo;The true measure of what we create is not how far it takes us, but how far it can take others.&rdquo;
               </blockquote>
               <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/70">
-                Project METRO · DTI Zambales · 2026
+                Project METRO · Project Turnover · 2026
               </p>
             </div>
           </div>
