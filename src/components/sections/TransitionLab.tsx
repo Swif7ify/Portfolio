@@ -169,7 +169,7 @@ export function TransitionLab() {
 										"'wght' 700, 'wdth' 85",
 								}}
 							>
-								Verified Certificates
+							
 							</p>
 
 							<div className="flex items-center gap-3">
