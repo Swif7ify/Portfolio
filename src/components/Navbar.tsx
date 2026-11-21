@@ -33,7 +33,7 @@ export function Navbar({ ready }: NavbarProps) {
 						className="font-display text-lg uppercase tracking-wide text-cream"
 						aria-label="Back to top"
 					>
-						OneDev<span className="text-accent">.</span>
+						Earl
 					</button>
 				</Magnetic>
 
