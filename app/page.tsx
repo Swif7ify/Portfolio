@@ -20,7 +20,6 @@ import { CylinderCarousel } from "@/src/components/sections/CylinderCarousel";
 import { StackingCards } from "@/src/components/sections/StackingCards";
 import { BlindsTransition } from "@/src/components/sections/BlindsTransition";
 import { ElasticGrid } from "@/src/components/sections/ElasticGrid";
-import { Work } from "@/src/components/sections/Work";
 import { ExpandingPanels } from "@/src/components/sections/ExpandingPanels";
 import { InfiniteCanvas } from "@/src/components/sections/InfiniteCanvas";
 import { NativeScrollCSS } from "@/src/components/sections/NativeScrollCSS";
@@ -101,7 +100,6 @@ export default function Home() {
           <StackingCards />
           <BlindsTransition />
           <ElasticGrid />
-          <Work />
           <ExpandingPanels />
 
           {/* Chapter 15-17: Platform Engineering & Labs */}

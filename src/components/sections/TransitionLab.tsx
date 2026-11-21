@@ -33,6 +33,7 @@ export function TransitionLab() {
 	const trackRef = useRef<HTMLDivElement>(null);
 	const dragRef = useRef({
 		active: false,
+		pointerId: -1,
 		startX: 0,
 		startScroll: 0,
 		moved: false,
@@ -74,6 +75,7 @@ export function TransitionLab() {
 		if (!el) return;
 		dragRef.current = {
 			active: true,
+			pointerId: e.pointerId,
 			startX: e.clientX,
 			startScroll: el.scrollLeft,
 			moved: false,
@@ -86,14 +88,33 @@ export function TransitionLab() {
 		const el = trackRef.current;
 		if (!el) return;
 		const dx = e.clientX - d.startX;
-		if (Math.abs(dx) > 6) d.moved = true;
+		if (!d.moved && Math.abs(dx) > 6) {
+			d.moved = true;
+			if (!el.hasPointerCapture(d.pointerId)) {
+				el.setPointerCapture(d.pointerId);
+			}
+		}
 		if (d.moved) {
 			el.scrollLeft = d.startScroll - dx;
 		}
 	};
 
 	const endDrag = () => {
-		dragRef.current.active = false;
+		const d = dragRef.current;
+		const el = trackRef.current;
+		if (d.active && el && d.pointerId >= 0 && el.hasPointerCapture(d.pointerId)) {
+			el.releasePointerCapture(d.pointerId);
+		}
+		d.active = false;
+		d.pointerId = -1;
+	};
+
+	const onTrackClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (dragRef.current.moved) {
+			e.preventDefault();
+			e.stopPropagation();
+			dragRef.current.moved = false;
+		}
 	};
 
 	const runPixel = useCallback(
@@ -209,7 +230,7 @@ export function TransitionLab() {
 							onPointerMove={onPointerMove}
 							onPointerUp={endDrag}
 							onPointerCancel={endDrag}
-							onPointerLeave={endDrag}
+							onClickCapture={onTrackClickCapture}
 							className="mt-4 flex min-h-0 flex-1 gap-3 overflow-x-auto select-none cursor-grab active:cursor-grabbing [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4"
 						>
 							{certificates.map((cert) => (
