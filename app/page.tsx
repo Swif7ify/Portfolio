@@ -28,12 +28,12 @@ import { Testimonials } from "@/src/components/sections/Testimonials";
 import { CurtainFooter } from "@/src/components/CurtainFooter";
 
 const marqueeItems = [
-  "Biography",
-  "Creative Engineering",
-  "Design Systems",
-  "Spring Physics",
+  "Agentic",
+  "Software",
+  "Hardware",
+  "Design",
   "Full-Stack",
-  "WebGL & Motion"
+  "Open Source"
 ];
 
 export default function Home() {
