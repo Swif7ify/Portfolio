@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { zoomTiles } from "@/src/data/pageSections";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp, lerp, sectionProgress } from "@/src/utils/math";
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -13,21 +16,30 @@ export function ZoomOutGrid() {
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
   const headRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
+  const lastPRef = useRef<number>(-1);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
     const s = sectionRef.current;
     if (!s) return;
-    const r = s.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > window.innerHeight) return;
     const p = sectionProgress(s);
+    if (Math.abs(p - lastPRef.current) < 0.0001) return;
+    lastPRef.current = p;
+
     const z = clamp((p - 0.08) / 0.62);
     const e = easeInOut(z);
+
+    // Read center tile dimensions BEFORE writing styles to avoid forced reflow
+    const centerEl = tileRefs.current[4];
+    const centerW = centerEl ? centerEl.offsetWidth : 300;
+    const centerH = centerEl ? centerEl.offsetHeight : 225;
+    const startScale = Math.max(window.innerWidth / Math.max(1, centerW), window.innerHeight / Math.max(1, centerH)) * 1.02;
+
     tileRefs.current.forEach((el, i) => {
       if (!el) return;
       if (i === 4) {
-        const start = Math.max(window.innerWidth / el.offsetWidth, window.innerHeight / el.offsetHeight) * 1.02;
-        const sc = lerp(start, 1, e);
+        const sc = lerp(startScale, 1, e);
         el.style.transform = `scale(${sc.toFixed(4)})`;
         el.style.borderRadius = `${((16 * e) / sc).toFixed(2)}px`;
         return;
@@ -46,7 +58,7 @@ export function ZoomOutGrid() {
       captionRef.current.style.opacity = String(c);
       captionRef.current.style.transform = `translate3d(0, ${((1 - c) * 16).toFixed(1)}px, 0)`;
     }
-  });
+  }, inView);
 
   return (
     <section ref={sectionRef} id="zoomout" aria-labelledby="zoomout-title" className="relative h-[320vh] bg-bg">
@@ -61,11 +73,13 @@ export function ZoomOutGrid() {
               className={`relative aspect-[4/3] overflow-hidden rounded-2xl bg-surface will-change-transform ${i === 4 ? "z-10" : ""}`}
               style={i === 4 ? undefined : { opacity: 0 }}
             >
-              <img
-                src={src}
+              <Image
+                src={getImagePath(src)}
                 alt={i === 4 ? "Featured perspective visual" : ""}
                 aria-hidden={i !== 4}
-                className="h-full w-full object-cover"
+                fill
+                sizes="33vw"
+                className="object-cover"
               />
             </div>
           ))}

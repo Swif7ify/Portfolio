@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { Dispatch, MutableRefObject, ReactNode, SetStateAction } from "react";
 import type Lenis from "lenis";
 import type { PhysicsSettings, ScrollMetrics, ThemeId } from "../types/kinetic";
@@ -35,22 +35,39 @@ interface KineticProviderProps {
   children: ReactNode;
 }
 
+function subscribeReducedMotion(onStoreChange: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getReducedMotionSnapshot(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getReducedMotionServerSnapshot(): boolean {
+  return false;
+}
+
 export function KineticProvider({ initialTheme = "cyber", children }: KineticProviderProps) {
   const [theme, setThemeState] = useState<ThemeId>(initialTheme);
   const [settings, setSettings] = useState<PhysicsSettings>(() =>
     initialTheme === "swiss" ? { ...defaultSettings, grid: 0.8 } : defaultSettings
   );
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    }
-  }, []);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot
+  );
 
   const settingsRef = useRef(settings);
-  settingsRef.current = settings;
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
   const metrics = useRef<ScrollMetrics>({ scroll: 0, velocity: 0, progress: 0, limit: 1 });
   const lenisRef = useRef<Lenis | null>(null);
 

@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { blindSlides } from "@/src/data/portfolio";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp, sectionProgress } from "@/src/utils/math";
 
 interface Piece {
@@ -36,29 +39,36 @@ export function BlindsTransition() {
   const sectionRef = useRef<HTMLElement>(null);
   const pieceRefs = useRef<(HTMLDivElement | null)[][]>(LAYERS.map(() => []));
   const activeRef = useRef(0);
+  const lastSegRef = useRef<number>(-1);
   const [active, setActive] = useState(0);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
     const s = sectionRef.current;
     if (!s) return;
-    const r = s.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > window.innerHeight) return;
     const seg = clamp((sectionProgress(s) - 0.05) / 0.9) * LAYERS.length;
+    if (Math.abs(seg - lastSegRef.current) < 0.0002) return;
+    lastSegRef.current = seg;
+
     LAYERS.forEach((pieces, k) => {
       const local = clamp((seg - k - 0.15) / 0.7);
+      const pattern = PATTERNS[k];
       pieces.forEach((pc, j) => {
         const el = pieceRefs.current[k]?.[j];
         if (!el) return;
         const a = clamp((local - pc.order * 0.45) / 0.55);
         const e = a * a * (3 - 2 * a);
-        const pattern = PATTERNS[k];
-        el.style.clipPath =
+        const nextClip =
           pattern === "rows"
             ? `inset(0 0 ${((1 - e) * 100).toFixed(2)}% 0)`
             : pattern === "cols"
             ? `inset(0 ${((1 - e) * 100).toFixed(2)}% 0 0)`
             : `inset(${((1 - e) * 50).toFixed(2)}%)`;
+        if (el.dataset.clip !== nextClip) {
+          el.dataset.clip = nextClip;
+          el.style.clipPath = nextClip;
+        }
       });
     });
     const idx = Math.min(blindSlides.length - 1, Math.round(seg));
@@ -66,14 +76,14 @@ export function BlindsTransition() {
       activeRef.current = idx;
       setActive(idx);
     }
-  });
+  }, inView);
 
   const slide = blindSlides[active] ?? blindSlides[0];
 
   return (
     <section ref={sectionRef} id="blinds" aria-labelledby="blinds-title" className="relative h-[420vh] bg-bg">
       <div className="sticky top-0 h-screen overflow-hidden">
-        <img src={blindSlides[0].image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <Image src={getImagePath(blindSlides[0].image)} alt="" fill sizes="100vw" className="object-cover" />
         {LAYERS.map((pieces, k) => (
           <div key={k} className="absolute inset-0" aria-hidden>
             {pieces.map((pc, j) => (
@@ -92,9 +102,11 @@ export function BlindsTransition() {
                   clipPath: "inset(0 0 100% 0)"
                 }}
               >
-                <img
-                  src={blindSlides[k + 1]?.image || blindSlides[0].image}
+                <Image
+                  src={getImagePath(blindSlides[k + 1]?.image || blindSlides[0].image)}
                   alt=""
+                  width={1600}
+                  height={1000}
                   className="absolute max-w-none object-cover"
                   style={{
                     width: `${100 / pc.w}%`,

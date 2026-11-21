@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import { comicPanels } from "@/src/data/awardExhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp, lerp, sectionProgress } from "@/src/utils/math";
 
 const PAGE = { w: 1600, h: 1200 };
@@ -20,7 +23,9 @@ export function ComicCamera() {
   const pageRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const activeRef = useRef(-1);
+  const lastPRef = useRef<number>(-1);
   const [active, setActive] = useState(-1);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
@@ -30,6 +35,9 @@ export function ComicCamera() {
     if (!section || !stage || !page) return;
 
     const p = sectionProgress(section);
+    if (Math.abs(p - lastPRef.current) < 0.0001) return;
+    lastPRef.current = p;
+
     const seg = p * (KEYS.length - 1);
     const i = Math.min(KEYS.length - 2, Math.floor(seg));
     const f = seg - i;
@@ -56,7 +64,7 @@ export function ComicCamera() {
       activeRef.current = idx;
       setActive(idx);
     }
-  });
+  }, inView);
 
   const narration = active >= 0 && active < comicPanels.length ? comicPanels[active].narration : "The Full Arc — 5 chapters of growth, late nights, breakthroughs, and craft.";
 
@@ -78,7 +86,7 @@ export function ComicCamera() {
               style={{ left: panel.x, top: panel.y, width: panel.w, height: panel.h }}
             >
               {panel.image ? (
-                <img src={panel.image} alt={panel.narration} className="h-full w-full object-cover" />
+                <Image src={getImagePath(panel.image)} alt={panel.narration} fill sizes="800px" className="object-cover" />
               ) : (
                 <div
                   className="flex h-full w-full items-center justify-center bg-accent"

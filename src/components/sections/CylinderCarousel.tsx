@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useKinetic } from "@/src/contexts/KineticContext";
 import { carouselItems } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
 
@@ -18,6 +20,7 @@ export function CylinderCarousel() {
   const ringRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const radiusRef = useRef(420);
+  const stageRectRef = useRef<{ top: number; height: number }>({ top: 0, height: 600 });
   const drag = useRef({ active: false, lastX: 0, vel: 0, angle: 0 });
   const tilt = useRef({ value: -6, target: -6 });
   const frontRef = useRef(0);
@@ -32,6 +35,10 @@ export function CylinderCarousel() {
       cardRefs.current.forEach((el, i) => {
         if (el) el.style.transform = `translate(-50%, -50%) rotateY(${i * STEP}deg) translateZ(${radiusRef.current}px)`;
       });
+      if (stageRef.current) {
+        const r = stageRef.current.getBoundingClientRect();
+        stageRectRef.current = { top: r.top, height: Math.max(1, r.height) };
+      }
     };
     measure();
     window.addEventListener("resize", measure);
@@ -64,15 +71,21 @@ export function CylinderCarousel() {
     }
   }, inView);
 
+  const onPointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    stageRectRef.current = { top: r.top, height: Math.max(1, r.height) };
+  };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    stageRectRef.current = { top: r.top, height: Math.max(1, r.height) };
     drag.current.active = true;
     drag.current.lastX = e.clientX;
     drag.current.vel = 0;
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    tilt.current.target = -6 + ((e.clientY - r.top) / r.height - 0.5) * -14;
+    const { top, height } = stageRectRef.current;
+    tilt.current.target = -6 + ((e.clientY - top) / height - 0.5) * -14;
     const d = drag.current;
     if (!d.active) return;
     const dx = e.clientX - d.lastX;
@@ -110,6 +123,7 @@ export function CylinderCarousel() {
 
       <div
         ref={stageRef}
+        onPointerEnter={onPointerEnter}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -118,18 +132,18 @@ export function CylinderCarousel() {
         className="relative mt-12 h-[min(78vh,640px)] touch-pan-y select-none cursor-grab active:cursor-grabbing"
         style={{ perspective: "1600px" }}
       >
-        <div ref={ringRef} className="absolute left-1/2 top-1/2 h-0 w-0" style={{ transformStyle: "preserve-3d" }}>
+        <div ref={ringRef} className="absolute left-1/2 top-1/2 h-0 w-0 will-change-transform" style={{ transformStyle: "preserve-3d" }}>
           {carouselItems.map((c, i) => (
             <div
               key={c.id}
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
-              className="absolute left-0 top-0 aspect-[3/4] w-[clamp(170px,20vw,270px)] overflow-hidden rounded-2xl border border-hair bg-surface"
+              className="absolute left-0 top-0 aspect-[3/4] w-[clamp(170px,20vw,270px)] overflow-hidden rounded-2xl border border-hair bg-surface will-change-[transform,opacity]"
               style={{ backfaceVisibility: "hidden", transform: `translate(-50%, -50%) rotateY(${i * STEP}deg) translateZ(420px)` }}
             >
               {c.image ? (
-                <img src={c.image} alt={c.title} draggable={false} className="h-full w-full object-cover" />
+                <Image src={getImagePath(c.image)} alt={c.title} fill sizes="270px" draggable={false} className="object-cover" />
               ) : (
                 <div className={`flex h-full w-full items-center justify-center ${i % 2 === 0 ? "bg-fg text-bg" : "bg-accent text-bg"}`}>
                   <span className="font-display text-[clamp(4rem,8vw,7rem)] leading-none" style={{ fontVariationSettings: "'wght' 900, 'wdth' 60" }}>
@@ -137,7 +151,7 @@ export function CylinderCarousel() {
                   </span>
                 </div>
               )}
-              <span className="absolute bottom-3 left-3 rounded-md bg-bg/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-fg backdrop-blur">
+              <span className="absolute bottom-3 left-3 rounded-md bg-bg/85 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-fg">
                 {String(i + 1).padStart(2, "0")}
               </span>
             </div>

@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useKinetic } from "@/src/contexts/KineticContext";
 import { infiniteTiles } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
 
@@ -20,6 +22,7 @@ export function InfiniteCanvas() {
   const { metrics, reducedMotion } = useKinetic();
   const viewRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const viewSizeRef = useRef<{ w: number; h: number }>({ w: 1200, h: 700 });
   const state = useRef({ x: 0, y: 0, vx: 0, vy: 0, dragging: false, lastX: 0, lastY: 0, moved: 0 });
   const [tile, setTile] = useState({ w: 240, h: 312 });
   const inView = useInView(viewRef);
@@ -29,6 +32,12 @@ export function InfiniteCanvas() {
     const measure = () => {
       const w = clamp(window.innerWidth * 0.17, 170, 270);
       setTile({ w, h: w * 1.3 });
+      if (viewRef.current) {
+        viewSizeRef.current = {
+          w: viewRef.current.clientWidth || window.innerWidth,
+          h: viewRef.current.clientHeight || window.innerHeight * 0.8
+        };
+      }
     };
     measure();
     window.addEventListener("resize", measure);
@@ -37,8 +46,6 @@ export function InfiniteCanvas() {
 
   useAnimationFrame((dt) => {
     if (typeof window === "undefined") return;
-    const view = viewRef.current;
-    if (!view) return;
     const s = state.current;
     if (!s.dragging) {
       s.x += s.vx;
@@ -49,8 +56,8 @@ export function InfiniteCanvas() {
     }
     s.y -= metrics.current.velocity * 0.5;
 
-    const vw = view.clientWidth;
-    const vh = view.clientHeight;
+    const vw = viewSizeRef.current.w;
+    const vh = viewSizeRef.current.h;
     const cellW = tile.w + GAP;
     const cellH = tile.h + GAP;
     const patW = COLS * cellW;
@@ -135,8 +142,8 @@ export function InfiniteCanvas() {
               className="absolute left-0 top-0 overflow-hidden rounded-xl bg-bg will-change-transform shadow-lg"
               style={{ width: tile.w, height: tile.h }}
             >
-              <img src={t.image} alt={t.title} draggable={false} className="h-full w-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-2 bg-bg/85 px-3 py-2 backdrop-blur">
+              <Image src={getImagePath(t.image)} alt={t.title} fill sizes="270px" draggable={false} className="object-cover" />
+              <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-2 bg-bg/90 px-3 py-2">
                 <span className="truncate text-sm text-fg">{t.title}</span>
                 <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.12em] text-muted">{t.year}</span>
               </div>

@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { lookbookPages } from "@/src/data/portfolio";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp, sectionProgress } from "@/src/utils/math";
 
 const LEAVES = Math.floor(lookbookPages.length / 2);
@@ -11,7 +14,9 @@ const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t 
 function Page({ page, n, side }: { page: (typeof lookbookPages)[number]; n: number; side: "left" | "right" }) {
   return (
     <div className="flex h-full flex-col bg-[#f3efe6] p-[7%] text-[#161512]">
-      <img src={page.image} alt={page.title} className="aspect-[4/5] w-full rounded-sm object-cover" />
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm">
+        <Image src={getImagePath(page.image)} alt={page.title} fill sizes="450px" className="object-cover" />
+      </div>
       <div className="mt-auto flex items-end justify-between pt-[6%]">
         <div>
           <p className="font-display text-[clamp(0.9rem,2vw,1.75rem)] leading-none" style={{ fontVariationSettings: "'wght' 760, 'wdth' 78" }}>
@@ -33,14 +38,17 @@ export function PageFlipLookbook() {
   const leafRefs = useRef<(HTMLDivElement | null)[]>([]);
   const shadeFront = useRef<(HTMLSpanElement | null)[]>([]);
   const shadeBack = useRef<(HTMLSpanElement | null)[]>([]);
+  const lastFRef = useRef<number>(-1);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
     const s = sectionRef.current;
     if (!s) return;
-    const r = s.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > window.innerHeight) return;
     const f = clamp((sectionProgress(s) - 0.06) / 0.86) * LEAVES;
+    if (Math.abs(f - lastFRef.current) < 0.0002) return;
+    lastFRef.current = f;
+
     leafRefs.current.forEach((leaf, i) => {
       if (!leaf) return;
       const e = easeInOut(clamp(f - i));
@@ -51,7 +59,7 @@ export function PageFlipLookbook() {
       if (sf) sf.style.opacity = (Math.sin(e * Math.PI) * 0.45).toFixed(3);
       if (sb) sb.style.opacity = (Math.sin(e * Math.PI) * 0.35).toFixed(3);
     });
-  });
+  }, inView);
 
   return (
     <section ref={sectionRef} id="lookbook" aria-labelledby="lookbook-title" className="relative h-[520vh] bg-bg">

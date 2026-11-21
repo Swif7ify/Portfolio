@@ -47,6 +47,7 @@ export function CurtainFooter() {
   const { scrollToId } = useKinetic();
   const footRef = useRef<HTMLElement>(null);
   const wordRef = useRef<HTMLParagraphElement>(null);
+  const lastPRef = useRef<number>(-1);
   const inView = useInView(footRef, "200px");
 
   useAnimationFrame(() => {
@@ -60,6 +61,8 @@ export function CurtainFooter() {
     const totalDist = r.height || 600;
     const scrolledIn = vh - r.top;
     const p = clamp(scrolledIn / (totalDist * 0.82));
+    if (Math.abs(p - lastPRef.current) < 0.0002) return;
+    lastPRef.current = p;
 
     word.style.transform = `translate3d(0, ${((1 - p) * 35).toFixed(2)}%, 0) scale(${lerp(0.5, 1, p).toFixed(4)})`;
     word.style.fontVariationSettings = `'wght' ${lerp(200, 950, p).toFixed(0)}, 'wdth' ${lerp(40, 151, p).toFixed(1)}`;

@@ -1,24 +1,43 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { statementTokens } from "@/src/data/pageSections";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 
 /** An editorial statement where images live inside the sentence and open up as you read, reflowing the type around them. */
 export function InlineStatement() {
   const sectionRef = useRef<HTMLElement>(null);
   const tokenRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const inView = useInView(sectionRef);
+  const lastScrollRef = useRef<number>(-1);
+  const lastVhRef = useRef<number>(-1);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
     const vh = window.innerHeight;
-    tokenRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const p = clamp((vh * 0.82 - r.top) / (vh * 0.32));
+    const sy = window.scrollY;
+    if (Math.abs(sy - lastScrollRef.current) < 0.5 && vh === lastVhRef.current) return;
+    lastScrollRef.current = sy;
+    lastVhRef.current = vh;
+
+    const els = tokenRefs.current;
+    const tops = new Array<number>(els.length);
+
+    // Pass 1: Batch read all bounding rects to avoid forced synchronous reflows
+    for (let i = 0; i < els.length; i++) {
+      const el = els[i];
+      tops[i] = el ? el.getBoundingClientRect().top : 0;
+    }
+
+    // Pass 2: Batch write all styles
+    for (let i = 0; i < els.length; i++) {
+      const el = els[i];
+      if (!el) continue;
+      const p = clamp((vh * 0.82 - tops[i]) / (vh * 0.32));
       const t = statementTokens[i];
       if (t && "image" in t) {
         const e = p * p * (3 - 2 * p);
@@ -29,7 +48,7 @@ export function InlineStatement() {
       } else {
         el.style.opacity = (0.14 + 0.86 * p).toFixed(3);
       }
-    });
+    }
   }, inView);
 
   return (
@@ -54,7 +73,7 @@ export function InlineStatement() {
                 className="relative inline-block h-[0.78em] overflow-hidden rounded-full align-[-0.06em]"
                 style={{ width: 0 }}
               >
-                <img src={t.image} alt={t.alt} className="absolute inset-0 h-full w-full object-cover" />
+                <Image src={getImagePath(t.image)} alt={t.alt} fill sizes="160px" className="object-cover" />
               </span>
             ) : (
               <React.Fragment key={i}>

@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { useKinetic } from "@/src/contexts/KineticContext";
 import { marqueeRows, trailImages } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 import { ScrambleText } from "@/src/components/type/ScrambleText";
 
@@ -122,13 +124,15 @@ export function KineticType() {
             <p className="mt-3 text-sm text-muted">Trace across the space to reveal archival moments.</p>
           </div>
           {Array.from({ length: TRAIL_POOL }).map((_, i) => (
-            <img
+            <Image
               key={i}
               ref={(el) => {
                 trailRefs.current[i] = el;
               }}
-              src={trailImages[i % trailImages.length]}
+              src={getImagePath(trailImages[i % trailImages.length])}
               alt=""
+              width={200}
+              height={266}
               aria-hidden
               draggable={false}
               className="pointer-events-none absolute left-0 top-0 aspect-[3/4] w-[clamp(120px,14vw,200px)] rounded-xl object-cover opacity-0 shadow-2xl"

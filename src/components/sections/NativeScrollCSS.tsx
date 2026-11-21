@@ -1,19 +1,22 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
 import { nativeReveals, nativeSteps } from "@/src/data/swiftify";
+import { getImagePath } from "@/src/utils/image";
+
+const emptySubscribe = () => () => {};
+const getTimelineSupport = () => typeof CSS !== "undefined" && CSS.supports("animation-timeline: view()");
+const getServerTimelineSupport = () => null;
 
 /** Scroll choreography written entirely in CSS (animation-timeline), with an IntersectionObserver fallback. */
 export function NativeScrollCSS() {
-  const [supported, setSupported] = useState<boolean | null>(null);
+  const supported = useSyncExternalStore<boolean | null>(emptySubscribe, getTimelineSupport, getServerTimelineSupport);
   const [active, setActive] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const ok = typeof CSS !== "undefined" && CSS.supports("animation-timeline: view()");
-    setSupported(ok);
-    if (ok) return;
+    if (typeof window === "undefined" || supported !== false) return;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -24,7 +27,7 @@ export function NativeScrollCSS() {
     );
     stepRefs.current.forEach((el) => el && io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [supported]);
 
   return (
     <section id="native" aria-labelledby="native-title" className="sda-section relative bg-bg px-4 pt-32 md:px-6 md:pt-40">
@@ -56,12 +59,14 @@ export function NativeScrollCSS() {
           <div className="md:col-span-6 md:col-start-7 md:row-start-1">
             <div className="sticky top-[14vh] aspect-[4/5] overflow-hidden rounded-3xl bg-surface md:aspect-auto md:h-[72vh] shadow-2xl">
               {nativeSteps.map((s, i) => (
-                <img
+                <Image
                   key={s.title}
-                  src={s.image}
+                  src={getImagePath(s.image)}
                   alt=""
                   aria-hidden
-                  className={`sda-layer sda-layer-${i} absolute inset-0 h-full w-full object-cover`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className={`sda-layer sda-layer-${i} object-cover`}
                   style={{
                     zIndex: nativeSteps.length - i,
                     opacity: supported === false && i < active ? 0 : 1,
@@ -94,7 +99,9 @@ export function NativeScrollCSS() {
         <div className="grid gap-6 pb-32 md:grid-cols-3 md:pb-40">
           {nativeReveals.map((src, i) => (
             <figure key={src} className="sda-reveal overflow-hidden rounded-2xl bg-surface shadow-xl">
-              <img src={src} alt="" aria-hidden className="aspect-[3/4] w-full object-cover" />
+              <div className="relative aspect-[3/4] w-full">
+                <Image src={getImagePath(src)} alt="" aria-hidden fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+              </div>
               <figcaption className="px-4 py-3 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
                 Visual Study 0{i + 1}
               </figcaption>

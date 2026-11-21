@@ -10,6 +10,7 @@ import {
 	useTransform,
 	useVelocity,
 } from "framer-motion";
+import { useInView } from "@/src/hooks/useInView";
 
 function wrap(min: number, max: number, v: number) {
 	const range = max - min;
@@ -28,6 +29,8 @@ export function Marquee({
 	baseVelocity = 2,
 	className,
 }: MarqueeProps) {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const inView = useInView(containerRef, "200px");
 	const baseX = useMotionValue(0);
 	const { scrollY } = useScroll();
 	const scrollVelocity = useVelocity(scrollY);
@@ -43,6 +46,7 @@ export function Marquee({
 	const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`);
 
 	useAnimationFrame((_, delta) => {
+		if (!inView) return;
 		let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
 		const vf = velocityFactor.get();
 		if (vf < 0) directionFactor.current = -1;
@@ -53,10 +57,11 @@ export function Marquee({
 
 	return (
 		<div
+			ref={containerRef}
 			className={`overflow-hidden whitespace-nowrap ${className ?? ""}`}
 			aria-hidden="true"
 		>
-			<motion.div className="flex w-max whitespace-nowrap" style={{ x }}>
+			<motion.div className="flex w-max whitespace-nowrap will-change-transform" style={{ x }}>
 				{[0, 1, 2, 3].map((i) => (
 					<div key={i} className="flex shrink-0 items-center">
 						{children}

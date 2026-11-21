@@ -1,19 +1,29 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { stackCases } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
 
 /** Sticky cards that stack; each earlier card shrinks and dims by the sum of the cards covering it. */
 export function StackingCards() {
+  const sectionRef = useRef<HTMLElement>(null);
   const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const shadeRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const lastScrollRef = useRef<number>(-1);
+  const inView = useInView(sectionRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
+    const sy = window.scrollY;
+    if (Math.abs(sy - lastScrollRef.current) < 0.5) return;
+    lastScrollRef.current = sy;
+
     const vh = window.innerHeight;
     const covers = wrapRefs.current.map((el) => (el ? clamp(1 - el.getBoundingClientRect().top / vh) : 0));
     cardRefs.current.forEach((card, i) => {
@@ -24,10 +34,10 @@ export function StackingCards() {
       const shade = shadeRefs.current[i];
       if (shade) shade.style.opacity = clamp(sum * 0.3, 0, 0.75).toFixed(3);
     });
-  });
+  }, inView);
 
   return (
-    <section id="stack" aria-labelledby="stack-title" className="relative bg-bg px-4 pt-32 md:px-6 md:pt-40">
+    <section ref={sectionRef} id="stack" aria-labelledby="stack-title" className="relative bg-bg px-4 pt-32 md:px-6 md:pt-40">
       <div className="mx-auto max-w-[1440px]">
         <ChapterHeader
           id="stack-title"
@@ -62,7 +72,7 @@ export function StackingCards() {
               }}
             >
               <div className="relative h-48 md:col-span-6 md:h-auto">
-                <img src={c.image} alt={`${c.title} illustration`} className="absolute inset-0 h-full w-full object-cover" />
+                <Image src={getImagePath(c.image)} alt={`${c.title} illustration`} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
               </div>
               <div className="flex flex-col p-6 md:col-span-6 md:p-10">
                 <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent">

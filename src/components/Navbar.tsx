@@ -20,17 +20,17 @@ export function Navbar({ ready }: NavbarProps) {
 	const [time, setTime] = useState<string>("");
 
 	useEffect(() => {
-		const update = () =>
-			setTime(
-				new Date().toLocaleTimeString("en-US", {
-					timeZone: "Asia/Manila",
-					hour: "numeric",
-					minute: "2-digit",
-					hour12: true,
-				}),
-			);
+		const update = () => {
+			const nextTime = new Date().toLocaleTimeString("en-US", {
+				timeZone: "Asia/Manila",
+				hour: "numeric",
+				minute: "2-digit",
+				hour12: true,
+			});
+			setTime((prev) => (prev === nextTime ? prev : nextTime));
+		};
 		update();
-		const interval = setInterval(update, 1000);
+		const interval = setInterval(update, 10000);
 		return () => clearInterval(interval);
 	}, []);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import type { MotionProps } from "framer-motion";
 import { ArrowLeftIcon } from "lucide-react";
@@ -9,6 +10,7 @@ import { ChapterHeader } from "@/src/components/ChapterHeader";
 import { PixelCurtain } from "@/src/components/transitions/PixelCurtain";
 import { FrameMovers } from "@/src/components/transitions/FrameMovers";
 import type { Rect } from "@/src/components/transitions/FrameMovers";
+import { getImagePath } from "@/src/utils/image";
 
 type Mode = (typeof transitionModes)[number]["id"];
 const MOVERS = 8;
@@ -24,6 +26,7 @@ export function TransitionLab() {
   const stageRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const timers = useRef<number[]>([]);
+  const moverKeyRef = useRef<number>(0);
 
   const later = (ms: number, fn: () => void) => timers.current.push(window.setTimeout(fn, ms));
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
@@ -69,7 +72,8 @@ export function TransitionLab() {
         };
       });
       setBusy(true);
-      setMovers({ key: Date.now(), image: project.image, rects });
+      moverKeyRef.current += 1;
+      setMovers({ key: moverKeyRef.current, image: project.image, rects });
       later(MOVERS * 50 + 280, () => setOpenId(id));
       later(MOVERS * 50 + 560, () => {
         setMovers(null);
@@ -169,7 +173,7 @@ export function TransitionLab() {
                       className="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl"
                       transition={{ type: "spring", stiffness: 260, damping: 30 }}
                     >
-                      <img src={p.image} alt={p.title} className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]" />
+                      <Image src={getImagePath(p.image)} alt={p.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]" />
                     </motion.div>
                     <span className="mt-3 flex items-baseline justify-between gap-2">
                       <span className="truncate text-sm text-fg">{p.title}</span>
@@ -188,14 +192,20 @@ export function TransitionLab() {
                     transition={{ type: "spring", stiffness: 260, damping: 30 }}
                     className="absolute left-4 right-4 top-4 h-[45%] overflow-hidden rounded-xl md:bottom-6 md:left-6 md:right-auto md:top-6 md:h-auto md:w-[calc(50%-36px)]"
                   >
-                    <motion.img
-                      src={project.image}
-                      alt={project.title}
-                      className="h-full w-full object-cover"
+                    <motion.div
+                      className="relative h-full w-full"
                       initial={mode === "mask" ? { scale: 1.15 } : false}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.3, ease: EASE }}
-                    />
+                    >
+                      <Image
+                        src={getImagePath(project.image)}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                    </motion.div>
                   </motion.div>
                   <motion.div
                     className="absolute bottom-4 left-4 right-4 top-[calc(45%+32px)] flex flex-col md:bottom-6 md:left-[calc(50%+12px)] md:right-6 md:top-6"

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export function Cursor() {
 	const [isFinePointer, setIsFinePointer] = useState<boolean>(false);
 	const [hovering, setHovering] = useState<boolean>(false);
 	const [label, setLabel] = useState<string | null>(null);
+	const hoveringRef = useRef<boolean>(false);
+	const labelRef = useRef<string | null>(null);
 
 	const x = useMotionValue(-100);
 	const y = useMotionValue(-100);
@@ -40,20 +42,24 @@ export function Cursor() {
 			y.set(e.clientY);
 		};
 		const onOver = (e: MouseEvent) => {
-			const target = (e.target as HTMLElement).closest<HTMLElement>(
+			const target = (e.target as HTMLElement | null)?.closest<HTMLElement>(
 				"[data-cursor]",
 			);
-			if (target) {
-				setHovering(true);
-				setLabel(target.dataset.cursor || null);
-			} else {
-				setHovering(false);
-				setLabel(null);
+			const nextHovering = Boolean(target);
+			const nextLabel = target?.dataset.cursor || null;
+
+			if (nextHovering !== hoveringRef.current) {
+				hoveringRef.current = nextHovering;
+				setHovering(nextHovering);
+			}
+			if (nextLabel !== labelRef.current) {
+				labelRef.current = nextLabel;
+				setLabel(nextLabel);
 			}
 		};
 
-		window.addEventListener("mousemove", onMove);
-		window.addEventListener("mouseover", onOver);
+		window.addEventListener("mousemove", onMove, { passive: true });
+		window.addEventListener("mouseover", onOver, { passive: true });
 		return () => {
 			document.documentElement.classList.remove("custom-cursor-active");
 			mq.removeEventListener("change", onMediaChange);
@@ -69,7 +75,7 @@ export function Cursor() {
 	return (
 		<motion.div
 			aria-hidden="true"
-			className="pointer-events-none fixed left-0 top-0 z-[300] flex items-center justify-center"
+			className="pointer-events-none fixed left-0 top-0 z-[300] flex items-center justify-center will-change-transform"
 			style={{
 				x: springX,
 				y: springY,

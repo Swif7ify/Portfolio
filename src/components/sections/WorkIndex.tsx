@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRightIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { useKinetic } from "@/src/contexts/KineticContext";
 import { workProjects } from "@/src/data/pageSections";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 
 const EASE_IO = [0.76, 0, 0.24, 1] as const;
@@ -39,10 +41,13 @@ export function WorkIndex() {
     el.style.transform = `translate3d(${(p.x - el.offsetWidth / 2).toFixed(1)}px, ${(p.y - el.offsetHeight / 2).toFixed(1)}px, 0) rotate(${rot.toFixed(2)}deg)`;
   }, hover !== null);
 
-  useEffect(() => {
-    if (hover === null) return;
-    setOrder((o) => [...o.filter((i) => i !== hover), hover]);
-  }, [hover]);
+  const close = useCallback(() => {
+    setOpen(null);
+    lenisRef.current?.start();
+    if (typeof window !== "undefined") {
+      window.setTimeout(() => lastTrigger.current?.focus(), 50);
+    }
+  }, [lenisRef]);
 
   useEffect(() => {
     if (!open || typeof window === "undefined") return;
@@ -50,16 +55,7 @@ export function WorkIndex() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-  const close = () => {
-    setOpen(null);
-    lenisRef.current?.start();
-    if (typeof window !== "undefined") {
-      window.setTimeout(() => lastTrigger.current?.focus(), 50);
-    }
-  };
+  }, [open, close, lenisRef]);
 
   const openProject = (i: number) => {
     const preview = previewRef.current;
@@ -119,7 +115,12 @@ export function WorkIndex() {
                     rowRefs.current[i] = el;
                   }}
                   type="button"
-                  onPointerEnter={(e) => e.pointerType === "mouse" && setHover(i)}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") {
+                      setHover(i);
+                      setOrder((o) => [...o.filter((idx) => idx !== i), i]);
+                    }
+                  }}
                   onFocus={() => setHover(null)}
                   onClick={() => openProject(i)}
                   className={`group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-6 text-left transition-opacity duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent md:grid-cols-[4rem_1fr_14rem_4rem] md:py-8 ${
@@ -150,11 +151,13 @@ export function WorkIndex() {
         }`}
       >
         {workProjects.map((w, i) => (
-          <img
+          <Image
             key={w.id}
-            src={w.image}
+            src={getImagePath(w.image)}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            sizes="320px"
+            className="object-cover"
             style={{
               zIndex: order.indexOf(i),
               clipPath: hover === i || (hover === null && order[order.length - 1] === i) ? "inset(0 0 0 0)" : "inset(100% 0 0 0)",
@@ -174,7 +177,7 @@ export function WorkIndex() {
               animate={{ top: 0, left: 0, width: "100vw", height: "100vh", borderRadius: 0 }}
               transition={{ duration: 0.3, ease: EASE_IO }}
             >
-              <img src={project.image} alt={project.title} className="h-full w-full object-cover" />
+              <Image src={getImagePath(project.image)} alt={project.title} fill sizes="100vw" className="object-cover" />
             </motion.div>
             <motion.div className="absolute inset-0 bg-black/55" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, delay: 0.2 }} />
             <div className="absolute inset-0 flex flex-col justify-between p-6 text-white md:p-10">

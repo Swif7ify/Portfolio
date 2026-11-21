@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { useKinetic } from "@/src/contexts/KineticContext";
 import { elasticImages } from "@/src/data/motionLab";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
+import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
 
@@ -17,20 +19,30 @@ export function ElasticGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
   const colRefs = useRef<(HTMLDivElement | null)[]>([]);
   const offsets = useRef<number[]>(Array(COLS).fill(0));
-  const inView = useInView(gridRef);
+  const settledRef = useRef<boolean>(false);
+  const inView = useInView(gridRef, "200px");
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
     const v = reducedMotion ? 0 : clamp(metrics.current.velocity, -60, 60);
+    if (Math.abs(v) < 0.01 && settledRef.current) return;
+
     const center = (COLS - 1) / 2;
+    let allSettled = Math.abs(v) < 0.01;
     colRefs.current.forEach((el, c) => {
       if (!el) return;
       const dist = Math.abs(c - center);
       const target = v * 4.2 * dist;
       const ease = 0.06 + (center - dist) * 0.02;
       offsets.current[c] += (target - offsets.current[c]) * ease;
+      if (Math.abs(offsets.current[c]) > 0.04) {
+        allSettled = false;
+      } else if (Math.abs(v) < 0.01) {
+        offsets.current[c] = 0;
+      }
       el.style.transform = `translate3d(0, ${offsets.current[c].toFixed(2)}px, 0)`;
     });
+    settledRef.current = allSettled;
   }, inView);
 
   const columns = Array.from({ length: COLS }, (_, c) => elasticImages.filter((_, i) => i % COLS === c));
@@ -62,8 +74,8 @@ export function ElasticGrid() {
               className={`flex flex-col gap-3 will-change-transform md:gap-5 ${c >= 2 ? "hidden md:flex" : ""} ${c % 2 ? "md:pt-24" : ""}`}
             >
               {col.map((src, i) => (
-                <figure key={i} className={`overflow-hidden rounded-xl bg-surface ${ASPECTS[(c + i) % ASPECTS.length]}`}>
-                  <img src={src} alt="" aria-hidden className="h-full w-full object-cover" />
+                <figure key={i} className={`relative overflow-hidden rounded-xl bg-surface ${ASPECTS[(c + i) % ASPECTS.length]}`}>
+                  <Image src={getImagePath(src)} alt="" aria-hidden fill sizes="(max-width: 768px) 50vw, 20vw" className="object-cover" />
                 </figure>
               ))}
             </div>

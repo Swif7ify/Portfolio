@@ -1,7 +1,9 @@
 'use client';
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { getImagePath } from "@/src/utils/image";
 
 export interface Rect {
   x: number;
@@ -21,11 +23,9 @@ export function FrameMovers({ image, rects }: FrameMoversProps) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 z-30">
       {rects.map((r, i) => (
-        <motion.img
+        <motion.div
           key={i}
-          src={image}
-          alt=""
-          className="absolute rounded-xl object-cover shadow-2xl"
+          className="absolute overflow-hidden rounded-xl shadow-2xl"
           style={{
             left: r.x,
             top: r.y,
@@ -41,7 +41,9 @@ export function FrameMovers({ image, rects }: FrameMoversProps) {
             times: i === last ? undefined : [0, 0.15, 0.6, 1],
             ease: "easeOut"
           }}
-        />
+        >
+          <Image src={getImagePath(image)} alt="" fill sizes="50vw" className="object-cover" />
+        </motion.div>
       ))}
     </div>
   );

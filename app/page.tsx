@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { KineticProvider } from "@/src/contexts/KineticContext";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Cursor } from "@/src/components/Cursor";
@@ -73,17 +73,9 @@ export default function Home() {
                   style={{ fontVariationSettings: "'wght' 700, 'wdth' 75" }}
                 >
                   {item}
-                  <motion.span
-                    className="text-accent"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 6,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
+                  <span className="inline-block text-accent animate-[spin_6s_linear_infinite]">
                     ✳
-                  </motion.span>
+                  </span>
                 </span>
               ))}
             </Marquee>

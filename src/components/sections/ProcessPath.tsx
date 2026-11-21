@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useInView } from "@/src/hooks/useInView";
 import { clamp } from "@/src/utils/math";
 
 const PATH = "M50 0 C 88 90, 88 150, 50 200 S 12 310, 50 400 S 88 510, 50 600 S 12 710, 50 800 S 88 910, 50 1000";
@@ -53,7 +54,9 @@ export function ProcessPath() {
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const nodeRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const len = useRef(1);
+  const lastPRef = useRef<number>(-1);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const inView = useInView(wrapRef, "200px");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -75,8 +78,10 @@ export function ProcessPath() {
     const path = pathRef.current;
     if (!wrap || !path) return;
     const r = wrap.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > window.innerHeight) return;
     const p = clamp((window.innerHeight * 0.6 - r.top) / r.height);
+    if (Math.abs(p - lastPRef.current) < 0.0002) return;
+    lastPRef.current = p;
+
     path.style.strokeDashoffset = String(len.current * (1 - p));
     const head = path.getPointAtLength(p * len.current);
     if (headRef.current) {
@@ -93,7 +98,7 @@ export function ProcessPath() {
       }
       if (node) node.dataset.on = on ? "1" : "0";
     });
-  });
+  }, inView);
 
   return (
     <section id="process" aria-labelledby="process-title" className="relative bg-bg px-4 py-32 md:px-6 md:py-40">

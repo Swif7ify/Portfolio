@@ -5,7 +5,10 @@ import { useEffect, useRef } from "react";
 /** Runs `callback(dtSeconds, timeMs)` every frame while `active`. Always calls the latest callback. */
 export function useAnimationFrame(callback: (dt: number, time: number) => void, active = true) {
   const ref = useRef(callback);
-  ref.current = callback;
+
+  useEffect(() => {
+    ref.current = callback;
+  });
 
   useEffect(() => {
     if (!active || typeof window === "undefined") return;

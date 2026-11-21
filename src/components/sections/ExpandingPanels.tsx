@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { servicePanels } from "@/src/data/pageSections";
 import { ChapterHeader } from "@/src/components/ChapterHeader";
+import { getImagePath } from "@/src/utils/image";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
@@ -60,13 +62,19 @@ export function ExpandingPanels() {
                 transition={{ type: "spring", stiffness: 260, damping: 34 }}
                 className="relative min-h-[64px] min-w-0 basis-0 cursor-pointer overflow-hidden rounded-2xl bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:min-w-[72px]"
               >
-                <motion.img
-                  src={s.image}
-                  alt=""
-                  className="absolute inset-0 h-full w-full object-cover"
+                <motion.div
+                  className="absolute inset-0"
                   animate={{ scale: on ? 1 : 1.15 }}
                   transition={{ duration: 0.3, ease: EASE }}
-                />
+                >
+                  <Image
+                    src={getImagePath(s.image)}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </motion.div>
 
                 <motion.div className="absolute inset-0 bg-black" animate={{ opacity: on ? 0.35 : 0.65 }} transition={{ duration: 0.25 }} />
                 <span className="absolute left-4 top-4 font-mono text-[11px] text-white/70 md:left-5 md:top-5">0{i + 1}</span>
