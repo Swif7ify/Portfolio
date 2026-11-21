@@ -179,7 +179,7 @@ export function MaskReveal() {
           />
           <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-10 md:px-10 md:pb-14">
             <div className="max-w-lg">
-              <span aria-hidden="true" className="mb-4 block h-[2px] w-10 bg-accent" />
+              <span aria-hidden="true" className="mb-4 block h- [2px] w-10 bg-accent" />
               <blockquote className="text-balance font-serif text-[clamp(1.65rem,3.4vw,2.1rem)] italic leading-[1.1] text-cream">
                 &ldquo;The true measure of what we create is not how far it takes us, but how far it can take others.&rdquo;
               </blockquote>

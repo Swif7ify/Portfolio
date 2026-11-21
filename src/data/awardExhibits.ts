@@ -19,37 +19,37 @@ export const comicPanels = [
 {
   id: "p1",
   x: 24, y: 24, w: 920, h: 560,
-  image: "/bfd237bc-9bb6-48a7-89ca-8b7f5afc3e4f.jpg",
-  bubble: { text: "How does code create living reality?", x: 420, y: 60 },
-  narration: "Chapter 1 — The Spark: Curiosity ignited when first discovering how code could craft living interfaces."
+  image: "/Comic/1.jpg",
+  bubble: { text: "PC hardware was where it all started.", x: 32, y: 28 },
+  narration: "Chapter 01: Before college and before writing code, my main obsession was computers, GPUs, and how hardware works."
 },
 {
   id: "p2",
   x: 968, y: 24, w: 608, h: 560,
-  image: "/a2f76396-b813-4302-a91f-08aa997f213c.jpg",
-  bubble: { text: "Practice every day. No shortcuts.", x: 40, y: 40 },
-  narration: "Chapter 2 — The Crucible: Late nights reverse-engineering systems, breaking designs, and writing code."
+  image: "/Comic/2.jpg",
+  bubble: { text: "First Vue.js app defended 100/100!", x: 140, y: 24 },
+  narration: "Chapter 02: My first web project built with a Vue framework (SmartPocket), defended with a perfect 100."
 },
 {
   id: "p3",
   x: 24, y: 608, w: 500, h: 568,
-  image: "",
-  bubble: null,
-  narration: "Chapter 3 — The Fusion: Engineering and artistic intuition collide. Code becomes the canvas."
+  image: "/Comic/3.jpg",
+  bubble: { text: "First time building hardware with Raspberry Pi!", x: 24, y: 24 },
+  narration: "Chapter 03: My first hands-on experience with embedded systems, experimenting with Raspberry Pi, circuits, motors, and sensors."
 },
 {
   id: "p4",
   x: 548, y: 608, w: 500, h: 568,
-  image: "/af3acb03-668e-4e6c-829c-3ba051eb3503.jpg",
-  bubble: { text: "Shipped & live worldwide!", x: 40, y: 40 },
-  narration: "Chapter 4 — The Breakthrough: Launching real-world applications and delivering impact to real users."
+  image: "/Comic/4.jpg",
+  bubble: { text: "Capstone proposal!", x: 156, y: 24 },
+  narration: "Chapter 04: Introduced Project METRO to the beneficiaries, sharing the proposed solution and its potential impact."
 },
 {
   id: "p5",
   x: 1072, y: 608, w: 504, h: 568,
-  image: "/0df203d0-6732-48db-a351-c0bde5f79c08.jpg",
-  bubble: { text: "Craft without compromise.", x: 40, y: 40 },
-  narration: "Chapter 5 — Today: Crafting experiences with heart, velocity, and uncompromising attention to detail."
+  image: "/Comic/5.jpeg",
+  bubble: { text: "Capstone shipped!", x: 160, y: 22 },
+  narration: "Chapter 05: Successfully presented and turned over our completed capstone project to the beneficiary."
 }];
 
 

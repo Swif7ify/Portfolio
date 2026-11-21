@@ -66,7 +66,7 @@ export function ComicCamera() {
     }
   }, inView);
 
-  const narration = active >= 0 && active < comicPanels.length ? comicPanels[active].narration : "The Full Arc — 5 chapters of growth, late nights, breakthroughs, and craft.";
+  const narration = active >= 0 && active < comicPanels.length ? comicPanels[active].narration : "My journey started with hardware, but curiosity led me far beyond it..";
 
   return (
     <section ref={sectionRef} id="about" aria-labelledby="comic-title" className="relative h-[560vh] bg-bg">
