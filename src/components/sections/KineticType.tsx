@@ -16,11 +16,23 @@ export function KineticType() {
   const { metrics, reducedMotion } = useKinetic();
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const rowHalfWidthsRef = useRef<number[]>([1200, 1200]);
+  const trailStageRectRef = useRef<{ left: number; top: number }>({ left: 0, top: 0 });
   const offsets = useRef([0, 0]);
   const dir = useRef(1);
   const trailRefs = useRef<(HTMLImageElement | null)[]>([]);
   const trail = useRef({ i: 0, lastX: 0, lastY: 0, z: 1 });
   const inView = useInView(sectionRef);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const measure = () => {
+      rowHalfWidthsRef.current = rowRefs.current.map((row) => (row ? Math.max(1, row.scrollWidth / 2) : 1200));
+    };
+    measure();
+    window.addEventListener("resize", measure, { passive: true });
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   useAnimationFrame((dt) => {
     if (typeof window === "undefined") return;
@@ -29,7 +41,7 @@ export function KineticType() {
     const speed = (reducedMotion ? 0 : 60) + Math.min(Math.abs(v), 50) * 40;
     rowRefs.current.forEach((row, i) => {
       if (!row) return;
-      const half = row.scrollWidth / 2;
+      const half = rowHalfWidthsRef.current[i] || 1200;
       const sign = i % 2 === 0 ? -1 : 1;
       let x = offsets.current[i] + sign * dir.current * speed * dt;
       if (x <= -half) x += half;
@@ -39,8 +51,13 @@ export function KineticType() {
     });
   }, inView);
 
-  const onTrailMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onTrailEnter = (e: React.PointerEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
+    trailStageRectRef.current = { left: r.left, top: r.top };
+  };
+
+  const onTrailMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = trailStageRectRef.current;
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
     const t = trail.current;
@@ -114,6 +131,7 @@ export function KineticType() {
 
       <div className="mx-auto mt-16 max-w-[1440px] px-4 md:px-6">
         <div
+          onPointerEnter={onTrailEnter}
           onPointerMove={onTrailMove}
           className="relative flex h-[60vh] min-h-[380px] items-center justify-center overflow-hidden rounded-3xl border border-hair bg-surface"
         >

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { statementTokens } from "@/src/data/pageSections";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
@@ -12,32 +12,63 @@ import { clamp } from "@/src/utils/math";
 export function InlineStatement() {
   const sectionRef = useRef<HTMLElement>(null);
   const tokenRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const tokenDocTopsRef = useRef<number[]>([]);
+  const vhRef = useRef<number>(900);
   const lastScrollRef = useRef<number>(-1);
-  const lastVhRef = useRef<number>(-1);
   const inView = useInView(sectionRef, "200px");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let rafId = 0;
+
+    const measure = () => {
+      vhRef.current = window.innerHeight;
+      const sy = window.scrollY;
+      const els = tokenRefs.current;
+      const tops = new Array<number>(els.length);
+      for (let i = 0; i < els.length; i++) {
+        const el = els[i];
+        tops[i] = el ? el.getBoundingClientRect().top + sy : 0;
+      }
+      tokenDocTopsRef.current = tops;
+      lastScrollRef.current = -1;
+    };
+
+    const scheduleMeasure = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("resize", scheduleMeasure, { passive: true });
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && document.body) {
+      ro = new ResizeObserver(scheduleMeasure);
+      ro.observe(document.body);
+    }
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", scheduleMeasure);
+      ro?.disconnect();
+    };
+  }, []);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const vh = window.innerHeight;
     const sy = window.scrollY;
-    if (Math.abs(sy - lastScrollRef.current) < 0.5 && vh === lastVhRef.current) return;
+    if (Math.abs(sy - lastScrollRef.current) < 0.5) return;
     lastScrollRef.current = sy;
-    lastVhRef.current = vh;
 
+    const vh = vhRef.current;
     const els = tokenRefs.current;
-    const tops = new Array<number>(els.length);
+    const docTops = tokenDocTopsRef.current;
 
-    // Pass 1: Batch read all bounding rects to avoid forced synchronous reflows
-    for (let i = 0; i < els.length; i++) {
-      const el = els[i];
-      tops[i] = el ? el.getBoundingClientRect().top : 0;
-    }
-
-    // Pass 2: Batch write all styles
+    // Pure write loop using cached document tops (zero getBoundingClientRect calls inside RAF)
     for (let i = 0; i < els.length; i++) {
       const el = els[i];
       if (!el) continue;
-      const p = clamp((vh * 0.82 - tops[i]) / (vh * 0.32));
+      const rTop = (docTops[i] ?? 0) - sy;
+      const p = clamp((vh * 0.82 - rTop) / (vh * 0.32));
       const t = statementTokens[i];
       if (t && "image" in t) {
         const e = p * p * (3 - 2 * p);

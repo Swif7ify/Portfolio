@@ -4,9 +4,10 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import { exhibitImages } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
-import { clamp, sectionProgress } from "@/src/utils/math";
+import { clamp } from "@/src/utils/math";
 
 /** Giant word used as a mask over a full-bleed image; scroll zooms the camera straight through it. */
 export function MaskReveal() {
@@ -14,12 +15,13 @@ export function MaskReveal() {
   const sectionRef = useRef<HTMLElement>(null);
   const groupRef = useRef<SVGGElement>(null);
   const coverRef = useRef<SVGRectElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLParagraphElement>(null);
   const lastPRef = useRef<number>(-1);
   const [box, setBox] = useState({ w: 1440, h: 900 });
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -28,7 +30,7 @@ export function MaskReveal() {
       setBox({ w: window.innerWidth, h: window.innerHeight });
     };
     measure();
-    window.addEventListener("resize", measure);
+    window.addEventListener("resize", measure, { passive: true });
     return () => window.removeEventListener("resize", measure);
   }, []);
 
@@ -38,9 +40,7 @@ export function MaskReveal() {
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const s = sectionRef.current;
-    if (!s) return;
-    const p = sectionProgress(s);
+    const p = calcSectionProgress(sectionMetrics.current, window.scrollY);
     if (Math.abs(p - lastPRef.current) < 0.0001) return;
     lastPRef.current = p;
 
@@ -55,7 +55,7 @@ export function MaskReveal() {
       const scale = 1 + Math.pow(z, 3) * 46;
       groupRef.current.setAttribute("transform", `translate(${cx} ${cy}) scale(${scale.toFixed(3)}) translate(${-cx} ${-cy})`);
     }
-    if (imgRef.current) imgRef.current.style.transform = `scale(${(1.35 - 0.35 * z).toFixed(4)})`;
+    if (imgWrapRef.current) imgWrapRef.current.style.transform = `scale(${(1.35 - 0.35 * z).toFixed(4)})`;
     if (hintRef.current) hintRef.current.style.opacity = String(1 - clamp(p / 0.15));
     if (captionRef.current) {
       const c = clamp((p - 0.78) / 0.12);
@@ -67,14 +67,15 @@ export function MaskReveal() {
   return (
     <section ref={sectionRef} id="reveal" aria-labelledby="reveal-title" className="relative h-[320vh] bg-bg">
       <div className="sticky top-0 h-screen overflow-hidden">
-        <Image
-          ref={imgRef}
-          src={getImagePath(exhibitImages.neon || "/EARL_ORDOVEZ.JPG")}
-          alt="Atmospheric studio creative visual"
-          fill
-          sizes="100vw"
-          className="object-cover will-change-transform"
-        />
+        <div ref={imgWrapRef} className="absolute inset-0 will-change-transform">
+          <Image
+            src={getImagePath(exhibitImages.neon || "/EARL_ORDOVEZ.JPG")}
+            alt="Atmospheric studio creative visual"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
 
         <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox={`0 0 ${box.w} ${box.h}`} aria-hidden>
           <defs>

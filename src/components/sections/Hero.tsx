@@ -2,8 +2,12 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
+import { useAnimationFrame } from "../../hooks/useAnimationFrame";
+import { useElementMetrics } from "../../hooks/useElementMetrics";
+import { useInView } from "../../hooks/useInView";
 import { getImagePath } from "../../utils/image";
+import { clamp } from "../../utils/math";
 
 interface HeroProps {
 	ready: boolean;
@@ -21,15 +25,25 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function Hero({ ready }: HeroProps) {
 	const ref = useRef<HTMLElement>(null);
-	const { scrollYProgress } = useScroll({
-		target: ref,
-		offset: ["start start", "end start"],
-	});
+	const inView = useInView(ref, "200px");
+	const heroMetrics = useElementMetrics(ref);
+	const lastPRef = useRef<number>(-1);
 
-	// Subtle parallax on scroll
-	const portraitY = useTransform(scrollYProgress, [0, 1], [0, 70]);
-	const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
-	const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+	const portraitY = useMotionValue(0);
+	const contentY = useMotionValue(0);
+	const opacity = useMotionValue(1);
+
+	useAnimationFrame(() => {
+		if (typeof window === "undefined") return;
+		const h = Math.max(1, heroMetrics.current.height);
+		const p = clamp(window.scrollY / h);
+		if (Math.abs(p - lastPRef.current) < 0.0002) return;
+		lastPRef.current = p;
+
+		portraitY.set(p * 70);
+		contentY.set(p * 40);
+		opacity.set(1 - clamp(p / 0.85));
+	}, inView);
 
 	return (
 		<section

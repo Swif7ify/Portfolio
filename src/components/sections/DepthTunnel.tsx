@@ -3,8 +3,9 @@
 import React, { useRef } from "react";
 import { tunnelLayers } from "@/src/data/showcase";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
-import { clamp, sectionProgress } from "@/src/utils/math";
+import { clamp } from "@/src/utils/math";
 
 const TRAVEL = 1800;
 
@@ -14,12 +15,11 @@ export function DepthTunnel() {
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastPRef = useRef<number>(-1);
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    if (!section) return;
-    const p = sectionProgress(section);
+    const p = calcSectionProgress(sectionMetrics.current, window.scrollY);
     if (Math.abs(p - lastPRef.current) < 0.0001) return;
     lastPRef.current = p;
 

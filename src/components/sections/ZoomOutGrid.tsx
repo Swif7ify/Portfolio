@@ -4,9 +4,10 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { zoomTiles } from "@/src/data/pageSections";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
-import { clamp, lerp, sectionProgress } from "@/src/utils/math";
+import { clamp, lerp } from "@/src/utils/math";
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
@@ -18,23 +19,23 @@ export function ZoomOutGrid() {
   const captionRef = useRef<HTMLDivElement>(null);
   const lastPRef = useRef<number>(-1);
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const s = sectionRef.current;
-    if (!s) return;
-    const p = sectionProgress(s);
+    const m = sectionMetrics.current;
+    const p = calcSectionProgress(m, window.scrollY);
     if (Math.abs(p - lastPRef.current) < 0.0001) return;
     lastPRef.current = p;
 
     const z = clamp((p - 0.08) / 0.62);
     const e = easeInOut(z);
 
-    // Read center tile dimensions BEFORE writing styles to avoid forced reflow
-    const centerEl = tileRefs.current[4];
-    const centerW = centerEl ? centerEl.offsetWidth : 300;
-    const centerH = centerEl ? centerEl.offsetHeight : 225;
-    const startScale = Math.max(window.innerWidth / Math.max(1, centerW), window.innerHeight / Math.max(1, centerH)) * 1.02;
+    // Pure arithmetic center tile scale from cached viewport dimensions (zero offsetWidth/offsetHeight DOM reads)
+    const gridW = Math.min(m.vw * 0.92, m.vh);
+    const centerW = Math.max(1, (gridW - 32) / 3);
+    const centerH = Math.max(1, centerW * 0.75);
+    const startScale = Math.max(m.vw / centerW, m.vh / centerH) * 1.02;
 
     tileRefs.current.forEach((el, i) => {
       if (!el) return;

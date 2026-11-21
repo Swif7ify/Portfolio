@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
 import { useInView } from "@/src/hooks/useInView";
 import { clamp, lerp } from "@/src/utils/math";
@@ -13,41 +13,70 @@ const specimenLines = ["EARL ORDOVEZ", "CREATIVE DEV"];
 export function VariableSpecimen() {
   const blockRef = useRef<HTMLDivElement>(null);
   const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const glyphCentersRef = useRef<{ docX: number; docY: number }[]>([]);
   const axes = useRef<{ w: number; d: number; str: string }[]>([]);
-  const pointer = useRef({ x: -9999, y: -9999 });
+  const pointerDoc = useRef({ x: -99999, y: -99999 });
   const settledRef = useRef<boolean>(true);
   const [hovered, setHovered] = useState(false);
   const inView = useInView(blockRef, "200px");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let rafId = 0;
+    const measureCenters = () => {
+      const sx = window.scrollX;
+      const sy = window.scrollY;
+      const els = letterRefs.current;
+      const centers = new Array<{ docX: number; docY: number }>(els.length);
+      for (let i = 0; i < els.length; i++) {
+        const el = els[i];
+        if (!el) {
+          centers[i] = { docX: 0, docY: 0 };
+          continue;
+        }
+        const r = el.getBoundingClientRect();
+        centers[i] = {
+          docX: r.left + sx + r.width / 2,
+          docY: r.top + sy + r.height / 2,
+        };
+      }
+      glyphCentersRef.current = centers;
+    };
+
+    const scheduleMeasure = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(measureCenters);
+    };
+
+    measureCenters();
+    window.addEventListener("resize", scheduleMeasure, { passive: true });
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && document.body) {
+      ro = new ResizeObserver(scheduleMeasure);
+      ro.observe(document.body);
+    }
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", scheduleMeasure);
+      ro?.disconnect();
+    };
+  }, []);
 
   useAnimationFrame(() => {
     if (!hovered && settledRef.current) return;
 
     const els = letterRefs.current;
-    const px = pointer.current.x;
-    const py = pointer.current.y;
+    const centers = glyphCentersRef.current;
+    const px = pointerDoc.current.x;
+    const py = pointerDoc.current.y;
 
-    // Pass 1: Read all bounding boxes before mutating any fontVariationSettings to prevent 24x forced reflows
-    const distances = new Array<number>(els.length);
-    for (let i = 0; i < els.length; i++) {
-      const el = els[i];
-      if (!el) {
-        distances[i] = 99999;
-        continue;
-      }
-      if (!hovered) {
-        distances[i] = 99999;
-      } else {
-        const r = el.getBoundingClientRect();
-        distances[i] = Math.hypot(r.left + r.width / 2 - px, r.top + r.height / 2 - py);
-      }
-    }
-
-    // Pass 2: Interpolate axes and write only changed fontVariationSettings
     let allAtRest = !hovered;
     for (let i = 0; i < els.length; i++) {
       const el = els[i];
       if (!el) continue;
-      const k = 1 - clamp(distances[i] / RADIUS);
+      const c = centers[i];
+      const dist = !hovered || !c ? 99999 : Math.hypot(c.docX - px, c.docY - py);
+      const k = 1 - clamp(dist / RADIUS);
       const ease = k * k * (3 - 2 * k);
       const targetW = 120 + 880 * ease;
       const targetD = 30 + 121 * ease;
@@ -55,14 +84,16 @@ export function VariableSpecimen() {
       a.w = lerp(a.w, targetW, 0.14);
       a.d = lerp(a.d, targetD, 0.14);
 
-      if (Math.abs(a.w - 120) > 0.6 || Math.abs(a.d - 30) > 0.15) {
+      if (Math.abs(a.w - 120) > 1.2 || Math.abs(a.d - 30) > 0.25) {
         allAtRest = false;
       } else if (!hovered) {
         a.w = 120;
         a.d = 30;
       }
 
-      const nextStr = `'wght' ${a.w.toFixed(0)}, 'wdth' ${a.d.toFixed(1)}`;
+      const qW = Math.round(a.w / 4) * 4;
+      const qD = (Math.round(a.d * 2) / 2).toFixed(1);
+      const nextStr = `'wght' ${qW}, 'wdth' ${qD}`;
       if (nextStr !== a.str) {
         a.str = nextStr;
         el.style.fontVariationSettings = nextStr;
@@ -92,17 +123,17 @@ export function VariableSpecimen() {
         <div
           ref={blockRef}
           onPointerEnter={(e) => {
-            pointer.current = { x: e.clientX, y: e.clientY };
+            pointerDoc.current = { x: e.clientX + window.scrollX, y: e.clientY + window.scrollY };
             settledRef.current = false;
             setHovered(true);
           }}
           onPointerMove={(e) => {
-            pointer.current = { x: e.clientX, y: e.clientY };
+            pointerDoc.current = { x: e.clientX + window.scrollX, y: e.clientY + window.scrollY };
             settledRef.current = false;
             if (!hovered) setHovered(true);
           }}
           onPointerLeave={() => {
-            pointer.current = { x: -9999, y: -9999 };
+            pointerDoc.current = { x: -99999, y: -99999 };
             setHovered(false);
           }}
           data-cursor="Breathe"

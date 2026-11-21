@@ -4,9 +4,10 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { lookbookPages } from "@/src/data/portfolio";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
-import { clamp, sectionProgress } from "@/src/utils/math";
+import { clamp } from "@/src/utils/math";
 
 const LEAVES = Math.floor(lookbookPages.length / 2);
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -40,12 +41,12 @@ export function PageFlipLookbook() {
   const shadeBack = useRef<(HTMLSpanElement | null)[]>([]);
   const lastFRef = useRef<number>(-1);
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const s = sectionRef.current;
-    if (!s) return;
-    const f = clamp((sectionProgress(s) - 0.06) / 0.86) * LEAVES;
+    const p = calcSectionProgress(sectionMetrics.current, window.scrollY);
+    const f = clamp((p - 0.06) / 0.86) * LEAVES;
     if (Math.abs(f - lastFRef.current) < 0.0002) return;
     lastFRef.current = f;
 

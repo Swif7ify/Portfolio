@@ -58,22 +58,24 @@ export function NativeScrollCSS() {
         <div className={`sda-scope mt-16 grid gap-10 md:grid-cols-12 ${supported ? "" : "sda-fallback"}`}>
           <div className="md:col-span-6 md:col-start-7 md:row-start-1">
             <div className="sticky top-[14vh] aspect-[4/5] overflow-hidden rounded-3xl bg-surface md:aspect-auto md:h-[72vh] shadow-2xl">
-              {nativeSteps.map((s, i) => (
-                <Image
-                  key={s.title}
-                  src={getImagePath(s.image)}
-                  alt=""
-                  aria-hidden
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className={`sda-layer sda-layer-${i} object-cover`}
-                  style={{
-                    zIndex: nativeSteps.length - i,
-                    opacity: supported === false && i < active ? 0 : 1,
-                    transition: supported === false ? "opacity 250ms ease-out" : undefined
-                  }}
-                />
-              ))}
+              <div className="relative h-full w-full">
+                {nativeSteps.map((s, i) => (
+                  <Image
+                    key={s.title}
+                    src={getImagePath(s.image)}
+                    alt=""
+                    aria-hidden
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className={`sda-layer sda-layer-${i} object-cover`}
+                    style={{
+                      zIndex: nativeSteps.length - i,
+                      opacity: supported === false && i < active ? 0 : 1,
+                      transition: supported === false ? "opacity 250ms ease-out" : undefined
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <div className="md:col-span-5 md:row-start-1">

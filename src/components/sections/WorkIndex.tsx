@@ -25,10 +25,27 @@ export function WorkIndex() {
   const [open, setOpen] = useState<OpenState | null>(null);
   const [order, setOrder] = useState<number[]>(() => workProjects.map((_, i) => i));
   const previewRef = useRef<HTMLDivElement>(null);
+  const previewSizeRef = useRef<{ w: number; h: number }>({ w: 280, h: 350 });
   const listRef = useRef<HTMLUListElement>(null);
   const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const pos = useRef({ x: 0, y: 0, tx: 0, ty: 0, init: false });
   const lastTrigger = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const measure = () => {
+      const el = previewRef.current;
+      if (el) {
+        previewSizeRef.current = {
+          w: el.offsetWidth || 280,
+          h: el.offsetHeight || 350,
+        };
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure, { passive: true });
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
@@ -38,7 +55,8 @@ export function WorkIndex() {
     p.x += (p.tx - p.x) * 0.12;
     p.y += (p.ty - p.y) * 0.12;
     const rot = clamp((p.tx - p.x) * 0.04, -8, 8);
-    el.style.transform = `translate3d(${(p.x - el.offsetWidth / 2).toFixed(1)}px, ${(p.y - el.offsetHeight / 2).toFixed(1)}px, 0) rotate(${rot.toFixed(2)}deg)`;
+    const { w, h } = previewSizeRef.current;
+    el.style.transform = `translate3d(${(p.x - w / 2).toFixed(1)}px, ${(p.y - h / 2).toFixed(1)}px, 0) rotate(${rot.toFixed(2)}deg)`;
   }, hover !== null);
 
   const close = useCallback(() => {

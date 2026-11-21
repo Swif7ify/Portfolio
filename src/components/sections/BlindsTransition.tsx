@@ -5,9 +5,10 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { blindSlides } from "@/src/data/portfolio";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
-import { clamp, sectionProgress } from "@/src/utils/math";
+import { clamp } from "@/src/utils/math";
 
 interface Piece {
   x: number;
@@ -42,12 +43,12 @@ export function BlindsTransition() {
   const lastSegRef = useRef<number>(-1);
   const [active, setActive] = useState(0);
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const s = sectionRef.current;
-    if (!s) return;
-    const seg = clamp((sectionProgress(s) - 0.05) / 0.9) * LAYERS.length;
+    const p = calcSectionProgress(sectionMetrics.current, window.scrollY);
+    const seg = clamp((p - 0.05) / 0.9) * LAYERS.length;
     if (Math.abs(seg - lastSegRef.current) < 0.0002) return;
     lastSegRef.current = seg;
 
@@ -83,7 +84,9 @@ export function BlindsTransition() {
   return (
     <section ref={sectionRef} id="blinds" aria-labelledby="blinds-title" className="relative h-[420vh] bg-bg">
       <div className="sticky top-0 h-screen overflow-hidden">
-        <Image src={getImagePath(blindSlides[0].image)} alt="" fill sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0">
+          <Image src={getImagePath(blindSlides[0].image)} alt="" fill sizes="100vw" className="object-cover" />
+        </div>
         {LAYERS.map((pieces, k) => (
           <div key={k} className="absolute inset-0" aria-hidden>
             {pieces.map((pc, j) => (

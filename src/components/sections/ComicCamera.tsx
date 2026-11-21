@@ -4,9 +4,10 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { comicPanels } from "@/src/data/awardExhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { calcSectionProgress, useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
-import { clamp, lerp, sectionProgress } from "@/src/utils/math";
+import { clamp, lerp } from "@/src/utils/math";
 
 const PAGE = { w: 1600, h: 1200 };
 const PAD = 36;
@@ -19,22 +20,21 @@ const KEYS = [
 /** Guided-view comic: scroll flies a camera from panel to panel across one page, then pulls back. */
 export function ComicCamera() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const activeRef = useRef(-1);
   const lastPRef = useRef<number>(-1);
   const [active, setActive] = useState(-1);
   const inView = useInView(sectionRef, "200px");
+  const sectionMetrics = useElementMetrics(sectionRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    const stage = stageRef.current;
     const page = pageRef.current;
-    if (!section || !stage || !page) return;
+    if (!page) return;
 
-    const p = sectionProgress(section);
+    const m = sectionMetrics.current;
+    const p = calcSectionProgress(m, window.scrollY);
     if (Math.abs(p - lastPRef.current) < 0.0001) return;
     lastPRef.current = p;
 
@@ -46,8 +46,8 @@ export function ComicCamera() {
     const a = KEYS[i];
     const b = KEYS[i + 1];
     const cam = { x: lerp(a.x, b.x, e), y: lerp(a.y, b.y, e), w: lerp(a.w, b.w, e), h: lerp(a.h, b.h, e) };
-    const vw = stage.clientWidth;
-    const vh = stage.clientHeight;
+    const vw = m.vw;
+    const vh = m.vh;
     const s = Math.min(vw / cam.w, vh / cam.h) * 0.92;
     const tx = vw / 2 - (cam.x + cam.w / 2) * s;
     const ty = vh / 2 - (cam.y + cam.h / 2) * s;
@@ -70,7 +70,7 @@ export function ComicCamera() {
 
   return (
     <section ref={sectionRef} id="about" aria-labelledby="comic-title" className="relative h-[560vh] bg-bg">
-      <div ref={stageRef} className="sticky top-0 h-screen overflow-hidden">
+      <div className="sticky top-0 h-screen overflow-hidden">
         <div
           ref={pageRef}
           className="absolute left-0 top-0 origin-top-left rounded-lg bg-surface will-change-transform"

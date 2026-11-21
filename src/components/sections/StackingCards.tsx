@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { stackCases } from "@/src/data/exhibits";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
 import { getImagePath } from "@/src/utils/image";
 import { clamp } from "@/src/utils/math";
@@ -12,11 +13,12 @@ import { ChapterHeader } from "@/src/components/ChapterHeader";
 /** Sticky cards that stack; each earlier card shrinks and dims by the sum of the cards covering it. */
 export function StackingCards() {
   const sectionRef = useRef<HTMLElement>(null);
-  const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const listRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const shadeRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const lastScrollRef = useRef<number>(-1);
   const inView = useInView(sectionRef, "200px");
+  const listMetrics = useElementMetrics(listRef);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
@@ -24,8 +26,11 @@ export function StackingCards() {
     if (Math.abs(sy - lastScrollRef.current) < 0.5) return;
     lastScrollRef.current = sy;
 
-    const vh = window.innerHeight;
-    const covers = wrapRefs.current.map((el) => (el ? clamp(1 - el.getBoundingClientRect().top / vh) : 0));
+    const m = listMetrics.current;
+    const vh = m.vh;
+    // Pure arithmetic cover calculation for sticky top-0 h-screen wrappers (zero getBoundingClientRect calls)
+    const covers = stackCases.map((_, i) => clamp(1 - (m.docTop + i * vh - sy) / vh));
+
     cardRefs.current.forEach((card, i) => {
       if (!card) return;
       let sum = 0;
@@ -52,13 +57,10 @@ export function StackingCards() {
         />
       </div>
 
-      <div className="mx-auto mt-16 max-w-[1440px] pb-[20vh]">
+      <div ref={listRef} className="mx-auto mt-16 max-w-[1440px] pb-[20vh]">
         {stackCases.map((c, i) => (
           <div
             key={c.id}
-            ref={(el) => {
-              wrapRefs.current[i] = el;
-            }}
             className="sticky top-0 flex h-screen items-center"
             style={{ paddingTop: `${88 + i * 22}px` }}
           >

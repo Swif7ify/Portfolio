@@ -2,11 +2,13 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAnimationFrame } from "@/src/hooks/useAnimationFrame";
+import { useElementMetrics } from "@/src/hooks/useElementMetrics";
 import { useInView } from "@/src/hooks/useInView";
-import { clamp } from "@/src/utils/math";
+import { clamp, lerp } from "@/src/utils/math";
 
 const PATH = "M50 0 C 88 90, 88 150, 50 200 S 12 310, 50 400 S 88 510, 50 600 S 12 710, 50 800 S 88 910, 50 1000";
 const AT = [0.1, 0.3, 0.5, 0.7, 0.9];
+const LUT_STEPS = 200;
 
 const lifeRoadmapSteps = [
   {
@@ -54,19 +56,31 @@ export function ProcessPath() {
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const nodeRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const len = useRef(1);
+  const lutRef = useRef<{ x: number; y: number }[]>([]);
   const lastPRef = useRef<number>(-1);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
   const inView = useInView(wrapRef, "200px");
+  const wrapMetrics = useElementMetrics(wrapRef);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const path = pathRef.current;
     if (!path) return;
-    len.current = path.getTotalLength();
-    path.style.strokeDasharray = String(len.current);
+    const totalLen = path.getTotalLength();
+    len.current = totalLen;
+    path.style.strokeDasharray = String(totalLen);
+
+    // Pre-sample lookup table once on mount so scroll RAF never calls path.getPointAtLength()
+    const lut: { x: number; y: number }[] = new Array(LUT_STEPS + 1);
+    for (let i = 0; i <= LUT_STEPS; i++) {
+      const pt = path.getPointAtLength((i / LUT_STEPS) * totalLen);
+      lut[i] = { x: pt.x, y: pt.y / 10 };
+    }
+    lutRef.current = lut;
+
     setPoints(
       AT.map((t) => {
-        const pt = path.getPointAtLength(t * len.current);
+        const pt = path.getPointAtLength(t * totalLen);
         return { x: pt.x, y: pt.y / 10 };
       })
     );
@@ -74,19 +88,29 @@ export function ProcessPath() {
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
-    const wrap = wrapRef.current;
     const path = pathRef.current;
-    if (!wrap || !path) return;
-    const r = wrap.getBoundingClientRect();
-    const p = clamp((window.innerHeight * 0.6 - r.top) / r.height);
+    const lut = lutRef.current;
+    if (!path || lut.length === 0) return;
+
+    const m = wrapMetrics.current;
+    const rTop = m.docTop - window.scrollY;
+    const p = clamp((m.vh * 0.6 - rTop) / m.height);
     if (Math.abs(p - lastPRef.current) < 0.0002) return;
     lastPRef.current = p;
 
     path.style.strokeDashoffset = String(len.current * (1 - p));
-    const head = path.getPointAtLength(p * len.current);
+
+    // O(1) lookup table interpolation instead of SVG path.getPointAtLength()
+    const idxF = p * LUT_STEPS;
+    const idx0 = Math.min(LUT_STEPS, Math.floor(idxF));
+    const idx1 = Math.min(LUT_STEPS, idx0 + 1);
+    const frac = idxF - idx0;
+    const headX = lerp(lut[idx0].x, lut[idx1].x, frac);
+    const headY = lerp(lut[idx0].y, lut[idx1].y, frac);
+
     if (headRef.current) {
-      headRef.current.style.left = `${head.x}%`;
-      headRef.current.style.top = `${head.y / 10}%`;
+      headRef.current.style.left = `${headX.toFixed(2)}%`;
+      headRef.current.style.top = `${headY.toFixed(2)}%`;
     }
     AT.forEach((t, i) => {
       const on = p >= t - 0.005;
